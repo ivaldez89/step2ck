@@ -56,7 +56,7 @@ export default function ImportPage() {
           topic: card.metadata?.topic || 'Imported',
           difficulty: card.metadata?.difficulty || 'medium',
           clinicalVignette: card.metadata?.clinicalVignette ?? true,
-          ...card.metadata
+          rotation: card.metadata?.rotation
         },
         spacedRepetition: card.spacedRepetition || {
           state: 'new',
