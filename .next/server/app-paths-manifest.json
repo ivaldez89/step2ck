@@ -1,0 +1,6 @@
+{
+  "/page": "app/page.js",
+  "/import/page": "app/import/page.js",
+  "/rapid-review/page": "app/rapid-review/page.js",
+  "/flashcards/page": "app/flashcards/page.js"
+}
