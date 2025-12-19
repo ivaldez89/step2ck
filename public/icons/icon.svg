@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d9488;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0891b2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f472b6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="110" fill="url(#bgGrad)"/>
+
+  <!-- Three people (tribe) silhouettes -->
+  <!-- Left person -->
+  <circle cx="156" cy="180" r="45" fill="white" opacity="0.9"/>
+  <path d="M156 240 C106 240 76 290 76 340 L76 380 C76 390 84 398 94 398 L218 398 C228 398 236 390 236 380 L236 340 C236 290 206 240 156 240Z" fill="white" opacity="0.9"/>
+
+  <!-- Center person (larger, front) -->
+  <circle cx="256" cy="160" r="55" fill="white"/>
+  <path d="M256 230 C196 230 156 290 156 350 L156 400 C156 412 166 422 178 422 L334 422 C346 422 356 412 356 400 L356 350 C356 290 316 230 256 230Z" fill="white"/>
+
+  <!-- Right person -->
+  <circle cx="356" cy="180" r="45" fill="white" opacity="0.9"/>
+  <path d="M356 240 C306 240 276 290 276 340 L276 380 C276 390 284 398 294 398 L418 398 C428 398 436 390 436 380 L436 340 C436 290 406 240 356 240Z" fill="white" opacity="0.9"/>
+
+  <!-- Heart with medical cross (wellness) -->
+  <path d="M256 130 C240 110 210 110 195 130 C175 155 175 190 200 215 L256 270 L312 215 C337 190 337 155 317 130 C302 110 272 110 256 130Z" fill="url(#heartGrad)"/>
+
+  <!-- Small medical cross in heart -->
+  <rect x="248" y="150" width="16" height="40" rx="3" fill="white"/>
+  <rect x="238" y="162" width="36" height="16" rx="3" fill="white"/>
+</svg>
