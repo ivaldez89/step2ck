@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { FlashcardViewer } from '@/components/flashcards/FlashcardViewer';
@@ -9,15 +9,264 @@ import { DeckFilterPanel } from '@/components/deck/DeckFilterPanel';
 import { CardEditor } from '@/components/deck/CardEditor';
 import { useFlashcards } from '@/hooks/useFlashcards';
 
-// Ambient sound definitions
+// Ambient sound definitions - generated using Web Audio API
 const AMBIENT_SOUNDS = [
-  { id: 'rain', name: 'Rain', emoji: '🌧️', url: 'https://cdn.pixabay.com/audio/2022/05/16/audio_3b65c15d51.mp3' },
-  { id: 'thunder', name: 'Thunder', emoji: '⛈️', url: 'https://cdn.pixabay.com/audio/2022/10/30/audio_f2cbc47b97.mp3' },
-  { id: 'forest', name: 'Forest', emoji: '🌲', url: 'https://cdn.pixabay.com/audio/2022/08/04/audio_2dde668d05.mp3' },
-  { id: 'ocean', name: 'Ocean', emoji: '🌊', url: 'https://cdn.pixabay.com/audio/2022/06/07/audio_b9bd4170e4.mp3' },
-  { id: 'fire', name: 'Fireplace', emoji: '🔥', url: 'https://cdn.pixabay.com/audio/2022/11/17/audio_fe4e9cf054.mp3' },
-  { id: 'cafe', name: 'Café', emoji: '☕', url: 'https://cdn.pixabay.com/audio/2022/03/09/audio_c121d4f7ce.mp3' },
+  { id: 'whitenoise', name: 'White Noise', emoji: '📻' },
+  { id: 'pinknoise', name: 'Pink Noise', emoji: '🩷' },
+  { id: 'brownnoise', name: 'Brown Noise', emoji: '🟤' },
+  { id: 'rain', name: 'Rain', emoji: '🌧️' },
+  { id: 'wind', name: 'Wind', emoji: '💨' },
+  { id: 'binaural', name: 'Focus 40Hz', emoji: '🧠' },
 ];
+
+// Noise generator using Web Audio API
+class NoiseGenerator {
+  private audioContext: AudioContext | null = null;
+  private gainNode: GainNode | null = null;
+  private noiseNode: AudioBufferSourceNode | null = null;
+  private oscillators: OscillatorNode[] = [];
+  private isPlaying = false;
+
+  start(type: string, volume: number) {
+    this.stop();
+    
+    this.audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+    this.gainNode = this.audioContext.createGain();
+    this.gainNode.gain.value = volume;
+    this.gainNode.connect(this.audioContext.destination);
+
+    switch (type) {
+      case 'whitenoise':
+        this.createWhiteNoise();
+        break;
+      case 'pinknoise':
+        this.createPinkNoise();
+        break;
+      case 'brownnoise':
+        this.createBrownNoise();
+        break;
+      case 'rain':
+        this.createRain();
+        break;
+      case 'wind':
+        this.createWind();
+        break;
+      case 'binaural':
+        this.createBinaural();
+        break;
+    }
+    
+    this.isPlaying = true;
+  }
+
+  private createWhiteNoise() {
+    if (!this.audioContext || !this.gainNode) return;
+    
+    const bufferSize = 2 * this.audioContext.sampleRate;
+    const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
+    const output = buffer.getChannelData(0);
+    
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
+    
+    this.noiseNode = this.audioContext.createBufferSource();
+    this.noiseNode.buffer = buffer;
+    this.noiseNode.loop = true;
+    this.noiseNode.connect(this.gainNode);
+    this.noiseNode.start();
+  }
+
+  private createPinkNoise() {
+    if (!this.audioContext || !this.gainNode) return;
+    
+    const bufferSize = 2 * this.audioContext.sampleRate;
+    const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
+    const output = buffer.getChannelData(0);
+    
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1;
+      b0 = 0.99886 * b0 + white * 0.0555179;
+      b1 = 0.99332 * b1 + white * 0.0750759;
+      b2 = 0.96900 * b2 + white * 0.1538520;
+      b3 = 0.86650 * b3 + white * 0.3104856;
+      b4 = 0.55000 * b4 + white * 0.5329522;
+      b5 = -0.7616 * b5 - white * 0.0168980;
+      output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
+      b6 = white * 0.115926;
+    }
+    
+    this.noiseNode = this.audioContext.createBufferSource();
+    this.noiseNode.buffer = buffer;
+    this.noiseNode.loop = true;
+    this.noiseNode.connect(this.gainNode);
+    this.noiseNode.start();
+  }
+
+  private createBrownNoise() {
+    if (!this.audioContext || !this.gainNode) return;
+    
+    const bufferSize = 2 * this.audioContext.sampleRate;
+    const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
+    const output = buffer.getChannelData(0);
+    
+    let lastOut = 0;
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1;
+      output[i] = (lastOut + (0.02 * white)) / 1.02;
+      lastOut = output[i];
+      output[i] *= 3.5;
+    }
+    
+    this.noiseNode = this.audioContext.createBufferSource();
+    this.noiseNode.buffer = buffer;
+    this.noiseNode.loop = true;
+    this.noiseNode.connect(this.gainNode);
+    this.noiseNode.start();
+  }
+
+  private createRain() {
+    if (!this.audioContext || !this.gainNode) return;
+    
+    // Pink noise + filtered for rain-like sound
+    const bufferSize = 2 * this.audioContext.sampleRate;
+    const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
+    const output = buffer.getChannelData(0);
+    
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1;
+      b0 = 0.99886 * b0 + white * 0.0555179;
+      b1 = 0.99332 * b1 + white * 0.0750759;
+      b2 = 0.96900 * b2 + white * 0.1538520;
+      b3 = 0.86650 * b3 + white * 0.3104856;
+      b4 = 0.55000 * b4 + white * 0.5329522;
+      b5 = -0.7616 * b5 - white * 0.0168980;
+      output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
+      b6 = white * 0.115926;
+      
+      // Add some variation for rain texture
+      if (Math.random() > 0.9997) {
+        output[i] += (Math.random() - 0.5) * 0.3;
+      }
+    }
+    
+    this.noiseNode = this.audioContext.createBufferSource();
+    this.noiseNode.buffer = buffer;
+    this.noiseNode.loop = true;
+    
+    // Add lowpass filter for softer rain sound
+    const filter = this.audioContext.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 3000;
+    
+    this.noiseNode.connect(filter);
+    filter.connect(this.gainNode);
+    this.noiseNode.start();
+  }
+
+  private createWind() {
+    if (!this.audioContext || !this.gainNode) return;
+    
+    // Brown noise with modulation for wind effect
+    const bufferSize = 4 * this.audioContext.sampleRate;
+    const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
+    const output = buffer.getChannelData(0);
+    
+    let lastOut = 0;
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1;
+      output[i] = (lastOut + (0.02 * white)) / 1.02;
+      lastOut = output[i];
+      // Add gentle amplitude modulation for wind gusts
+      const mod = 0.7 + 0.3 * Math.sin(i / (this.audioContext!.sampleRate * 3));
+      output[i] *= 3.5 * mod;
+    }
+    
+    this.noiseNode = this.audioContext.createBufferSource();
+    this.noiseNode.buffer = buffer;
+    this.noiseNode.loop = true;
+    
+    const filter = this.audioContext.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 800;
+    
+    this.noiseNode.connect(filter);
+    filter.connect(this.gainNode);
+    this.noiseNode.start();
+  }
+
+  private createBinaural() {
+    if (!this.audioContext || !this.gainNode) return;
+    
+    // 40Hz binaural beat (good for focus/concentration)
+    // Base frequency in left ear, base + 40Hz in right ear
+    const baseFreq = 200;
+    const beatFreq = 40;
+    
+    const leftOsc = this.audioContext.createOscillator();
+    const rightOsc = this.audioContext.createOscillator();
+    
+    leftOsc.frequency.value = baseFreq;
+    rightOsc.frequency.value = baseFreq + beatFreq;
+    
+    leftOsc.type = 'sine';
+    rightOsc.type = 'sine';
+    
+    // Create stereo panning
+    const leftPan = this.audioContext.createStereoPanner();
+    const rightPan = this.audioContext.createStereoPanner();
+    leftPan.pan.value = -1;
+    rightPan.pan.value = 1;
+    
+    leftOsc.connect(leftPan);
+    rightOsc.connect(rightPan);
+    leftPan.connect(this.gainNode);
+    rightPan.connect(this.gainNode);
+    
+    leftOsc.start();
+    rightOsc.start();
+    
+    this.oscillators = [leftOsc, rightOsc];
+  }
+
+  setVolume(volume: number) {
+    if (this.gainNode) {
+      this.gainNode.gain.value = volume;
+    }
+  }
+
+  stop() {
+    if (this.noiseNode) {
+      this.noiseNode.stop();
+      this.noiseNode.disconnect();
+      this.noiseNode = null;
+    }
+    
+    this.oscillators.forEach(osc => {
+      osc.stop();
+      osc.disconnect();
+    });
+    this.oscillators = [];
+    
+    if (this.gainNode) {
+      this.gainNode.disconnect();
+      this.gainNode = null;
+    }
+    
+    if (this.audioContext) {
+      this.audioContext.close();
+      this.audioContext = null;
+    }
+    
+    this.isPlaying = false;
+  }
+
+  getIsPlaying() {
+    return this.isPlaying;
+  }
+}
 
 export default function FlashcardsPage() {
   const {
@@ -52,61 +301,51 @@ export default function FlashcardsPage() {
   // Ambient sound state
   const [currentSound, setCurrentSound] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.5);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [volume, setVolume] = useState(0.3);
+  const noiseGenRef = useRef<NoiseGenerator | null>(null);
 
-  // Initialize audio element
+  // Initialize noise generator
   useEffect(() => {
-    audioRef.current = new Audio();
-    audioRef.current.loop = true;
-    audioRef.current.volume = volume;
+    noiseGenRef.current = new NoiseGenerator();
     
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
+      if (noiseGenRef.current) {
+        noiseGenRef.current.stop();
       }
     };
   }, []);
 
-  // Update volume when changed
+  // Update volume
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
+    if (noiseGenRef.current && isPlaying) {
+      noiseGenRef.current.setVolume(volume);
     }
-  }, [volume]);
+  }, [volume, isPlaying]);
 
   // Play/pause sound
-  const playSound = (soundId: string) => {
-    const sound = AMBIENT_SOUNDS.find(s => s.id === soundId);
-    if (!sound || !audioRef.current) return;
+  const playSound = useCallback((soundId: string) => {
+    if (!noiseGenRef.current) return;
 
     if (currentSound === soundId && isPlaying) {
-      // Pause current sound
-      audioRef.current.pause();
+      // Stop current sound
+      noiseGenRef.current.stop();
       setIsPlaying(false);
     } else {
-      // Play new or resume sound
-      if (currentSound !== soundId) {
-        audioRef.current.src = sound.url;
-        setCurrentSound(soundId);
-      }
-      audioRef.current.play().catch(() => {
-        // Handle autoplay restrictions
-        console.log('Audio playback failed');
-      });
+      // Play new sound
+      noiseGenRef.current.stop();
+      noiseGenRef.current.start(soundId, volume);
+      setCurrentSound(soundId);
       setIsPlaying(true);
     }
-  };
+  }, [currentSound, isPlaying, volume]);
 
-  const stopSound = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
+  const stopSound = useCallback(() => {
+    if (noiseGenRef.current) {
+      noiseGenRef.current.stop();
     }
     setIsPlaying(false);
     setCurrentSound(null);
-  };
+  }, []);
 
   // Auto-start session when page loads with due cards
   useEffect(() => {
@@ -364,13 +603,17 @@ export default function FlashcardsPage() {
                 type="range"
                 min="0"
                 max="1"
-                step="0.1"
+                step="0.05"
                 value={volume}
                 onChange={(e) => setVolume(parseFloat(e.target.value))}
                 className="flex-1 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-purple-500"
               />
               <span className="text-sm text-slate-500 w-12 text-right">{Math.round(volume * 100)}%</span>
             </div>
+            
+            <p className="mt-3 text-xs text-slate-400">
+              💡 Use headphones for binaural beats (Focus 40Hz) - creates a subtle beat perceived by your brain to enhance concentration.
+            </p>
           </div>
         )}
 
