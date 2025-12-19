@@ -7,7 +7,21 @@ import { FlashcardViewer } from '@/components/flashcards/FlashcardViewer';
 import { AnswerButtons } from '@/components/flashcards/AnswerButtons';
 import { DeckFilterPanel } from '@/components/deck/DeckFilterPanel';
 import { CardEditor } from '@/components/deck/CardEditor';
+import { PomodoroTimer } from '@/components/study/PomodoroTimer';
+import { recordCardReview, AchievementNotification } from '@/components/study/StudyStats';
 import { useFlashcards } from '@/hooks/useFlashcards';
+import type { Rating } from '@/types';
+
+// Achievement type for notifications
+interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  emoji: string;
+  unlockedAt: string | null;
+  requirement: number;
+  type: 'cards' | 'streak' | 'days' | 'pomodoro';
+}
 
 // Ambient sound definitions - generated using Web Audio API
 const AMBIENT_SOUNDS = [
@@ -129,7 +143,6 @@ class NoiseGenerator {
   private createRain() {
     if (!this.audioContext || !this.gainNode) return;
     
-    // Pink noise + filtered for rain-like sound
     const bufferSize = 2 * this.audioContext.sampleRate;
     const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
     const output = buffer.getChannelData(0);
@@ -146,7 +159,6 @@ class NoiseGenerator {
       output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
       b6 = white * 0.115926;
       
-      // Add some variation for rain texture
       if (Math.random() > 0.9997) {
         output[i] += (Math.random() - 0.5) * 0.3;
       }
@@ -156,7 +168,6 @@ class NoiseGenerator {
     this.noiseNode.buffer = buffer;
     this.noiseNode.loop = true;
     
-    // Add lowpass filter for softer rain sound
     const filter = this.audioContext.createBiquadFilter();
     filter.type = 'lowpass';
     filter.frequency.value = 3000;
@@ -169,7 +180,6 @@ class NoiseGenerator {
   private createWind() {
     if (!this.audioContext || !this.gainNode) return;
     
-    // Brown noise with modulation for wind effect
     const bufferSize = 4 * this.audioContext.sampleRate;
     const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
     const output = buffer.getChannelData(0);
@@ -179,7 +189,6 @@ class NoiseGenerator {
       const white = Math.random() * 2 - 1;
       output[i] = (lastOut + (0.02 * white)) / 1.02;
       lastOut = output[i];
-      // Add gentle amplitude modulation for wind gusts
       const mod = 0.7 + 0.3 * Math.sin(i / (this.audioContext!.sampleRate * 3));
       output[i] *= 3.5 * mod;
     }
@@ -200,8 +209,6 @@ class NoiseGenerator {
   private createBinaural() {
     if (!this.audioContext || !this.gainNode) return;
     
-    // 40Hz binaural beat (good for focus/concentration)
-    // Base frequency in left ear, base + 40Hz in right ear
     const baseFreq = 200;
     const beatFreq = 40;
     
@@ -214,7 +221,6 @@ class NoiseGenerator {
     leftOsc.type = 'sine';
     rightOsc.type = 'sine';
     
-    // Create stereo panning
     const leftPan = this.audioContext.createStereoPanner();
     const rightPan = this.audioContext.createStereoPanner();
     leftPan.pan.value = -1;
@@ -290,13 +296,14 @@ export default function FlashcardsPage() {
     deleteCard,
     setFilters,
     clearFilters,
-    previousCard,
     goToCard
   } = useFlashcards();
 
   const [showEditor, setShowEditor] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showAmbient, setShowAmbient] = useState(false);
+  const [showPomodoro, setShowPomodoro] = useState(false);
+  const [newAchievement, setNewAchievement] = useState<Achievement | null>(null);
   
   // Ambient sound state
   const [currentSound, setCurrentSound] = useState<string | null>(null);
@@ -327,11 +334,9 @@ export default function FlashcardsPage() {
     if (!noiseGenRef.current) return;
 
     if (currentSound === soundId && isPlaying) {
-      // Stop current sound
       noiseGenRef.current.stop();
       setIsPlaying(false);
     } else {
-      // Play new sound
       noiseGenRef.current.stop();
       noiseGenRef.current.start(soundId, volume);
       setCurrentSound(soundId);
@@ -375,6 +380,20 @@ export default function FlashcardsPage() {
     if (currentIndex > 0) {
       goToCard(currentIndex - 1);
     }
+  };
+
+  // Handle card rating with achievement tracking
+  const handleRateCard = (rating: Rating) => {
+    // Record the review for stats/achievements
+    const { newAchievements } = recordCardReview();
+    
+    // Show achievement notification if any
+    if (newAchievements.length > 0) {
+      setNewAchievement(newAchievements[0]);
+    }
+    
+    // Call the original rate function
+    rateCard(rating);
   };
 
   const hasActiveFilters = 
@@ -480,7 +499,7 @@ export default function FlashcardsPage() {
       
       <main className="max-w-5xl mx-auto px-4 py-8">
         {/* Session progress bar */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-4">
             {session && (
               <>
@@ -495,7 +514,6 @@ export default function FlashcardsPage() {
               </>
             )}
             
-            {/* Filter indicator */}
             {hasActiveFilters && (
               <div className="flex items-center gap-2 text-sm px-2 py-1 bg-indigo-50 text-indigo-600 rounded-lg">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -506,7 +524,10 @@ export default function FlashcardsPage() {
             )}
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {/* Pomodoro Timer (compact) */}
+            <PomodoroTimer />
+            
             {/* Ambient sounds button */}
             <button
               onClick={() => setShowAmbient(!showAmbient)}
@@ -573,7 +594,6 @@ export default function FlashcardsPage() {
               )}
             </div>
             
-            {/* Sound buttons */}
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-4">
               {AMBIENT_SOUNDS.map((sound) => (
                 <button
@@ -594,7 +614,6 @@ export default function FlashcardsPage() {
               ))}
             </div>
             
-            {/* Volume control */}
             <div className="flex items-center gap-3">
               <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
@@ -647,7 +666,7 @@ export default function FlashcardsPage() {
             
             {/* Answer buttons - only show when revealed */}
             <AnswerButtons
-              onRate={rateCard}
+              onRate={handleRateCard}
               disabled={!isRevealed}
               intervalPreview={intervalPreview}
             />
@@ -671,6 +690,14 @@ export default function FlashcardsPage() {
           onSave={handleSaveCard}
           onCancel={() => setShowEditor(false)}
           onDelete={handleDeleteCard}
+        />
+      )}
+
+      {/* Achievement Notification */}
+      {newAchievement && (
+        <AchievementNotification
+          achievement={newAchievement}
+          onClose={() => setNewAchievement(null)}
         />
       )}
     </div>

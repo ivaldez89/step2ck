@@ -5,34 +5,8 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { DeckFilterPanel } from '@/components/deck/DeckFilterPanel';
 import { PerformanceAnalytics } from '@/components/deck/PerformanceAnalytics';
+import { StudyStatsDisplay } from '@/components/study/StudyStats';
 import { useFlashcards } from '@/hooks/useFlashcards';
-
-// Rapid review stats type
-interface RapidReviewStats {
-  totalCardsReviewed: number;
-  totalSessions: number;
-  lastSessionDate: string | null;
-  todayCardsReviewed: number;
-  streak: number;
-}
-
-// Get rapid review stats from localStorage
-function getRapidReviewStats(): RapidReviewStats {
-  if (typeof window === 'undefined') {
-    return { totalCardsReviewed: 0, totalSessions: 0, lastSessionDate: null, todayCardsReviewed: 0, streak: 0 };
-  }
-  const stored = localStorage.getItem('step2_rapid_review_stats');
-  if (stored) {
-    const stats = JSON.parse(stored);
-    // Reset today's count if it's a new day
-    const today = new Date().toDateString();
-    if (stats.lastSessionDate !== today) {
-      stats.todayCardsReviewed = 0;
-    }
-    return stats;
-  }
-  return { totalCardsReviewed: 0, totalSessions: 0, lastSessionDate: null, todayCardsReviewed: 0, streak: 0 };
-}
 
 export default function HomePage() {
   const { 
@@ -47,13 +21,6 @@ export default function HomePage() {
     setFilters,
     clearFilters
   } = useFlashcards();
-
-  const [rapidStats, setRapidStats] = useState<RapidReviewStats>({ totalCardsReviewed: 0, totalSessions: 0, lastSessionDate: null, todayCardsReviewed: 0, streak: 0 });
-
-  // Load rapid review stats on mount
-  useEffect(() => {
-    setRapidStats(getRapidReviewStats());
-  }, []);
 
   if (isLoading) {
     return (
@@ -176,40 +143,42 @@ export default function HomePage() {
           />
         </section>
 
-        {/* Rapid Review Stats Card */}
-        {rapidStats.totalCardsReviewed > 0 && (
-          <section className="mb-8">
-            <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-amber-200 p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        {/* AI Card Generator CTA */}
+        <section className="mb-8">
+          <Link
+            href="/generate"
+            className="block group p-6 bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 rounded-2xl shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300 text-white"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center">
+                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900">Rapid Review Progress</h3>
-                {rapidStats.streak > 1 && (
-                  <span className="ml-auto px-3 py-1 bg-orange-100 text-orange-700 text-sm font-medium rounded-full flex items-center gap-1">
-                    🔥 {rapidStats.streak} day streak!
-                  </span>
-                )}
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="text-center p-3 bg-white/60 rounded-xl">
-                  <p className="text-2xl font-bold text-amber-600">{rapidStats.todayCardsReviewed}</p>
-                  <p className="text-sm text-slate-600">Today</p>
-                </div>
-                <div className="text-center p-3 bg-white/60 rounded-xl">
-                  <p className="text-2xl font-bold text-amber-600">{rapidStats.totalCardsReviewed}</p>
-                  <p className="text-sm text-slate-600">Total Reviews</p>
-                </div>
-                <div className="text-center p-3 bg-white/60 rounded-xl">
-                  <p className="text-2xl font-bold text-amber-600">{rapidStats.totalSessions}</p>
-                  <p className="text-sm text-slate-600">Sessions</p>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl font-bold group-hover:translate-x-1 transition-transform">
+                      AI Card Generator
+                    </h3>
+                    <span className="px-2 py-0.5 text-xs bg-white/20 rounded-full">NEW</span>
+                  </div>
+                  <p className="text-white/80 mt-1">
+                    Paste lecture notes or describe a topic → get instant flashcards
+                  </p>
                 </div>
               </div>
+              <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
             </div>
-          </section>
-        )}
+          </Link>
+        </section>
+
+        {/* Your Progress (Gamification) */}
+        <section className="mb-8">
+          <StudyStatsDisplay />
+        </section>
 
         {/* Filter Panel and Analytics */}
         <section className="grid md:grid-cols-2 gap-6 mb-8">
@@ -226,7 +195,7 @@ export default function HomePage() {
         </section>
         
         {/* Quick Actions */}
-        <section className="grid md:grid-cols-3 gap-6">
+        <section className="grid md:grid-cols-4 gap-6">
           {/* Shelf Exam Selector */}
           <Link
             href="/shelf"
@@ -243,7 +212,7 @@ export default function HomePage() {
                   Shelf Exams
                 </h3>
                 <p className="text-white/80 mt-1 text-sm">
-                  Pick a rotation to study targeted content
+                  Targeted rotation content
                 </p>
               </div>
             </div>
@@ -266,7 +235,7 @@ export default function HomePage() {
                   Study Session
                 </h3>
                 <p className="text-slate-600 mt-1 text-sm">
-                  Review due cards with spaced repetition
+                  Spaced repetition review
                 </p>
               </div>
             </div>
@@ -280,7 +249,7 @@ export default function HomePage() {
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center group-hover:bg-emerald-500 transition-colors">
                 <svg className="w-6 h-6 text-emerald-600 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                 </svg>
               </div>
               <div>
@@ -288,7 +257,29 @@ export default function HomePage() {
                   Import Cards
                 </h3>
                 <p className="text-slate-600 mt-1 text-sm">
-                  Add new flashcards from JSON files
+                  Add from JSON files
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          {/* AI Generate */}
+          <Link
+            href="/generate"
+            className="group p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-violet-200 transition-all duration-300"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-violet-100 flex items-center justify-center group-hover:bg-violet-500 transition-colors">
+                <svg className="w-6 h-6 text-violet-600 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900 group-hover:text-violet-600 transition-colors">
+                  AI Generate
+                </h3>
+                <p className="text-slate-600 mt-1 text-sm">
+                  Create cards from notes
                 </p>
               </div>
             </div>
