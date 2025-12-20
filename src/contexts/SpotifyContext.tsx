@@ -1,0 +1,169 @@
+'use client';
+
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+
+// Curated study playlists (Spotify embed URIs)
+export const STUDY_PLAYLISTS = [
+  {
+    id: 'focus',
+    name: 'Deep Focus',
+    description: 'Instrumental focus music',
+    spotifyUri: '37i9dQZF1DWZeKCadgRdKQ',
+    color: 'from-purple-500 to-indigo-600',
+  },
+  {
+    id: 'lofi',
+    name: 'Lo-Fi Study',
+    description: 'Chill beats to study to',
+    spotifyUri: '37i9dQZF1DWWQRwui0ExPn',
+    color: 'from-pink-500 to-rose-600',
+  },
+  {
+    id: 'classical',
+    name: 'Classical Focus',
+    description: 'Classical music for concentration',
+    spotifyUri: '37i9dQZF1DWV0gynK7G6pD',
+    color: 'from-amber-500 to-orange-600',
+  },
+  {
+    id: 'ambient',
+    name: 'Peaceful Piano',
+    description: 'Relaxing piano melodies',
+    spotifyUri: '37i9dQZF1DX4sWSpwq3LiO',
+    color: 'from-teal-500 to-cyan-600',
+  },
+  {
+    id: 'nature',
+    name: 'Nature Sounds',
+    description: 'Calming nature ambience',
+    spotifyUri: '37i9dQZF1DX4PP3DA4J0N8',
+    color: 'from-emerald-500 to-green-600',
+  },
+  {
+    id: 'jazz',
+    name: 'Jazz Study',
+    description: 'Smooth jazz for studying',
+    spotifyUri: '37i9dQZF1DX0SM0LYsmbMT',
+    color: 'from-blue-500 to-indigo-600',
+  },
+];
+
+export type Playlist = typeof STUDY_PLAYLISTS[number];
+
+interface SpotifyContextType {
+  isConnected: boolean;
+  selectedPlaylist: string | null;
+  isPlayerVisible: boolean;
+  isMinimized: boolean;
+  connect: () => void;
+  disconnect: () => void;
+  selectPlaylist: (playlistId: string) => void;
+  stopPlayback: () => void;
+  toggleMinimize: () => void;
+  hidePlayer: () => void;
+  showPlayer: () => void;
+  getSelectedPlaylistData: () => Playlist | undefined;
+}
+
+const SpotifyContext = createContext<SpotifyContextType | undefined>(undefined);
+
+export function SpotifyProvider({ children }: { children: ReactNode }) {
+  const [isConnected, setIsConnected] = useState(false);
+  const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null);
+  const [isPlayerVisible, setIsPlayerVisible] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+
+  // Check for saved Spotify connection and playlist on mount
+  useEffect(() => {
+    const savedConnection = localStorage.getItem('tribewellmd_spotify_connected');
+    const savedPlaylist = localStorage.getItem('tribewellmd_spotify_playlist');
+    const savedMinimized = localStorage.getItem('tribewellmd_spotify_minimized');
+
+    if (savedConnection === 'true') {
+      setIsConnected(true);
+    }
+    if (savedPlaylist) {
+      setSelectedPlaylist(savedPlaylist);
+      setIsPlayerVisible(true);
+    }
+    if (savedMinimized === 'true') {
+      setIsMinimized(true);
+    }
+  }, []);
+
+  const connect = () => {
+    setIsConnected(true);
+    localStorage.setItem('tribewellmd_spotify_connected', 'true');
+  };
+
+  const disconnect = () => {
+    setIsConnected(false);
+    setSelectedPlaylist(null);
+    setIsPlayerVisible(false);
+    localStorage.removeItem('tribewellmd_spotify_connected');
+    localStorage.removeItem('tribewellmd_spotify_playlist');
+  };
+
+  const selectPlaylist = (playlistId: string) => {
+    setSelectedPlaylist(playlistId);
+    setIsPlayerVisible(true);
+    setIsMinimized(false);
+    localStorage.setItem('tribewellmd_spotify_playlist', playlistId);
+    localStorage.setItem('tribewellmd_spotify_minimized', 'false');
+  };
+
+  const stopPlayback = () => {
+    setSelectedPlaylist(null);
+    setIsPlayerVisible(false);
+    localStorage.removeItem('tribewellmd_spotify_playlist');
+  };
+
+  const toggleMinimize = () => {
+    const newMinimized = !isMinimized;
+    setIsMinimized(newMinimized);
+    localStorage.setItem('tribewellmd_spotify_minimized', String(newMinimized));
+  };
+
+  const hidePlayer = () => {
+    setIsPlayerVisible(false);
+  };
+
+  const showPlayer = () => {
+    if (selectedPlaylist) {
+      setIsPlayerVisible(true);
+    }
+  };
+
+  const getSelectedPlaylistData = () => {
+    return STUDY_PLAYLISTS.find(p => p.id === selectedPlaylist);
+  };
+
+  return (
+    <SpotifyContext.Provider
+      value={{
+        isConnected,
+        selectedPlaylist,
+        isPlayerVisible,
+        isMinimized,
+        connect,
+        disconnect,
+        selectPlaylist,
+        stopPlayback,
+        toggleMinimize,
+        hidePlayer,
+        showPlayer,
+        getSelectedPlaylistData,
+      }}
+    >
+      {children}
+    </SpotifyContext.Provider>
+  );
+}
+
+export function useSpotify() {
+  const context = useContext(SpotifyContext);
+  if (context === undefined) {
+    throw new Error('useSpotify must be used within a SpotifyProvider');
+  }
+  return context;
+}

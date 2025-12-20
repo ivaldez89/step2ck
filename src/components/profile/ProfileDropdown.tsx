@@ -1,0 +1,213 @@
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
+import { getUserProfile, getUserInitials, getDisplayName, type UserProfile } from '@/lib/storage/profileStorage';
+import { getConnectionCount, getPendingRequestCount } from '@/lib/storage/chatStorage';
+
+interface ProfileDropdownProps {
+  className?: string;
+}
+
+export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [connectionCount, setConnectionCount] = useState(0);
+  const [pendingCount, setPendingCount] = useState(0);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Load profile on mount
+  useEffect(() => {
+    setProfile(getUserProfile());
+    setConnectionCount(getConnectionCount());
+    setPendingCount(getPendingRequestCount());
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        isOpen &&
+        dropdownRef.current &&
+        buttonRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
+
+  const initials = getUserInitials();
+  const displayName = getDisplayName();
+  const hasProfile = profile?.firstName && profile?.lastName;
+
+  return (
+    <div className={`relative ${className}`}>
+      {/* Profile Button */}
+      <button
+        ref={buttonRef}
+        onClick={() => setIsOpen(!isOpen)}
+        className="relative flex items-center gap-2 p-1 rounded-full transition-all duration-200 hover:ring-2 hover:ring-teal-500/30 focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+        aria-label="Profile menu"
+      >
+        {/* Avatar */}
+        {profile?.avatar ? (
+          <img
+            src={profile.avatar}
+            alt={displayName}
+            className="w-9 h-9 rounded-full object-cover border-2 border-white dark:border-slate-700 shadow-md"
+          />
+        ) : (
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-teal-400 via-cyan-500 to-indigo-500 flex items-center justify-center text-white text-sm font-bold shadow-md border-2 border-white dark:border-slate-700">
+            {initials}
+          </div>
+        )}
+
+        {/* Online indicator */}
+        <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" />
+      </button>
+
+      {/* Dropdown Panel */}
+      {isOpen && (
+        <div
+          ref={dropdownRef}
+          className="absolute top-full right-0 mt-2 w-72 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50"
+        >
+          {/* Profile Header */}
+          <div className="relative">
+            {/* Gradient Banner */}
+            <div className="h-16 bg-gradient-to-r from-teal-500 via-cyan-500 to-indigo-500" />
+
+            {/* Avatar overlapping banner */}
+            <div className="absolute -bottom-8 left-4">
+              {profile?.avatar ? (
+                <img
+                  src={profile.avatar}
+                  alt={displayName}
+                  className="w-16 h-16 rounded-xl object-cover border-4 border-white dark:border-slate-800 shadow-lg"
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-teal-400 via-cyan-500 to-indigo-500 flex items-center justify-center text-white text-xl font-bold border-4 border-white dark:border-slate-800 shadow-lg">
+                  {initials}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Profile Info */}
+          <div className="pt-10 pb-4 px-4">
+            <h3 className="font-bold text-slate-900 dark:text-white text-lg">
+              {hasProfile ? displayName : 'Welcome!'}
+            </h3>
+            {profile?.currentYear && (
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                {profile.currentYear} {profile.school ? `at ${profile.school}` : ''}
+              </p>
+            )}
+            {!hasProfile && (
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Set up your profile to get started
+              </p>
+            )}
+
+            {/* Quick Stats */}
+            {hasProfile && (
+              <div className="flex gap-4 mt-3 pt-3 border-t border-slate-100 dark:border-slate-700">
+                <div className="text-center relative">
+                  <div className="text-lg font-bold text-teal-600 dark:text-teal-400">{connectionCount}</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">Connections</div>
+                  {pendingCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                      {pendingCount}
+                    </span>
+                  )}
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">0</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">Study Hours</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-amber-600 dark:text-amber-400">0</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">Day Streak</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Menu Items */}
+          <div className="border-t border-slate-100 dark:border-slate-700">
+            <Link
+              href="/profile"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-gradient-to-r hover:from-teal-50 hover:to-transparent dark:hover:from-teal-900/20 dark:hover:to-transparent transition-all duration-200"
+            >
+              <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
+                <svg className="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <div>
+                <span className="block text-sm font-medium">View Profile</span>
+                <span className="block text-xs text-slate-500 dark:text-slate-400">Edit your information</span>
+              </div>
+            </Link>
+
+            <Link
+              href="/profile/settings"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-gradient-to-r hover:from-slate-50 hover:to-transparent dark:hover:from-slate-700/30 dark:hover:to-transparent transition-all duration-200"
+            >
+              <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700/50 flex items-center justify-center">
+                <svg className="w-4 h-4 text-slate-600 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div>
+                <span className="block text-sm font-medium">Settings</span>
+                <span className="block text-xs text-slate-500 dark:text-slate-400">Privacy & preferences</span>
+              </div>
+            </Link>
+
+            <Link
+              href="/study/progress"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-transparent dark:hover:from-indigo-900/20 dark:hover:to-transparent transition-all duration-200"
+            >
+              <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <div>
+                <span className="block text-sm font-medium">Study Progress</span>
+                <span className="block text-xs text-slate-500 dark:text-slate-400">View your analytics</span>
+              </div>
+            </Link>
+          </div>
+
+          {/* Sign Out (placeholder for future auth) */}
+          <div className="border-t border-slate-100 dark:border-slate-700 p-2">
+            <button
+              onClick={() => {
+                // Future: implement sign out
+                setIsOpen(false);
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span className="text-sm">Sign Out</span>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
