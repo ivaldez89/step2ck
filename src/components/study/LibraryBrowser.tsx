@@ -11,7 +11,7 @@ import {
   getConceptsForSubcategory
 } from '@/data/tribewellmd-library';
 import { understandingCards } from '@/data/understanding-cards';
-import { ClinicalConcept } from '@/data/concept-taxonomy';
+import type { ClinicalConcept } from '@/types';
 
 type LibraryView = 'shelves' | 'topics';
 
