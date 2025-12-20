@@ -632,8 +632,8 @@ export default function StudyPage() {
                       </div>
                       <div className="w-px h-10 bg-white/20" />
                       <div className="text-center">
-                        <p className="text-3xl font-bold text-white">{stats.streak || 0}</p>
-                        <p className="text-white/60 text-sm">Day Streak</p>
+                        <p className="text-3xl font-bold text-white">{stats.averageEase.toFixed(0)}%</p>
+                        <p className="text-white/60 text-sm">Avg Ease</p>
                       </div>
                     </div>
                   </div>
