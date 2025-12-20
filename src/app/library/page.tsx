@@ -1,125 +1,394 @@
 'use client';
 
-import { Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { LibraryBrowser } from '@/components/study/LibraryBrowser';
-import { useFlashcards } from '@/hooks/useFlashcards';
+import { CLINICAL_CARDS, searchByMultipleCodes, getCardsByCategory, getQBankStats, type ClinicalCard } from '@/data/qbank-cards';
 
-function LibraryContent() {
-  const searchParams = useSearchParams();
-  const viewParam = searchParams.get('view');
-  const defaultView = viewParam === 'topics' ? 'topics' : 'shelves';
+export default function LibraryPage() {
+  const [codeInput, setCodeInput] = useState('');
+  const [searchResults, setSearchResults] = useState<ClinicalCard[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [selectedCards, setSelectedCards] = useState<string[]>([]);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewCard, setPreviewCard] = useState<ClinicalCard | null>(null);
 
-  const { stats } = useFlashcards();
+  const stats = getQBankStats();
+
+  const handleSearch = () => {
+    if (!codeInput.trim()) return;
+    const results = searchByMultipleCodes(codeInput);
+    setSearchResults(results);
+    setHasSearched(true);
+    setSelectedCards(results.map(c => c.id));
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const toggleCardSelection = (cardId: string) => {
+    setSelectedCards(prev =>
+      prev.includes(cardId)
+        ? prev.filter(id => id !== cardId)
+        : [...prev, cardId]
+    );
+  };
+
+  const handleStartStudy = () => {
+    // In a full implementation, this would add selected cards to study session
+    alert(`Starting study session with ${selectedCards.length} cards!`);
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
-      <Header stats={stats} />
+      <Header />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-4">
-            <Link href="/study" className="hover:text-teal-600 transition-colors">
-              Study
-            </Link>
-            <span>/</span>
-            <span className="text-slate-900 dark:text-white">TribeWellMD Library</span>
-          </div>
-
-          <div className="flex items-start justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-                TribeWellMD <span className="bg-gradient-to-r from-teal-600 to-cyan-500 bg-clip-text text-transparent">Card Library</span>
-              </h1>
-              <p className="text-lg text-slate-600 dark:text-slate-400">
-                Pre-built understanding cards based on clinical decision points. Master the "why" behind each diagnosis and treatment.
-              </p>
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Hero Section */}
+        <section className="mb-8">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-500 via-cyan-500 to-blue-600 p-8 md:p-10 shadow-2xl">
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
+              <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
             </div>
 
-            <Link
-              href="/study"
-              className="flex items-center gap-2 px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              Back to Study
-            </Link>
+            <div className="relative z-10">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur rounded-full text-white/90 text-sm font-medium mb-4">
+                <span className="w-2 h-2 bg-teal-300 rounded-full animate-pulse" />
+                <span>QBank-Linked Cards</span>
+              </div>
+
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                TribeWellMD <span className="text-teal-200">Card Library</span>
+              </h1>
+
+              <p className="text-white/80 text-lg max-w-2xl mb-6">
+                Enter your UWorld or AMBOSS question codes to get targeted review cards.
+              </p>
+
+              {/* Stats */}
+              <div className="flex items-center gap-4 md:gap-6 mb-6">
+                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl font-bold text-white">{stats.totalCards}</p>
+                  <p className="text-white/60 text-xs">Cards</p>
+                </div>
+                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl font-bold text-white">{stats.uworldLinked}</p>
+                  <p className="text-white/60 text-xs">UWorld</p>
+                </div>
+                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl font-bold text-white">{stats.ambossLinked}</p>
+                  <p className="text-white/60 text-xs">AMBOSS</p>
+                </div>
+              </div>
+
+              {/* Code Search */}
+              <div className="flex gap-3 max-w-xl">
+                <input
+                  type="text"
+                  value={codeInput}
+                  onChange={(e) => setCodeInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Enter codes (e.g., 4523, z5ar5O, 102345)"
+                  className="flex-1 px-5 py-4 rounded-xl bg-white/20 backdrop-blur border border-white/30 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 text-lg"
+                />
+                <button
+                  onClick={handleSearch}
+                  className="px-8 py-4 bg-white hover:bg-teal-50 text-teal-600 font-bold rounded-xl shadow-lg transition-all hover:scale-105"
+                >
+                  Search
+                </button>
+              </div>
+              <p className="text-white/60 text-sm mt-2">
+                Separate multiple codes with commas or spaces
+              </p>
+            </div>
           </div>
-        </div>
+        </section>
 
-        {/* Feature Pills */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 text-sm rounded-full">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
-            Understanding-Based
-          </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 text-sm rounded-full">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-            High-Yield Focused
-          </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-sm rounded-full">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-            QBank Mapped
-          </span>
-        </div>
+        {/* Search Results */}
+        {hasSearched && (
+          <section className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                {searchResults.length > 0
+                  ? `Found ${searchResults.length} card${searchResults.length !== 1 ? 's' : ''}`
+                  : 'No cards found'}
+              </h2>
+              {searchResults.length > 0 && (
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-slate-500 dark:text-slate-400">
+                    {selectedCards.length} selected
+                  </span>
+                  <button
+                    onClick={handleStartStudy}
+                    disabled={selectedCards.length === 0}
+                    className="px-5 py-2.5 bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-medium rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-teal-500/25 transition-all"
+                  >
+                    Start Study Session
+                  </button>
+                </div>
+              )}
+            </div>
 
-        {/* Library Browser */}
-        <div className="bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
-          <LibraryBrowser defaultView={defaultView as 'shelves' | 'topics'} />
-        </div>
+            {searchResults.length > 0 ? (
+              <div className="space-y-3">
+                {searchResults.map((card) => (
+                  <div
+                    key={card.id}
+                    className={`p-5 bg-white dark:bg-slate-800 rounded-2xl border-2 transition-all cursor-pointer ${
+                      selectedCards.includes(card.id)
+                        ? 'border-teal-500 shadow-lg shadow-teal-500/10'
+                        : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                    }`}
+                    onClick={() => toggleCardSelection(card.id)}
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium rounded">
+                            {card.subcategory}
+                          </span>
+                          <span className="px-2.5 py-1 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 text-xs font-medium rounded">
+                            {card.type}
+                          </span>
+                          {card.uworldId && (
+                            <span className="px-2.5 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium rounded">
+                              UW: {card.uworldId}
+                            </span>
+                          )}
+                          {card.ambossId && (
+                            <span className="px-2.5 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-medium rounded">
+                              AMB: {card.ambossId}
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="font-semibold text-slate-900 dark:text-white mb-1">
+                          {card.topic}
+                        </h3>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
+                          {card.question}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPreviewCard(card);
+                            setShowPreview(true);
+                          }}
+                          className="p-2 text-slate-400 hover:text-teal-500 transition-colors"
+                        >
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        </button>
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                          selectedCards.includes(card.id)
+                            ? 'bg-teal-500 border-teal-500'
+                            : 'border-slate-300 dark:border-slate-600'
+                        }`}>
+                          {selectedCards.includes(card.id) && (
+                            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-8 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                  <svg className="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-1">No cards found for those codes</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  Try different codes or browse by category below
+                </p>
+              </div>
+            )}
+          </section>
+        )}
 
-        {/* Bottom CTA */}
-        <div className="mt-8 text-center">
-          <p className="text-slate-500 dark:text-slate-400 mb-4">
-            Want to add your own cards?
-          </p>
-          <div className="flex items-center justify-center gap-4">
-            <Link
-              href="/import"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium rounded-xl border border-slate-200 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-700 transition-colors"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-              </svg>
-              Import Cards
-            </Link>
-            <Link
-              href="/generate"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-medium rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-              </svg>
-              AI Generate
-            </Link>
+        {/* Browse by Category */}
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Browse by Category</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            {['Internal Medicine', 'Family Medicine'].map((category) => {
+              const categoryCards = getCardsByCategory(category);
+              return (
+                <div
+                  key={category}
+                  className="p-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-700 transition-all cursor-pointer group"
+                  onClick={() => {
+                    setSearchResults(categoryCards);
+                    setHasSearched(true);
+                    setSelectedCards(categoryCards.map(c => c.id));
+                  }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-semibold text-slate-900 dark:text-white mb-1">{category}</h3>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">
+                        {categoryCards.length} clinical vignette cards
+                      </p>
+                    </div>
+                    <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 dark:text-teal-400 group-hover:bg-teal-500 group-hover:text-white transition-colors">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        </div>
+        </section>
+
+        {/* How It Works */}
+        <section className="mb-8">
+          <div className="p-6 bg-gradient-to-br from-slate-100 to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">How to Use</h2>
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
+                <div>
+                  <h3 className="font-medium text-slate-900 dark:text-white text-sm">Missed a Question?</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Copy the question ID from UWorld or AMBOSS</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
+                <div>
+                  <h3 className="font-medium text-slate-900 dark:text-white text-sm">Enter the Code</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Paste it in the search box above</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
+                <div>
+                  <h3 className="font-medium text-slate-900 dark:text-white text-sm">Study the Concept</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Master the clinical reasoning behind the question</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Sample Codes to Try */}
+        <section className="mb-8">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Sample Codes to Try</h2>
+          <div className="flex flex-wrap gap-2">
+            {['4523', '5127', '1823', 'z5ar5O', 'hT67wQ', '4911'].map((code) => (
+              <button
+                key={code}
+                onClick={() => {
+                  setCodeInput(code);
+                  const results = searchByMultipleCodes(code);
+                  setSearchResults(results);
+                  setHasSearched(true);
+                  setSelectedCards(results.map(c => c.id));
+                }}
+                className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-mono text-slate-600 dark:text-slate-300 hover:border-teal-500 hover:text-teal-600 transition-all"
+              >
+                {code}
+              </button>
+            ))}
+          </div>
+        </section>
       </main>
 
       <Footer />
-    </div>
-  );
-}
 
-export default function LibraryPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
-        <div className="animate-spin w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full" />
-      </div>
-    }>
-      <LibraryContent />
-    </Suspense>
+      {/* Card Preview Modal */}
+      {showPreview && previewCard && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setShowPreview(false)}>
+          <div className="w-full max-w-2xl bg-white dark:bg-slate-800 rounded-3xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            {/* Card Header */}
+            <div className="p-4 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="font-semibold text-slate-900 dark:text-white">{previewCard.subcategory}</span>
+                  <span className="text-slate-400">•</span>
+                  <span className="text-slate-600 dark:text-slate-400">{previewCard.topic}</span>
+                </div>
+                <span className="px-3 py-1 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 text-sm font-medium rounded-full">
+                  {previewCard.type}
+                </span>
+              </div>
+            </div>
+
+            {/* Question */}
+            <div className="p-6 border-b border-slate-100 dark:border-slate-700">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 dark:text-teal-400 font-bold flex-shrink-0">
+                  Q
+                </div>
+                <p className="text-lg text-slate-900 dark:text-white leading-relaxed">
+                  {previewCard.question}
+                </p>
+              </div>
+            </div>
+
+            {/* Answer */}
+            <div className="p-6 border-b border-slate-100 dark:border-slate-700">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold flex-shrink-0">
+                  A
+                </div>
+                <div>
+                  <p className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
+                    {previewCard.answer}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Clinical Pearl */}
+            <div className="p-6 bg-amber-50 dark:bg-amber-900/20">
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-amber-800 dark:text-amber-200 leading-relaxed">
+                  {previewCard.clinicalPearl}
+                </p>
+              </div>
+            </div>
+
+            {/* Tags & Codes */}
+            <div className="p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-wrap gap-2">
+                  {previewCard.tags.map((tag, i) => (
+                    <span key={i} className="px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs rounded">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setShowPreview(false)}
+                  className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
