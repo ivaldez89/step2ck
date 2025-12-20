@@ -260,3 +260,9 @@ export interface DecisionRecord {
   timeSpentMs: number;
   timestamp: string;
 }
+
+// ============================================
+// Tribes Types (Group Communities)
+// ============================================
+
+export * from './tribes';

@@ -1,8 +1,10 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ThemeToggle } from '@/components/theme/ThemeProvider';
+import { ProfileDropdown } from '@/components/profile/ProfileDropdown';
 
 interface NavLinkProps {
   href: string;
@@ -12,14 +14,14 @@ interface NavLinkProps {
 function NavLink({ href, children }: NavLinkProps) {
   const pathname = usePathname();
   const isActive = pathname === href;
-  
+
   return (
     <Link
       href={href}
       className={`
         px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
-        ${isActive 
-          ? 'bg-emerald-600 text-white shadow-md' 
+        ${isActive
+          ? 'bg-emerald-600 text-white shadow-md'
           : 'text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'
         }
       `}
@@ -28,6 +30,118 @@ function NavLink({ href, children }: NavLinkProps) {
     </Link>
   );
 }
+
+interface DropdownItem {
+  label: string;
+  href: string;
+  description?: string;
+}
+
+interface NavDropdownProps {
+  label: string;
+  href: string;
+  items: DropdownItem[];
+}
+
+function NavDropdown({ label, href, items }: NavDropdownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pathname = usePathname();
+  const isActive = pathname === href || pathname.startsWith(href + '/');
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setIsOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsOpen(false);
+    }, 150);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      className="relative"
+      ref={dropdownRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <Link
+        href={href}
+        className={`
+          flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+          ${isActive
+            ? 'bg-emerald-600 text-white shadow-md'
+            : 'text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'
+          }
+        `}
+      >
+        {label}
+        <svg className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </Link>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 pt-1 w-64 z-50">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-2">
+            {items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="block px-4 py-3 border-l-2 border-transparent hover:border-teal-500 hover:bg-gradient-to-r hover:from-teal-50 hover:to-transparent dark:hover:from-teal-900/20 dark:hover:to-transparent transition-all duration-200"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="block text-sm font-medium text-slate-900 dark:text-white">{item.label}</span>
+                {item.description && (
+                  <span className="block text-xs text-slate-500 dark:text-slate-400 mt-0.5">{item.description}</span>
+                )}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Dropdown menu configurations
+const studyDropdownItems: DropdownItem[] = [
+  { label: 'Study Dashboard', href: '/study', description: 'Overview of your progress' },
+  { label: 'Flashcards', href: '/study/flashcards', description: 'Spaced repetition review' },
+  { label: 'Rapid Review', href: '/study/rapid-review', description: 'Quick concept review' },
+  { label: 'Progress', href: '/study/progress', description: 'Track your learning' },
+  { label: 'Card Library', href: '/library', description: 'QBank-linked cards' },
+];
+
+const casesDropdownItems: DropdownItem[] = [
+  { label: 'Browse Cases', href: '/cases', description: 'Clinical case library' },
+  { label: 'Create Case', href: '/cases/create', description: 'Build a new case' },
+];
+
+const wellnessDropdownItems: DropdownItem[] = [
+  { label: 'Wellness Hub', href: '/wellness', description: 'Your wellness dashboard' },
+  { label: 'Resources', href: '/resources', description: 'Visual guides & infographics' },
+];
+
+const communityDropdownItems: DropdownItem[] = [
+  { label: 'Community Hub', href: '/community', description: 'Connect with your tribe' },
+  { label: 'Tribes', href: '/tribes', description: 'Join group communities' },
+  { label: 'PreMed', href: '/premed', description: 'Resources for pre-med students' },
+];
 
 interface HeaderProps {
   stats?: {
@@ -53,22 +167,20 @@ export function Header({ stats }: HeaderProps) {
             </div>
           </Link>
 
-          {/* Navigation */}
-          <nav className="hidden md:flex items-center gap-2">
+          {/* Navigation with Dropdowns */}
+          <nav className="hidden md:flex items-center gap-1">
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/study">Study</NavLink>
-            <NavLink href="/cases">Cases</NavLink>
-            <NavLink href="/wellness">Wellness</NavLink>
-            <NavLink href="/resources">Resources</NavLink>
-            <NavLink href="/community">Community</NavLink>
-            <NavLink href="/premed">PreMed</NavLink>
+            <NavDropdown label="Study" href="/study" items={studyDropdownItems} />
+            <NavDropdown label="Cases" href="/cases" items={casesDropdownItems} />
+            <NavDropdown label="Wellness" href="/wellness" items={wellnessDropdownItems} />
+            <NavDropdown label="Community" href="/community" items={communityDropdownItems} />
           </nav>
           
-          {/* Right side: Theme toggle & Stats */}
+          {/* Right side: Theme toggle, Stats & Profile */}
           <div className="flex items-center gap-3">
             {/* Theme Toggle */}
             <ThemeToggle />
-            
+
             {/* Stats Badge */}
             {stats && stats.dueToday > 0 && (
               <>
@@ -81,7 +193,7 @@ export function Header({ stats }: HeaderProps) {
                     {stats.dueToday} due
                   </span>
                 </div>
-                
+
                 <Link
                   href="/study/flashcards"
                   className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-teal-600 text-white shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 transition-shadow"
@@ -92,6 +204,9 @@ export function Header({ stats }: HeaderProps) {
                 </Link>
               </>
             )}
+
+            {/* Profile Dropdown */}
+            <ProfileDropdown />
           </div>
         </div>
       </div>

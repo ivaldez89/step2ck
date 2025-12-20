@@ -1,0 +1,140 @@
+'use client';
+
+import Link from 'next/link';
+import type { Tribe } from '@/types/tribes';
+import { getTypeLabel } from '@/lib/storage/tribeStorage';
+
+interface TribeHeaderProps {
+  tribe: Tribe;
+  isMember: boolean;
+  isPrimary?: boolean;
+  onJoin?: () => void;
+  onLeave?: () => void;
+  onSetPrimary?: () => void;
+}
+
+export function TribeHeader({
+  tribe,
+  isMember,
+  isPrimary = false,
+  onJoin,
+  onLeave,
+  onSetPrimary,
+}: TribeHeaderProps) {
+  return (
+    <div className={`bg-gradient-to-r ${tribe.color} rounded-2xl overflow-hidden`}>
+      {/* Back button */}
+      <div className="px-4 py-3 bg-black/10">
+        <Link
+          href="/tribes"
+          className="inline-flex items-center gap-2 text-white/90 hover:text-white text-sm font-medium"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Tribes
+        </Link>
+      </div>
+
+      {/* Main header content */}
+      <div className="px-6 py-6">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          {/* Tribe info */}
+          <div className="flex items-start gap-4">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-4xl md:text-5xl shadow-lg">
+              {tribe.icon}
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 flex-wrap mb-1">
+                <h1 className="text-2xl md:text-3xl font-bold text-white">{tribe.name}</h1>
+                {tribe.visibility === 'private' && (
+                  <span className="px-2 py-0.5 text-xs font-medium bg-white/20 text-white rounded-full">
+                    Private
+                  </span>
+                )}
+                {isPrimary && (
+                  <span className="px-2 py-0.5 text-xs font-medium bg-yellow-400 text-yellow-900 rounded-full">
+                    Primary
+                  </span>
+                )}
+              </div>
+              <p className="text-white/80 text-sm md:text-base mb-2">{tribe.description}</p>
+              <div className="flex items-center gap-3 text-white/90 text-sm">
+                <span className="flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  {tribe.memberCount} member{tribe.memberCount !== 1 ? 's' : ''}
+                </span>
+                <span className="w-1 h-1 bg-white/50 rounded-full"></span>
+                <span className="px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                  {getTypeLabel(tribe.type)}
+                </span>
+                {tribe.rank > 0 && (
+                  <>
+                    <span className="w-1 h-1 bg-white/50 rounded-full"></span>
+                    <span className="flex items-center gap-1">
+                      <span className="text-lg">🏆</span>
+                      #{tribe.rank} on leaderboard
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex items-center gap-2 self-start">
+            {isMember ? (
+              <>
+                {!isPrimary && onSetPrimary && (
+                  <button
+                    onClick={onSetPrimary}
+                    className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm font-medium transition-colors"
+                  >
+                    Set as Primary
+                  </button>
+                )}
+                <button
+                  onClick={onLeave}
+                  className="px-4 py-2 bg-white/20 hover:bg-red-500/50 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  Leave Tribe
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={onJoin}
+                className="px-6 py-2 bg-white text-slate-800 rounded-lg font-semibold hover:bg-white/90 transition-colors shadow-lg"
+              >
+                Join Tribe
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Mission statement */}
+        <div className="mt-4 p-4 bg-white/10 rounded-xl backdrop-blur-sm">
+          <p className="text-xs text-white/70 uppercase tracking-wide mb-1">Mission</p>
+          <p className="text-white text-sm md:text-base">{tribe.mission}</p>
+        </div>
+
+        {/* Stats row */}
+        <div className="mt-4 grid grid-cols-3 gap-4">
+          <div className="text-center p-3 bg-white/10 rounded-xl">
+            <p className="text-2xl font-bold text-white">{tribe.totalPoints.toLocaleString()}</p>
+            <p className="text-xs text-white/70">Total Points</p>
+          </div>
+          <div className="text-center p-3 bg-white/10 rounded-xl">
+            <p className="text-2xl font-bold text-white">+{tribe.weeklyPoints.toLocaleString()}</p>
+            <p className="text-xs text-white/70">This Week</p>
+          </div>
+          <div className="text-center p-3 bg-white/10 rounded-xl">
+            <p className="text-2xl font-bold text-white">{tribe.memberCount}/{tribe.maxMembers}</p>
+            <p className="text-xs text-white/70">Members</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
