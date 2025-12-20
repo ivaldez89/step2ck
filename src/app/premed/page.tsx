@@ -1,6 +1,7 @@
 'use client';
 
 import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 import Link from 'next/link';
 
 const PREMED_FEATURES = [
@@ -259,19 +260,9 @@ export default function PreMedPage() {
           </button>
         </section>
 
-        {/* Back to Home */}
-        <div className="text-center mt-12">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to TribeWellMD
-          </Link>
-        </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

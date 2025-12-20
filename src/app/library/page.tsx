@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 import { LibraryBrowser } from '@/components/study/LibraryBrowser';
 import { useFlashcards } from '@/hooks/useFlashcards';
 
@@ -105,6 +106,8 @@ function LibraryContent() {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

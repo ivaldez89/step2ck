@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 
 // Type for PWA install prompt
 interface BeforeInstallPromptEvent extends Event {
@@ -308,18 +309,9 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* Footer */}
-        <footer className="text-center py-8 border-t border-slate-200 dark:border-slate-800">
-          <div className="flex items-center justify-center gap-1 mb-2">
-            <span className="font-serif text-xl font-bold text-slate-900 dark:text-white">Tribe</span>
-            <span className="font-serif text-xl font-bold text-teal-600">Well</span>
-            <span className="font-serif text-xl font-light text-indigo-600">MD</span>
-          </div>
-          <p className="text-slate-500 dark:text-slate-400 text-sm">
-            Study smart. Stay well. Find your tribe.
-          </p>
-        </footer>
       </main>
+
+      <Footer />
     </div>
   );
 }
