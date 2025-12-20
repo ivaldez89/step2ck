@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { useWellness } from '@/hooks/useWellness';
@@ -13,6 +14,7 @@ const ENERGY_EMOJIS = ['😴', '🥱', '😌', '⚡', '🔥'];
 const STRESS_EMOJIS = ['😌', '🙂', '😐', '😰', '🤯'];
 
 export default function WellnessPage() {
+  const searchParams = useSearchParams();
   const {
     profile,
     villages,
@@ -27,7 +29,15 @@ export default function WellnessPage() {
     getStats
   } = useWellness();
 
-  const [activeTab, setActiveTab] = useState<'journey' | 'village' | 'impact' | 'skills'>('journey');
+  const [activeTab, setActiveTab] = useState<'journey' | 'village' | 'impact' | 'skills'>('village');
+
+  // Handle tab query parameter from dropdown menu
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && ['journey', 'village', 'impact', 'skills'].includes(tabParam)) {
+      setActiveTab(tabParam as typeof activeTab);
+    }
+  }, [searchParams]);
   const [showMoodModal, setShowMoodModal] = useState(false);
   const [showDonateModal, setShowDonateModal] = useState(false);
   const [moodData, setMoodData] = useState({ mood: 3, energy: 3, stress: 3, notes: '' });
@@ -75,7 +85,7 @@ export default function WellnessPage() {
                 </div>
 
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
-                  Welcome to <span className="text-pink-200">TribeWell</span>
+                  Welcome to <span className="text-pink-200">TribeWellz</span>
                 </h1>
 
                 <p className="text-white/80 text-lg max-w-md mb-6">
@@ -132,8 +142,8 @@ export default function WellnessPage() {
         <section className="mb-6">
           <div className="flex items-center gap-2 p-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 w-fit">
             {[
-              { id: 'journey', label: 'My Journey', icon: '🧭' },
               { id: 'village', label: 'My Village', icon: '🏘️' },
+              { id: 'journey', label: 'My Journey', icon: '🧭' },
               { id: 'skills', label: 'Social Skills', icon: '🎯' },
               { id: 'impact', label: 'Social Impact', icon: '💚' },
             ].map((tab) => (
@@ -683,31 +693,6 @@ export default function WellnessPage() {
           </>
         )}
 
-        {/* Expert Section */}
-        <section className="mb-8">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 p-8">
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-            </div>
-
-            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-              <div className="w-24 h-24 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center flex-shrink-0 rotate-3 hover:rotate-0 transition-transform">
-                <span className="text-5xl">👩‍⚕️</span>
-              </div>
-              <div className="flex-1 text-center md:text-left">
-                <h3 className="text-2xl font-bold text-white mb-2">Built by Health Psychologists</h3>
-                <p className="text-purple-100 mb-4 max-w-2xl">
-                  TribeWell was founded by Dr. Marie Atallah, a licensed Health Psychologist who experienced firsthand the transformative power of community during her own recovery. Our evidence-based approach combines cutting-edge wellness science with the ancient wisdom of village support.
-                </p>
-                <div className="flex flex-wrap justify-center md:justify-start gap-3">
-                  <span className="px-4 py-2 bg-white/20 backdrop-blur rounded-full text-sm text-white font-medium">Evidence-based</span>
-                  <span className="px-4 py-2 bg-white/20 backdrop-blur rounded-full text-sm text-white font-medium">Community-driven</span>
-                  <span className="px-4 py-2 bg-white/20 backdrop-blur rounded-full text-sm text-white font-medium">Impact-focused</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
       {/* Mood Modal */}

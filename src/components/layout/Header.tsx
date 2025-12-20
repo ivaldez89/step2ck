@@ -134,7 +134,10 @@ const casesDropdownItems: DropdownItem[] = [
 ];
 
 const wellnessDropdownItems: DropdownItem[] = [
-  { label: 'Wellness Hub', href: '/wellness', description: 'Your wellness dashboard' },
+  { label: 'TribeWellz Hub', href: '/wellness', description: 'Your village & wellness home' },
+  { label: 'My Journey', href: '/wellness?tab=journey', description: 'Daily challenges & wellness journeys' },
+  { label: 'Social Skills', href: '/wellness?tab=skills', description: 'App-taught interpersonal skills' },
+  { label: 'Social Impact', href: '/wellness?tab=impact', description: 'Donate points to causes' },
 ];
 
 const communityDropdownItems: DropdownItem[] = [
