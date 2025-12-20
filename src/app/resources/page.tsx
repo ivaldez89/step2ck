@@ -126,22 +126,51 @@ export default function ResourcesPage() {
     : INFOGRAPHICS.filter(i => i.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900/20">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       <Header />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
-        <section className="text-center py-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full text-blue-700 dark:text-blue-300 text-sm font-medium mb-6">
-            <span>📖</span>
-            <span>High-Yield Resources</span>
+        <section className="mb-8">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 p-8 md:p-10 shadow-2xl">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
+              <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+              <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-blue-300/20 rounded-full blur-2xl" />
+            </div>
+
+            <div className="relative z-10">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur rounded-full text-white/90 text-sm font-medium mb-4">
+                <span className="w-2 h-2 bg-blue-300 rounded-full animate-pulse" />
+                <span>High-Yield Resources</span>
+              </div>
+
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
+                Resource <span className="text-blue-200">Library</span>
+              </h1>
+
+              <p className="text-white/80 text-lg max-w-2xl mb-6">
+                Visual guides, infographics, and quick references designed for rapid learning and board prep.
+              </p>
+
+              {/* Stats row */}
+              <div className="flex items-center gap-4 md:gap-6">
+                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold text-white">{INFOGRAPHICS.length}</p>
+                  <p className="text-white/60 text-xs">Infographics</p>
+                </div>
+                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold text-white">{GUIDES.length}</p>
+                  <p className="text-white/60 text-xs">Survival Guides</p>
+                </div>
+                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold text-white">{RESOURCE_CATEGORIES.length - 1}</p>
+                  <p className="text-white/60 text-xs">Categories</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
-            Resource <span className="text-blue-600 dark:text-blue-400">Library</span>
-          </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Visual guides, infographics, and quick references designed for rapid learning and board prep.
-          </p>
         </section>
 
         {/* Infographics Section */}
@@ -293,14 +322,25 @@ export default function ResourcesPage() {
         </section>
 
         {/* Contribute CTA */}
-        <section className="p-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl text-white text-center">
-          <h3 className="text-2xl font-bold mb-4">Have a Great Infographic?</h3>
-          <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-            We're building a community-curated library. If you've created helpful visual resources, share them with your fellow medical students!
-          </p>
-          <button className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-colors">
-            Submit a Resource
-          </button>
+        <section className="mb-8">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8">
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+            </div>
+
+            <div className="relative z-10 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center">
+                <span className="text-3xl">📤</span>
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-2">Have a Great Infographic?</h3>
+              <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
+                We're building a community-curated library. If you've created helpful visual resources, share them with your fellow medical students!
+              </p>
+              <button className="px-8 py-4 bg-white hover:bg-blue-50 text-blue-600 font-bold rounded-xl shadow-lg transition-all hover:scale-105">
+                Submit a Resource
+              </button>
+            </div>
+          </div>
         </section>
 
       </main>
