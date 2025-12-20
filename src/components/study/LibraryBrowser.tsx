@@ -172,7 +172,7 @@ export function LibraryBrowser({ defaultView = 'shelves', onStudySubcategory }: 
                         {concept.clinicalDecision}
                       </p>
                       <div className="flex flex-wrap gap-1 mt-2">
-                        {concept.testableAngles.slice(0, 3).map((angle, i) => (
+                        {concept.testableAngles.slice(0, 3).map((angle: string, i: number) => (
                           <span
                             key={i}
                             className="px-2 py-0.5 text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 rounded"
