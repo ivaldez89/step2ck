@@ -229,7 +229,12 @@ export default function CasesPage() {
             </div>
 
             {/* Box 2: Browse by Shelf / Category */}
-            <div className="relative p-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg shadow-indigo-500/25 text-white overflow-hidden">
+            <div className="relative p-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg shadow-indigo-500/25 text-white">
+              {/* Background decoration - separate from content */}
+              <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+              </div>
+
               <div className="relative z-10">
                 <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center mb-4">
                   <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -255,21 +260,6 @@ export default function CasesPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
-
-                    {showShelfDropdown && (
-                      <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 z-50 max-h-64 overflow-y-auto">
-                        {SHELF_CATEGORIES.map((shelf) => (
-                          <button
-                            key={shelf.id}
-                            onClick={() => handleShelfSelect(shelf.id)}
-                            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-left text-slate-900 dark:text-white"
-                          >
-                            <span className="text-lg">{shelf.icon}</span>
-                            <span className="text-sm font-medium">{shelf.name}</span>
-                          </button>
-                        ))}
-                      </div>
-                    )}
                   </div>
 
                   {/* Category Dropdown */}
@@ -286,41 +276,70 @@ export default function CasesPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
-
-                    {showCategoryDropdown && (
-                      <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 z-50 max-h-64 overflow-y-auto">
-                        {SYSTEM_CATEGORIES.map((cat) => {
-                          const count = getCasesBySystem(cat.id).length;
-                          return (
-                            <button
-                              key={cat.id}
-                              onClick={() => handleCategorySelect(cat.id)}
-                              disabled={count === 0}
-                              className={`w-full flex items-center justify-between px-4 py-3 transition-colors text-left ${
-                                count > 0
-                                  ? 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white'
-                                  : 'text-slate-400 dark:text-slate-600 cursor-not-allowed'
-                              }`}
-                            >
-                              <div className="flex items-center gap-3">
-                                <span className="text-lg">{cat.icon}</span>
-                                <span className="text-sm font-medium">{cat.name}</span>
-                              </div>
-                              <span className={`text-xs px-2 py-0.5 rounded-full ${
-                                count > 0
-                                  ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400'
-                                  : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
-                              }`}>
-                                {count}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
+
+              {/* Shelf Dropdown Menu - positioned outside overflow context */}
+              {showShelfDropdown && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowShelfDropdown(false)}
+                  />
+                  <div className="absolute left-6 right-6 top-[calc(100%-3.5rem)] mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 z-50 max-h-64 overflow-y-auto">
+                    {SHELF_CATEGORIES.map((shelf) => (
+                      <button
+                        key={shelf.id}
+                        onClick={() => handleShelfSelect(shelf.id)}
+                        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-left text-slate-900 dark:text-white first:rounded-t-xl last:rounded-b-xl"
+                      >
+                        <span className="text-lg">{shelf.icon}</span>
+                        <span className="text-sm font-medium">{shelf.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {/* Category Dropdown Menu - positioned outside overflow context */}
+              {showCategoryDropdown && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowCategoryDropdown(false)}
+                  />
+                  <div className="absolute left-6 right-6 top-full mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 z-50 max-h-64 overflow-y-auto">
+                    {SYSTEM_CATEGORIES.map((cat) => {
+                      const count = getCasesBySystem(cat.id).length;
+                      return (
+                        <button
+                          key={cat.id}
+                          onClick={() => handleCategorySelect(cat.id)}
+                          disabled={count === 0}
+                          className={`w-full flex items-center justify-between px-4 py-3 transition-colors text-left first:rounded-t-xl last:rounded-b-xl ${
+                            count > 0
+                              ? 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white'
+                              : 'text-slate-400 dark:text-slate-600 cursor-not-allowed'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-lg">{cat.icon}</span>
+                            <span className="text-sm font-medium">{cat.name}</span>
+                          </div>
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${
+                            count > 0
+                              ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400'
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+                          }`}>
+                            {count}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Box 3: Progress */}
