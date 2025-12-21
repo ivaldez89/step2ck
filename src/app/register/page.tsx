@@ -211,8 +211,8 @@ export default function RegisterPage() {
       <div className="relative w-full max-w-2xl">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-teal-500 via-cyan-500 to-indigo-500 rounded-2xl mb-4 shadow-xl shadow-teal-500/25">
-            <img src="/icons/icon.svg" alt="TribeWellMD" className="w-14 h-14" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-4 shadow-xl shadow-teal-500/25 overflow-hidden">
+            <img src="/logo.jpeg" alt="TribeWellMD" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-3xl font-bold mb-2">
             <span className="text-slate-900 dark:text-white">Join </span>
