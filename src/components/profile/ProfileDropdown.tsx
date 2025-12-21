@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { getUserProfile, getUserInitials, getDisplayName, type UserProfile } from '@/lib/storage/profileStorage';
 import { getConnectionCount, getPendingRequestCount } from '@/lib/storage/chatStorage';
 import { getUserTribes } from '@/lib/storage/tribeStorage';
+import { signOut } from '@/hooks/useAuth';
 import type { Tribe } from '@/types/tribes';
 
 interface ProfileDropdownProps {
@@ -23,9 +24,9 @@ export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
   const router = useRouter();
 
   const handleSignOut = () => {
-    // Clear the auth cookie by setting it to expire in the past
-    document.cookie = 'tribewellmd-auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     setIsOpen(false);
+    // Use shared signOut which notifies all auth listeners
+    signOut();
     // Redirect to homepage (which is now public)
     router.push('/');
     router.refresh();

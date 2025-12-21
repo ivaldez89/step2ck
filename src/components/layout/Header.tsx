@@ -6,26 +6,7 @@ import { usePathname } from 'next/navigation';
 import { ThemeToggle } from '@/components/theme/ThemeProvider';
 import { ProfileDropdown } from '@/components/profile/ProfileDropdown';
 import { StreakCounter } from '@/components/gamification/StreakCounter';
-
-// Check if user is authenticated by looking for the auth cookie
-function useIsAuthenticated() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    const checkAuth = () => {
-      const cookies = document.cookie.split(';');
-      const authCookie = cookies.find(c => c.trim().startsWith('tribewellmd-auth='));
-      setIsAuthenticated(authCookie?.includes('authenticated') ?? false);
-    };
-
-    checkAuth();
-    // Re-check on focus (in case user logged in/out in another tab)
-    window.addEventListener('focus', checkAuth);
-    return () => window.removeEventListener('focus', checkAuth);
-  }, []);
-
-  return isAuthenticated;
-}
+import { useIsAuthenticated } from '@/hooks/useAuth';
 
 interface NavLinkProps {
   href: string;
