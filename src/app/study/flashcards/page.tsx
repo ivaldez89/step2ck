@@ -543,10 +543,10 @@ export default function FlashcardsPage() {
 
     // Award XP based on rating quality (better recall = more XP)
     const xpRewards: Record<Rating, number> = {
-      1: 5,   // Again - still learning
-      2: 8,   // Hard - some effort
-      3: 10,  // Good - solid recall
-      4: 12   // Easy - mastered
+      'again': 5,   // Again - still learning
+      'hard': 8,    // Hard - some effort
+      'good': 10,   // Good - solid recall
+      'easy': 12    // Easy - mastered
     };
     addXP(xpRewards[rating], 'Flashcard review');
 

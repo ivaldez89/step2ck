@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { useWellness } from '@/hooks/useWellness';
+import { HealthConnect } from '@/components/health/HealthConnect';
 import { WELLNESS_DOMAINS, CHARITABLE_CAUSES, type WellnessDomain, type CharitableCause } from '@/types/wellness';
 import { useTribes } from '@/hooks/useTribes';
 
@@ -170,6 +171,11 @@ function WellnessPageContent() {
         {/* Tab Content */}
         {activeTab === 'journey' && (
           <>
+            {/* Health App Integration */}
+            <section className="mb-8">
+              <HealthConnect variant="full" />
+            </section>
+
             {/* Daily Challenges */}
             <section className="mb-8">
               <div className="flex items-center justify-between mb-4">

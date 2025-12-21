@@ -114,18 +114,18 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/resources" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
-                  Study Guides
+                <Link href="/impact" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
+                  How Impact Works
+                </Link>
+              </li>
+              <li>
+                <Link href="/tribes" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
+                  Tribes & Community
                 </Link>
               </li>
               <li>
                 <Link href="/premed" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
                   PreMed Resources
-                </Link>
-              </li>
-              <li>
-                <Link href="/community" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
-                  Community
                 </Link>
               </li>
             </ul>
@@ -174,6 +174,40 @@ export function Footer() {
                   Subscribe
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Conversion Transparency Section */}
+      <div className="bg-gradient-to-r from-emerald-900/20 to-teal-900/20 border-t border-emerald-800/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                <span className="text-xl">💚</span>
+              </div>
+              <div>
+                <h4 className="text-emerald-400 font-medium text-sm">Village Points to Charity</h4>
+                <p className="text-slate-400 text-xs">
+                  1,000 Village Points = $1.00 to verified 501(c)(3) charities. 100% transparent.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="text-center px-4 py-2 bg-slate-800/50 rounded-lg">
+                <p className="text-emerald-400 font-bold text-lg">10 XP</p>
+                <p className="text-slate-500 text-xs">= 1 Village Point</p>
+              </div>
+              <Link
+                href="/impact"
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+              >
+                Learn How It Works
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
             </div>
           </div>
         </div>

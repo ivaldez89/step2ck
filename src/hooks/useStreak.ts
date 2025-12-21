@@ -4,6 +4,17 @@ import { useState, useEffect, useCallback } from 'react';
 
 const STREAK_STORAGE_KEY = 'tribewellmd_streak';
 
+// Verification tiers with their point multipliers
+export type VerificationTier = 'automatic' | 'self-reported' | 'photo-verified' | 'health-app' | 'peer-confirmed';
+
+export const VERIFICATION_MULTIPLIERS: Record<VerificationTier, number> = {
+  'automatic': 1,      // Platform-tracked activities (flashcards, cases)
+  'self-reported': 1,  // Honor system (mood check-ins, gratitude)
+  'photo-verified': 2, // AI-analyzed photos
+  'health-app': 3,     // Apple Health/Google Fit verified
+  'peer-confirmed': 2  // Tribe member confirmed
+};
+
 export interface StreakData {
   currentStreak: number;
   longestStreak: number;
@@ -20,6 +31,8 @@ export interface StreakData {
   totalVillagePoints: number;
   weeklyVillagePoints: number;
   lastVillagePointsReset: string | null;
+  // Breakdown by verification tier
+  villagePointsByTier: Record<VerificationTier, number>;
 }
 
 const DEFAULT_DAILY_GOAL = 50; // XP needed per day
@@ -76,7 +89,14 @@ const createDefaultStreak = (): StreakData => ({
   achievements: [],
   totalVillagePoints: 0,
   weeklyVillagePoints: 0,
-  lastVillagePointsReset: getWeekStart()
+  lastVillagePointsReset: getWeekStart(),
+  villagePointsByTier: {
+    'automatic': 0,
+    'self-reported': 0,
+    'photo-verified': 0,
+    'health-app': 0,
+    'peer-confirmed': 0
+  }
 });
 
 export function useStreak() {
@@ -146,7 +166,13 @@ export function useStreak() {
   }, [streakData]);
 
   // Add XP (called when user completes activities)
-  const addXP = useCallback((amount: number, source?: string) => {
+  // Verification tier affects village points multiplier:
+  // - automatic: 1x (platform-tracked)
+  // - self-reported: 1x (honor system)
+  // - photo-verified: 2x (AI-analyzed)
+  // - health-app: 3x (Apple Health/Google Fit)
+  // - peer-confirmed: 2x (tribe member verified)
+  const addXP = useCallback((amount: number, source?: string, verificationTier: VerificationTier = 'automatic') => {
     setStreakData(prev => {
       if (!prev) return prev;
 
@@ -207,9 +233,12 @@ export function useStreak() {
         newAchievements.push('first-steps');
       }
 
-      // Calculate village points (study activities contribute to charity pool)
-      // 10 XP = 1 village point (studying helps the community!)
-      const villagePointsEarned = Math.floor(amount / 10);
+      // Calculate village points with verification multiplier
+      // Base: 10 XP = 1 village point
+      // Multiplied by verification tier
+      const multiplier = VERIFICATION_MULTIPLIERS[verificationTier];
+      const basePoints = Math.floor(amount / 10);
+      const villagePointsEarned = basePoints * multiplier;
 
       // Check if we need to reset weekly village points
       const currentWeekStart = getWeekStart();
@@ -218,6 +247,16 @@ export function useStreak() {
       const newWeeklyVillagePoints = shouldResetWeekly
         ? villagePointsEarned
         : prev.weeklyVillagePoints + villagePointsEarned;
+
+      // Track points by verification tier
+      const newVillagePointsByTier = { ...(prev.villagePointsByTier || {
+        'automatic': 0,
+        'self-reported': 0,
+        'photo-verified': 0,
+        'health-app': 0,
+        'peer-confirmed': 0
+      })};
+      newVillagePointsByTier[verificationTier] = (newVillagePointsByTier[verificationTier] || 0) + villagePointsEarned;
 
       return {
         ...prev,
@@ -231,7 +270,8 @@ export function useStreak() {
         achievements: newAchievements,
         totalVillagePoints: prev.totalVillagePoints + villagePointsEarned,
         weeklyVillagePoints: newWeeklyVillagePoints,
-        lastVillagePointsReset: currentWeekStart
+        lastVillagePointsReset: currentWeekStart,
+        villagePointsByTier: newVillagePointsByTier
       };
     });
   }, []);
