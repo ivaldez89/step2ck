@@ -279,11 +279,11 @@ export default function HomePage() {
             <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
               <span className="inline-block animate-fade-in-up">Study Smart.</span>
               <br />
-              <span className="inline-block animate-fade-in-up animation-delay-100">
+              <span className="inline-block animate-fade-in-up animation-delay-100">Find Your Tribe.</span>
+              <br />
+              <span className="inline-block animate-fade-in-up animation-delay-200">
                 <span className="text-shimmer">Stay Well.</span>
               </span>
-              <br />
-              <span className="inline-block animate-fade-in-up animation-delay-200">Find Your Tribe.</span>
             </h1>
 
             <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-10 animate-fade-in-up animation-delay-300">

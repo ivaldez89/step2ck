@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { getUserProfile, getUserInitials, getDisplayName, type UserProfile } from '@/lib/storage/profileStorage';
 import { getConnectionCount, getPendingRequestCount } from '@/lib/storage/chatStorage';
 import { getUserTribes } from '@/lib/storage/tribeStorage';
@@ -19,6 +20,16 @@ export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
   const [userTribes, setUserTribes] = useState<Tribe[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
+
+  const handleSignOut = () => {
+    // Clear the auth cookie by setting it to expire in the past
+    document.cookie = 'tribewellmd-auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    setIsOpen(false);
+    // Redirect to homepage (which is now public)
+    router.push('/');
+    router.refresh();
+  };
 
   // Load profile on mount
   useEffect(() => {
@@ -42,8 +53,9 @@ export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    // Use 'click' instead of 'mousedown' to allow button onClick to fire first
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
   }, [isOpen]);
 
   const initials = getUserInitials();
@@ -277,12 +289,14 @@ export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
             </Link>
           </div>
 
-          {/* Sign Out (placeholder for future auth) */}
+          {/* Sign Out */}
           <div className="border-t border-slate-100 dark:border-slate-700 p-2">
             <button
-              onClick={() => {
-                // Future: implement sign out
-                setIsOpen(false);
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleSignOut();
               }}
               className="w-full flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
             >

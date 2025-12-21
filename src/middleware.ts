@@ -1,14 +1,19 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Simple password protection
-// Change these credentials as needed
-const VALID_USERNAME = 'tribewellmd';
-const VALID_PASSWORD = 'preview2024';
+// Public routes that don't require authentication
+const publicRoutes = ['/', '/about', '/privacy', '/terms', '/login', '/register'];
 
 export function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
   // Skip auth for API routes
-  if (request.nextUrl.pathname.startsWith('/api')) {
+  if (pathname.startsWith('/api')) {
+    return NextResponse.next();
+  }
+
+  // Check if current path is a public route (exact match)
+  if (publicRoutes.includes(pathname)) {
     return NextResponse.next();
   }
 
@@ -16,11 +21,6 @@ export function middleware(request: NextRequest) {
   const authCookie = request.cookies.get('tribewellmd-auth');
 
   if (authCookie?.value === 'authenticated') {
-    return NextResponse.next();
-  }
-
-  // Check for login attempt
-  if (request.nextUrl.pathname === '/login') {
     return NextResponse.next();
   }
 

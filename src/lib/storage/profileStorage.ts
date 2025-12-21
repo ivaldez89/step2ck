@@ -1,5 +1,7 @@
 // User Profile Types and Storage
 
+export type UserRole = 'premed' | 'medical-student' | 'resident' | 'fellow' | 'attending' | 'institution';
+
 export interface UserProfile {
   id: string;
   // Basic Info
@@ -9,12 +11,21 @@ export interface UserProfile {
   avatar?: string; // Base64 or URL
   emailVerified?: boolean; // Has user verified their .edu email
 
+  // Role (primary user type)
+  role?: UserRole;
+
   // Academic Info
   school?: string; // School display name (for backward compatibility)
   schoolId?: string; // Reference to school in schools.ts
   schoolType?: 'md' | 'do' | 'undergrad' | 'caribbean' | 'international';
   graduationYear?: number;
   currentYear?: 'MS1' | 'MS2' | 'MS3' | 'MS4' | 'Resident' | 'Fellow' | 'Attending' | 'Pre-Med' | 'Other';
+
+  // Resident/Fellow specific
+  pgyYear?: string;
+
+  // Institution specific
+  jobTitle?: string;
 
   // Interests & Specialties
   interestedSpecialties?: string[];
