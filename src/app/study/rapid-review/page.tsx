@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { useFlashcards } from '@/hooks/useFlashcards';
 import { BackgroundSelector, useStudyBackground, getBackgroundUrl } from '@/components/study/BackgroundSelector';
-import { SpotifyWidget } from '@/components/music/SpotifyWidget';
 import { CalendarWidget } from '@/components/calendar/CalendarWidget';
 
 // Rapid review stats type
@@ -478,7 +477,6 @@ export default function RapidReviewPage() {
                       onOpacityChange={setOpacity}
                       variant="dark"
                     />
-                    <SpotifyWidget variant="compact" />
                     <CalendarWidget variant="compact" />
                     <button
                       onClick={() => setShowSettings(!showSettings)}

@@ -11,7 +11,6 @@ import { CardEditor } from '@/components/deck/CardEditor';
 import { PomodoroTimer } from '@/components/study/PomodoroTimer';
 import { recordCardReview, AchievementNotification } from '@/components/study/StudyStats';
 import { BackgroundSelector, useStudyBackground, getBackgroundUrl } from '@/components/study/BackgroundSelector';
-import { SpotifyWidget } from '@/components/music/SpotifyWidget';
 import { CalendarWidget } from '@/components/calendar/CalendarWidget';
 import { ExamCountdown } from '@/components/study/ExamCountdown';
 import { useFlashcards } from '@/hooks/useFlashcards';
@@ -575,13 +574,13 @@ export default function StudyPage() {
           <>
             {/* Hero Study Section - Primary CTA */}
             <section className="mb-8">
-              <div className={`relative overflow-hidden rounded-3xl ${
+              <div className={`relative rounded-3xl ${
                 stats.dueToday > 0
                   ? 'bg-gradient-to-br from-teal-500 via-cyan-500 to-blue-600'
                   : 'bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600'
               } p-8 md:p-10 shadow-2xl`}>
-                {/* Animated background elements */}
-                <div className="absolute inset-0 overflow-hidden">
+                {/* Animated background elements - contained with overflow-hidden */}
+                <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
                   <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
                   <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-white/10 to-transparent rounded-full" />
@@ -641,45 +640,52 @@ export default function StudyPage() {
                   </div>
 
                   {/* Right side - CTA Buttons */}
-                  <div className="flex flex-col items-center gap-4">
+                  <div className="flex flex-col items-center gap-3">
                     {/* Main Study Button */}
                     {filteredDueCards.length > 0 ? (
                       <button
                         onClick={handleStartStudying}
-                        className="group relative px-10 py-5 bg-white hover:bg-yellow-50 text-slate-900 font-bold text-xl rounded-2xl shadow-2xl hover:shadow-yellow-500/25 transition-all duration-300 hover:scale-105"
+                        className="group relative w-full min-w-[280px] px-8 py-4 bg-white hover:bg-yellow-50 text-slate-900 font-bold text-lg rounded-xl shadow-2xl hover:shadow-yellow-500/25 transition-all duration-300 hover:scale-[1.02]"
                       >
-                        <span className="flex items-center gap-3">
+                        <span className="flex items-center justify-center gap-3">
+                          <svg className="w-5 h-5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                          </svg>
                           Start Studying
-                          <span className="px-3 py-1 bg-teal-500 text-white text-base rounded-full">
+                          <span className="px-2.5 py-0.5 bg-teal-500 text-white text-sm rounded-full">
                             {filteredDueCards.length}
                           </span>
-                          <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
                         </span>
                       </button>
                     ) : (
-                      <div className="px-10 py-5 bg-white/20 backdrop-blur text-white font-semibold text-xl rounded-2xl flex items-center gap-3">
-                        <svg className="w-6 h-6 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div className="w-full min-w-[280px] px-8 py-4 bg-white/20 backdrop-blur text-white font-semibold text-lg rounded-xl flex items-center justify-center gap-3">
+                        <svg className="w-5 h-5 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                         All Done for Now
                       </div>
                     )}
 
-                    {/* Rapid Review Button - Added to hero */}
-                    <Link
-                      href="/study/rapid-review"
-                      className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg shadow-amber-500/30 hover:shadow-amber-500/50 hover:scale-105 transition-all"
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                      Rapid Review
-                    </Link>
+                    {/* Secondary Action Buttons - Consistent sizing */}
+                    <div className="flex gap-3 w-full">
+                      {/* Rapid Review Button */}
+                      <Link
+                        href="/study/rapid-review"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl shadow-lg shadow-amber-500/30 hover:shadow-amber-500/50 hover:scale-[1.02] transition-all"
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <span className="hidden sm:inline">Rapid Review</span>
+                        <span className="sm:hidden">Rapid</span>
+                      </Link>
 
-                    {/* Exam countdown inline */}
-                    <ExamCountdown variant="compact" />
+                      {/* Exam Countdown - Matching style */}
+                      <ExamCountdown variant="compact" />
+                    </div>
                   </div>
                 </div>
 
@@ -1175,9 +1181,6 @@ export default function StudyPage() {
                   onCustomBackgroundChange={setCustomBackgroundUrl}
                   variant="light"
                 />
-
-                {/* Spotify Widget */}
-                <SpotifyWidget variant="compact" />
 
                 {/* Calendar Widget */}
                 <CalendarWidget variant="compact" />
