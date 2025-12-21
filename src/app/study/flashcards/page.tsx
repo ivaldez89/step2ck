@@ -14,6 +14,7 @@ import { CalendarWidget } from '@/components/calendar/CalendarWidget';
 import { ExamCountdown } from '@/components/study/ExamCountdown';
 import { useFlashcards } from '@/hooks/useFlashcards';
 import { useStreak } from '@/hooks/useStreak';
+import { Icons } from '@/components/ui/Icons';
 import type { Rating } from '@/types';
 
 // Achievement type for notifications
@@ -27,24 +28,43 @@ interface Achievement {
   type: 'cards' | 'streak' | 'days' | 'pomodoro';
 }
 
+// Helper to render audio icons
+const AudioIcon = ({ iconId }: { iconId: string }) => {
+  const iconMap: Record<string, React.ReactNode> = {
+    'radio': <Icons.Radio />,
+    'pink': <Icons.PinkNoise />,
+    'brown': <Icons.BrownNoise />,
+    'rain': <Icons.Rain />,
+    'wind': <Icons.Wind />,
+    'brain': <Icons.Brain />,
+    'headphones': <Icons.Headphones />,
+    'violin': <Icons.Violin />,
+    'piano': <Icons.Piano />,
+    'saxophone': <Icons.Saxophone />,
+    'wave': <Icons.Wave />,
+    'coffee': <Icons.Coffee />,
+  };
+  return <span className="w-5 h-5 flex items-center justify-center">{iconMap[iconId] || <Icons.Music />}</span>;
+};
+
 // Ambient sound definitions - generated using Web Audio API
 const AMBIENT_SOUNDS = [
-  { id: 'whitenoise', name: 'White Noise', emoji: '📻' },
-  { id: 'pinknoise', name: 'Pink Noise', emoji: '🩷' },
-  { id: 'brownnoise', name: 'Brown Noise', emoji: '🟤' },
-  { id: 'rain', name: 'Rain', emoji: '🌧️' },
-  { id: 'wind', name: 'Wind', emoji: '💨' },
-  { id: 'binaural', name: 'Focus 40Hz', emoji: '🧠' },
+  { id: 'whitenoise', name: 'White Noise', icon: 'radio' },
+  { id: 'pinknoise', name: 'Pink Noise', icon: 'pink' },
+  { id: 'brownnoise', name: 'Brown Noise', icon: 'brown' },
+  { id: 'rain', name: 'Rain', icon: 'rain' },
+  { id: 'wind', name: 'Wind', icon: 'wind' },
+  { id: 'binaural', name: 'Focus 40Hz', icon: 'brain' },
 ];
 
 // Study music streams - royalty-free radio stations
 const MUSIC_STREAMS = [
-  { id: 'lofi', name: 'Lofi Hip Hop', emoji: '🎧', url: 'https://streams.ilovemusic.de/iloveradio17.mp3' },
-  { id: 'classical', name: 'Classical', emoji: '🎻', url: 'https://live.musopen.org:8085/streamvbr0' },
-  { id: 'piano', name: 'Piano', emoji: '🎹', url: 'https://streams.ilovemusic.de/iloveradio28.mp3' },
-  { id: 'jazz', name: 'Jazz', emoji: '🎷', url: 'https://streaming.radio.co/s774887f7b/listen' },
-  { id: 'ambient', name: 'Ambient', emoji: '🌊', url: 'https://streams.ilovemusic.de/iloveradio6.mp3' },
-  { id: 'chillout', name: 'Chill Out', emoji: '☕', url: 'https://streams.ilovemusic.de/iloveradio7.mp3' },
+  { id: 'lofi', name: 'Lofi Hip Hop', icon: 'headphones', url: 'https://streams.ilovemusic.de/iloveradio17.mp3' },
+  { id: 'classical', name: 'Classical', icon: 'violin', url: 'https://live.musopen.org:8085/streamvbr0' },
+  { id: 'piano', name: 'Piano', icon: 'piano', url: 'https://streams.ilovemusic.de/iloveradio28.mp3' },
+  { id: 'jazz', name: 'Jazz', icon: 'saxophone', url: 'https://streaming.radio.co/s774887f7b/listen' },
+  { id: 'ambient', name: 'Ambient', icon: 'wave', url: 'https://streams.ilovemusic.de/iloveradio6.mp3' },
+  { id: 'chillout', name: 'Chill Out', icon: 'coffee', url: 'https://streams.ilovemusic.de/iloveradio7.mp3' },
 ];
 
 // Noise generator using Web Audio API
@@ -604,7 +624,7 @@ export default function FlashcardsPage() {
             ) : (
               <>
                 <h1 className="text-3xl font-bold text-slate-900 mb-4">
-                  All Caught Up! 🎉
+                  All Caught Up!
                 </h1>
                 <p className="text-lg text-slate-600 max-w-md mx-auto">
                   You've reviewed all your due cards. Great work! Come back later for your next review session.
@@ -722,7 +742,7 @@ export default function FlashcardsPage() {
               }`}
               title={cramCards.length === 0 ? 'No cards to cram - you haven\'t missed any yet!' : `Cram ${cramCards.length} missed cards`}
             >
-              <span className="text-base">🔥</span>
+              <span className="w-4 h-4 text-orange-500"><Icons.Fire /></span>
               <span>Cram</span>
               {cramCards.length > 0 && (
                 <span className={`text-xs px-1.5 py-0.5 rounded-full ${
@@ -747,8 +767,8 @@ export default function FlashcardsPage() {
                 <span className="flex items-center gap-1">
                   <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
                   {isPlaying
-                    ? AMBIENT_SOUNDS.find(s => s.id === currentSound)?.emoji
-                    : MUSIC_STREAMS.find(s => s.id === currentMusic)?.emoji
+                    ? <AudioIcon iconId={AMBIENT_SOUNDS.find(s => s.id === currentSound)?.icon || 'radio'} />
+                    : <AudioIcon iconId={MUSIC_STREAMS.find(s => s.id === currentMusic)?.icon || 'headphones'} />
                   }
                 </span>
               ) : (
@@ -819,7 +839,7 @@ export default function FlashcardsPage() {
             {/* Ambient Sounds Section */}
             <div className="mb-5">
               <h4 className="text-sm font-medium text-slate-600 mb-2 flex items-center gap-2">
-                <span>🎧</span> Ambient Sounds
+                <Icons.Headphones /> Ambient Sounds
               </h4>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-3">
                 {AMBIENT_SOUNDS.map((sound) => (
@@ -832,7 +852,7 @@ export default function FlashcardsPage() {
                         : 'bg-slate-50 border-2 border-transparent hover:bg-slate-100'
                     }`}
                   >
-                    <span className="text-2xl">{sound.emoji}</span>
+                    <AudioIcon iconId={sound.icon} />
                     <span className="text-xs font-medium text-slate-600">{sound.name}</span>
                     {currentSound === sound.id && isPlaying && (
                       <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
@@ -865,7 +885,7 @@ export default function FlashcardsPage() {
             {/* Study Music Section */}
             <div>
               <h4 className="text-sm font-medium text-slate-600 mb-2 flex items-center gap-2">
-                <span>🎵</span> Study Music
+                <Icons.Music /> Study Music
               </h4>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-3">
                 {MUSIC_STREAMS.map((music) => (
@@ -879,7 +899,7 @@ export default function FlashcardsPage() {
                         : 'bg-slate-50 border-2 border-transparent hover:bg-slate-100'
                     } ${isMusicLoading && currentMusic !== music.id ? 'opacity-50' : ''}`}
                   >
-                    <span className="text-2xl">{music.emoji}</span>
+                    <AudioIcon iconId={music.icon} />
                     <span className="text-xs font-medium text-slate-600">{music.name}</span>
                     {currentMusic === music.id && isMusicLoading && (
                       <span className="w-3 h-3 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
@@ -910,9 +930,10 @@ export default function FlashcardsPage() {
             </div>
 
             {/* Tips */}
-            <p className="mt-4 text-xs text-slate-400">
-              💡 Ambient sounds are generated locally. Music streams from free internet radio stations.
-              Use headphones for binaural beats (Focus 40Hz).
+            <p className="mt-4 text-xs text-slate-400 flex items-start gap-1">
+              <span className="w-4 h-4 flex-shrink-0"><Icons.Lightbulb /></span>
+              <span>Ambient sounds are generated locally. Music streams from free internet radio stations.
+              Use headphones for binaural beats (Focus 40Hz).</span>
             </p>
           </div>
         )}
@@ -938,7 +959,7 @@ export default function FlashcardsPage() {
             {/* Cram Mode Header */}
             <div className="flex items-center justify-between mb-4 p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border border-orange-200">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">🔥</span>
+                <span className="w-8 h-8 text-orange-500"><Icons.Fire /></span>
                 <div>
                   <h2 className="font-semibold text-orange-900">Cram Mode</h2>
                   <p className="text-sm text-orange-700">Reviewing cards you've missed before</p>

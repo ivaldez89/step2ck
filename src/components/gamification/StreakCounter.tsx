@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useStreak } from '@/hooks/useStreak';
+import { Icons } from '@/components/ui/Icons';
 
 interface StreakCounterProps {
   variant?: 'compact' | 'full';
@@ -50,8 +51,8 @@ export function StreakCounter({ variant = 'compact', showDropdown = true }: Stre
         >
           {/* Fire icon with animation */}
           <div className={`relative ${isOnFire ? 'animate-pulse' : ''}`}>
-            <span className={`text-lg ${hasStreak ? '' : 'grayscale opacity-50'}`}>
-              {isOnFire ? '🔥' : '🔥'}
+            <span className={`w-5 h-5 ${hasStreak ? 'text-orange-500' : 'text-slate-400 opacity-50'}`}>
+              <Icons.Fire />
             </span>
             {isOnFire && (
               <span className="absolute -top-1 -right-1 flex h-2 w-2">
@@ -111,8 +112,8 @@ export function StreakCounter({ variant = 'compact', showDropdown = true }: Stre
             }`}>
               <div className="flex items-center justify-between text-white">
                 <div className="flex items-center gap-3">
-                  <div className={`text-4xl ${isOnFire ? 'animate-bounce' : ''}`}>
-                    🔥
+                  <div className={`w-10 h-10 ${isOnFire ? 'animate-bounce' : ''}`}>
+                    <Icons.Fire />
                   </div>
                   <div>
                     <div className="text-3xl font-bold">{streakData.currentStreak}</div>
@@ -207,7 +208,7 @@ export function StreakCounter({ variant = 'compact', showDropdown = true }: Stre
             <div className="p-4 border-b border-slate-100 dark:border-slate-700 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">💚</span>
+                  <span className="w-6 h-6 text-emerald-500"><Icons.HeartHand /></span>
                   <div>
                     <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Village Points</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">Your study helps the community</div>
@@ -229,7 +230,7 @@ export function StreakCounter({ variant = 'compact', showDropdown = true }: Stre
             <div className="p-4 bg-slate-50 dark:bg-slate-900/50">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">🧊</span>
+                  <span className="w-6 h-6 text-cyan-500"><Icons.Snowflake /></span>
                   <div>
                     <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Streak Freezes</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">Protect your streak</div>
@@ -239,13 +240,13 @@ export function StreakCounter({ variant = 'compact', showDropdown = true }: Stre
                   {[...Array(5)].map((_, i) => (
                     <div
                       key={i}
-                      className={`w-5 h-5 rounded-md flex items-center justify-center text-xs ${
+                      className={`w-5 h-5 rounded-md flex items-center justify-center ${
                         i < streakData.streakFreezes
                           ? 'bg-cyan-100 dark:bg-cyan-900/50 text-cyan-600 dark:text-cyan-400'
                           : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-600'
                       }`}
                     >
-                      {i < streakData.streakFreezes ? '❄️' : ''}
+                      {i < streakData.streakFreezes && <Icons.Snowflake />}
                     </div>
                   ))}
                 </div>
@@ -288,8 +289,8 @@ export function StreakCounter({ variant = 'compact', showDropdown = true }: Stre
       }`}>
         <div className="flex items-center justify-between text-white">
           <div className="flex items-center gap-4">
-            <div className={`text-5xl ${isOnFire ? 'animate-bounce' : ''}`}>
-              🔥
+            <div className={`w-12 h-12 ${isOnFire ? 'animate-bounce' : ''}`}>
+              <Icons.Fire />
             </div>
             <div>
               <div className="text-4xl font-bold">{streakData.currentStreak}</div>
@@ -378,7 +379,7 @@ export function StreakCounter({ variant = 'compact', showDropdown = true }: Stre
         {/* Streak Freezes */}
         <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">🧊</span>
+            <span className="w-8 h-8 text-cyan-500"><Icons.Snowflake /></span>
             <div>
               <div className="font-medium text-slate-700 dark:text-slate-300">Streak Freezes</div>
               <div className="text-sm text-slate-500 dark:text-slate-400">Auto-protect your streak</div>
@@ -390,11 +391,11 @@ export function StreakCounter({ variant = 'compact', showDropdown = true }: Stre
                 key={i}
                 className={`w-6 h-6 rounded-md flex items-center justify-center ${
                   i < streakData.streakFreezes
-                    ? 'bg-cyan-100 dark:bg-cyan-900/50'
+                    ? 'bg-cyan-100 dark:bg-cyan-900/50 text-cyan-600 dark:text-cyan-400'
                     : 'bg-slate-200 dark:bg-slate-700'
                 }`}
               >
-                {i < streakData.streakFreezes ? '❄️' : ''}
+                {i < streakData.streakFreezes && <Icons.Snowflake />}
               </div>
             ))}
           </div>

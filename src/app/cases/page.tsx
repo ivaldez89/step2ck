@@ -108,7 +108,7 @@ export default function CasesPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
-        <section className="mb-8">
+        <section className="mb-8 animate-fade-in-up">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-8 md:p-10 shadow-2xl">
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden">
@@ -193,40 +193,87 @@ export default function CasesPage() {
           </div>
         </section>
 
-        {/* Main 4-Box Navigation Grid */}
-        <section className="mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Main 3-Box Navigation Grid */}
+        <section className="mb-8 animate-fade-in-up animation-delay-100">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-            {/* Box 1: Due Cases */}
-            <div
-              onClick={dueCases.length > 0 ? handleStartDue : undefined}
-              className={`group relative p-6 rounded-2xl shadow-lg transition-all duration-300 overflow-hidden ${
-                dueCases.length > 0
-                  ? 'bg-gradient-to-br from-orange-500 to-red-600 shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-[1.02] cursor-pointer'
-                  : 'bg-gradient-to-br from-slate-400 to-slate-500 shadow-slate-500/25'
-              } text-white`}
-            >
-              <div className="relative z-10">
-                <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center mb-4">
-                  <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+            {/* Box 1: Weak Topics */}
+            {(() => {
+              // Calculate weak topics from vignettes
+              const weakTopics = SYSTEM_CATEGORIES
+                .map(cat => {
+                  const casesInSystem = vignettes.filter(v => v.metadata.system === cat.id);
+                  const masteredCount = casesInSystem.filter(v => {
+                    const progress = getProgressForVignette(v.id);
+                    return progress?.overallMastery === 'mastered';
+                  }).length;
+                  const total = casesInSystem.length;
+                  const masteryRate = total > 0 ? masteredCount / total : 0;
+                  return { ...cat, masteryRate, total, mastered: masteredCount };
+                })
+                .filter(cat => cat.total > 0 && cat.masteryRate < 0.5) // Topics with <50% mastery
+                .sort((a, b) => a.masteryRate - b.masteryRate)
+                .slice(0, 3);
+
+              const hasWeakTopics = weakTopics.length > 0;
+              const topWeakTopic = weakTopics[0];
+
+              return (
+                <div
+                  onClick={() => {
+                    if (hasWeakTopics && topWeakTopic) {
+                      handleCategorySelect(topWeakTopic.id);
+                    }
+                  }}
+                  className={`group relative p-6 rounded-2xl shadow-lg transition-all duration-300 overflow-hidden ${
+                    hasWeakTopics
+                      ? 'bg-gradient-to-br from-orange-500 to-red-600 shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-[1.02] cursor-pointer'
+                      : 'bg-gradient-to-br from-emerald-500 to-teal-600 shadow-emerald-500/25'
+                  } text-white`}
+                >
+                  <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+                  </div>
+                  <div className="relative z-10">
+                    <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center mb-4">
+                      {hasWeakTopics ? (
+                        <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                      ) : (
+                        <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                    <h3 className="font-bold text-xl mb-1">{hasWeakTopics ? 'Weak Topics' : 'Strong Across Topics'}</h3>
+                    <p className="text-white/70 text-sm mb-3">
+                      {hasWeakTopics ? 'Areas that need more practice' : 'Great job on all topics!'}
+                    </p>
+                    {hasWeakTopics ? (
+                      <div className="space-y-1">
+                        {weakTopics.map((topic, i) => (
+                          <div key={topic.id} className="flex items-center gap-2 text-sm">
+                            <span>{topic.icon}</span>
+                            <span className="text-white/80">{topic.name}</span>
+                            <span className="text-white/50 text-xs">({Math.round(topic.masteryRate * 100)}%)</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-white/60 text-sm">Keep up the great work!</p>
+                    )}
+                  </div>
+                  {hasWeakTopics && (
+                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
-                <h3 className="font-bold text-xl mb-1">Due for Review</h3>
-                <p className="text-white/70 text-sm mb-3">Cases waiting for you</p>
-                <div className="flex items-center gap-2">
-                  <span className="text-4xl font-bold">{dueCases.length}</span>
-                  <span className="text-white/60 text-sm">cases</span>
-                </div>
-              </div>
-              {dueCases.length > 0 && (
-                <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </div>
-              )}
-            </div>
+              );
+            })()}
 
             {/* Box 2: Browse by Shelf / Category */}
             <div className="relative p-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg shadow-indigo-500/25 text-white">
@@ -377,84 +424,66 @@ export default function CasesPage() {
               </div>
             </Link>
 
-            {/* Box 4: Create New Case */}
-            <Link
-              href="/cases/create"
-              className="group relative p-6 bg-white dark:bg-slate-800 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 overflow-hidden"
-            >
-              <div className="relative z-10">
-                <div className="w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-700 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/50 flex items-center justify-center mb-4 transition-colors">
-                  <svg className="w-7 h-7 text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                </div>
-                <h3 className="font-bold text-xl mb-1 text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Create Case</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-sm mb-3">Build your own scenario</p>
-                <p className="text-xs text-slate-400 dark:text-slate-500">
-                  Create custom clinical vignettes
-                </p>
-              </div>
-              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <svg className="w-6 h-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </div>
-            </Link>
           </div>
         </section>
 
-        {/* Quick Stats Row */}
-        <section className="mb-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
-                  <span className="text-lg">📊</span>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.total}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Total Cases</p>
-                </div>
+        {/* Daily Challenge Section */}
+        {vignettes.length > 0 && (
+          <section className="mb-8 animate-fade-in-up animation-delay-200">
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-6 shadow-lg">
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute -top-20 -right-20 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
+                <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-yellow-300/20 rounded-full blur-2xl" />
               </div>
-            </div>
 
-            <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
-                  <span className="text-lg">✅</span>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.familiar + stats.mastered}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Completed</p>
-                </div>
-              </div>
-            </div>
+              <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-2xl">
+                    🎯
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-bold text-xl text-white">Daily Challenge</h3>
+                      <span className="px-2 py-0.5 bg-white/20 text-white/90 text-xs font-medium rounded-full">
+                        +50 XP Bonus
+                      </span>
+                    </div>
+                    {(() => {
+                      // Pick a "daily challenge" case - one that's not mastered yet
+                      const challengeCase = vignettes.find(v => {
+                        const progress = getProgressForVignette(v.id);
+                        return !progress || progress.overallMastery !== 'mastered';
+                      }) || vignettes[0];
+                      const systemIcon = SYSTEM_CATEGORIES.find(s => s.id === challengeCase?.metadata.system)?.icon || '📋';
 
-            <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center">
-                  <span className="text-lg">🏆</span>
+                      return (
+                        <p className="text-white/80 text-sm">
+                          <span className="mr-1">{systemIcon}</span>
+                          {challengeCase?.title || 'Complete any case'} • {challengeCase?.metadata.difficulty || 'intermediate'}
+                        </p>
+                      );
+                    })()}
+                  </div>
                 </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.mastered}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Mastered</p>
-                </div>
-              </div>
-            </div>
 
-            <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center">
-                  <span className="text-lg">🔥</span>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">{progressPercentage}%</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Mastery Rate</p>
-                </div>
+                <button
+                  onClick={() => {
+                    const challengeCase = vignettes.find(v => {
+                      const progress = getProgressForVignette(v.id);
+                      return !progress || progress.overallMastery !== 'mastered';
+                    }) || vignettes[0];
+                    if (challengeCase) {
+                      router.push(`/cases/${challengeCase.id}`);
+                    }
+                  }}
+                  className="px-6 py-3 bg-white hover:bg-amber-50 text-amber-600 font-bold rounded-xl shadow-lg transition-all hover:scale-105"
+                >
+                  Start Challenge →
+                </button>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Recommended Cases - Personalized based on weaknesses */}
         {vignettes.length > 0 && (

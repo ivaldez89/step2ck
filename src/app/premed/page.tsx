@@ -1,53 +1,68 @@
 'use client';
 
+import { useState } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { Icons } from '@/components/ui/Icons';
 import Link from 'next/link';
 
 const PREMED_FEATURES = [
   {
     title: 'MCAT Preparation',
     description: 'Study resources, practice questions, and strategies to conquer the MCAT',
-    icon: '🎯',
+    icon: 'target',
     status: 'Coming Soon',
     features: ['Content review guides', 'Practice passages', 'Score tracking', 'Study schedules']
   },
   {
     title: 'Application Guidance',
     description: 'Navigate the medical school application process with confidence',
-    icon: '📝',
+    icon: 'document',
     status: 'Coming Soon',
     features: ['Personal statement tips', 'Activity descriptions', 'School selection', 'Timeline planning']
   },
   {
     title: 'Med Student Mentors',
     description: 'Connect with current medical students who were in your shoes',
-    icon: '🤝',
+    icon: 'handshake',
     status: 'Coming Soon',
     features: ['1-on-1 mentorship', 'Q&A sessions', 'Application review', 'Interview prep']
   },
   {
     title: 'Clinical Experience',
     description: 'Find shadowing opportunities and build meaningful clinical exposure',
-    icon: '🏥',
+    icon: 'hospital',
     status: 'Coming Soon',
     features: ['Shadowing guides', 'Volunteer opportunities', 'Research connections', 'Experience logging']
   },
   {
     title: 'School Research',
     description: 'Explore medical schools and find the right fit for you',
-    icon: '🔍',
+    icon: 'search',
     status: 'Coming Soon',
     features: ['School profiles', 'Acceptance stats', 'Mission matching', 'Cost comparison']
   },
   {
     title: 'Pre-Med Community',
     description: 'Join a supportive community of aspiring physicians',
-    icon: '💬',
+    icon: 'chat',
     status: 'Coming Soon',
     features: ['Discussion forums', 'Study groups', 'Success stories', 'Peer support']
   },
 ];
+
+// Helper function to render icon
+const renderFeatureIcon = (iconName: string) => {
+  switch (iconName) {
+    case 'target': return <Icons.Target />;
+    case 'document': return <Icons.Document />;
+    case 'handshake': return <Icons.Handshake />;
+    case 'hospital': return <Icons.Hospital />;
+    case 'search': return <Icons.Search />;
+    case 'chat': return <Icons.Chat />;
+    default: return <Icons.Target />;
+  }
+};
 
 const JOURNEY_STEPS = [
   { year: 'Freshman', focus: 'Build foundation', tasks: ['Explore interests', 'Start volunteering', 'Build relationships with professors'] },
@@ -60,21 +75,63 @@ const TESTIMONIALS = [
   {
     quote: "Having a med student mentor made all the difference. They helped me understand what admissions committees actually look for.",
     author: "Pre-Med Senior, UCLA",
-    avatar: "👩‍🎓"
+    icon: 'student'
   },
   {
     quote: "I wish I had access to this kind of guidance when I was applying. It would have saved me so much stress and uncertainty.",
     author: "MS1, Johns Hopkins",
-    avatar: "👨‍⚕️"
+    icon: 'doctor'
   },
   {
     quote: "The pre-med journey can feel isolating. Having a community of people going through the same thing is invaluable.",
     author: "Pre-Med Junior, UC Berkeley",
-    avatar: "🧑‍🎓"
+    icon: 'graduation'
   },
 ];
 
+// Helper for testimonial icons
+const renderTestimonialIcon = (iconName: string) => {
+  switch (iconName) {
+    case 'student': return <Icons.Student />;
+    case 'doctor': return <Icons.Doctor />;
+    case 'graduation': return <Icons.GraduationCap />;
+    default: return <Icons.Student />;
+  }
+};
+
 export default function PreMedPage() {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'premed-page' }),
+      });
+
+      if (response.ok) {
+        setSubscribed(true);
+        setEmail('');
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       <Header />
@@ -125,16 +182,37 @@ export default function PreMedPage() {
               {/* Email Signup Card */}
               <div className="p-5 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 w-full max-w-sm">
                 <h3 className="text-white font-semibold mb-3 text-center">Get Early Access</h3>
-                <div className="space-y-3">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="w-full px-4 py-3 rounded-xl bg-white/20 border border-white/30 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
-                  />
-                  <button className="w-full px-6 py-3 bg-white hover:bg-emerald-50 text-emerald-600 font-bold rounded-xl shadow-lg transition-all hover:scale-105">
-                    Notify Me
-                  </button>
-                </div>
+                {subscribed ? (
+                  <div className="text-center py-4">
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <p className="text-white font-medium">You're on the list!</p>
+                    <p className="text-white/60 text-sm mt-1">We'll notify you when PreMed launches.</p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubscribe} className="space-y-3">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter your email"
+                      required
+                      disabled={loading}
+                      className="w-full px-4 py-3 rounded-xl bg-white/20 border border-white/30 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-50"
+                    />
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full px-6 py-3 bg-white hover:bg-emerald-50 text-emerald-600 font-bold rounded-xl shadow-lg transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                    >
+                      {loading ? 'Saving...' : 'Notify Me'}
+                    </button>
+                    {error && <p className="text-red-300 text-sm text-center">{error}</p>}
+                  </form>
+                )}
                 <p className="text-white/60 text-xs text-center mt-3">Be the first to know when PreMed launches.</p>
               </div>
             </div>
@@ -155,8 +233,8 @@ export default function PreMedPage() {
                 <div className="absolute top-4 right-4 px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-medium rounded-full">
                   {feature.status}
                 </div>
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 flex items-center justify-center mb-4 text-2xl">
-                  {feature.icon}
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 flex items-center justify-center mb-4 text-emerald-600 dark:text-emerald-400">
+                  {renderFeatureIcon(feature.icon)}
                 </div>
                 <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{feature.title}</h3>
                 <p className="text-slate-600 dark:text-slate-400 mb-4">{feature.description}</p>
@@ -243,7 +321,9 @@ export default function PreMedPage() {
                 key={index}
                 className="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700"
               >
-                <div className="text-4xl mb-4">{testimonial.avatar}</div>
+                <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-4 text-emerald-600 dark:text-emerald-400">
+                  {renderTestimonialIcon(testimonial.icon)}
+                </div>
                 <p className="text-slate-600 dark:text-slate-300 italic mb-4">"{testimonial.quote}"</p>
                 <p className="text-sm text-slate-500 dark:text-slate-400">- {testimonial.author}</p>
               </div>
@@ -259,8 +339,8 @@ export default function PreMedPage() {
             </div>
 
             <div className="relative z-10 max-w-3xl mx-auto text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center">
-                <span className="text-3xl">🏥</span>
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center text-white">
+                <Icons.Hospital />
               </div>
               <h2 className="text-2xl font-bold text-white mb-2">Part of the TribeWellMD Family</h2>
               <p className="text-emerald-100 mb-6">
@@ -289,8 +369,8 @@ export default function PreMedPage() {
         {/* CTA */}
         <section className="mb-8">
           <div className="p-8 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 flex items-center justify-center">
-              <span className="text-3xl">🌱</span>
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+              <Icons.Sparkles />
             </div>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Ready to Start Your Journey?</h2>
             <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-2xl mx-auto">

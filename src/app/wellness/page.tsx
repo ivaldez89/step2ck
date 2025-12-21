@@ -9,11 +9,12 @@ import { useWellness } from '@/hooks/useWellness';
 import { HealthConnect } from '@/components/health/HealthConnect';
 import { WELLNESS_DOMAINS, CHARITABLE_CAUSES, type WellnessDomain, type CharitableCause } from '@/types/wellness';
 import { useTribes } from '@/hooks/useTribes';
+import { Icons } from '@/components/ui/Icons';
 
-// Mood emoji mapping
-const MOOD_EMOJIS = ['😢', '😔', '😐', '🙂', '😊'];
-const ENERGY_EMOJIS = ['😴', '🥱', '😌', '⚡', '🔥'];
-const STRESS_EMOJIS = ['😌', '🙂', '😐', '😰', '🤯'];
+// Mood level arrays (1-5 scale)
+const MOOD_LEVELS = [1, 2, 3, 4, 5];
+const ENERGY_LEVELS = [1, 2, 3, 4, 5];
+const STRESS_LEVELS = [1, 2, 3, 4, 5];
 
 function WellnessPageContent() {
   const searchParams = useSearchParams();
@@ -72,7 +73,7 @@ function WellnessPageContent() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
-        <section className="mb-8">
+        <section className="mb-8 animate-fade-in-up">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-500 via-purple-500 to-indigo-600 p-8 md:p-10 shadow-2xl">
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden">
@@ -135,7 +136,7 @@ function WellnessPageContent() {
                   href="tel:988"
                   className="flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur hover:bg-white/30 text-white font-medium rounded-xl transition-all"
                 >
-                  <span>🆘</span>
+                  <Icons.Emergency />
                   988 Crisis Line (24/7)
                 </a>
               </div>
@@ -144,13 +145,13 @@ function WellnessPageContent() {
         </section>
 
         {/* Navigation Tabs */}
-        <section className="mb-6">
+        <section className="mb-6 animate-fade-in-up animation-delay-100">
           <div className="flex items-center gap-2 p-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 w-fit">
             {[
-              { id: 'village', label: 'My Village', icon: '🏘️' },
-              { id: 'journey', label: 'My Journey', icon: '🧭' },
-              { id: 'skills', label: 'Social Skills', icon: '🎯' },
-              { id: 'impact', label: 'Social Impact', icon: '💚' },
+              { id: 'village', label: 'My Village', icon: <Icons.Village /> },
+              { id: 'journey', label: 'My Journey', icon: <Icons.Compass /> },
+              { id: 'skills', label: 'Social Skills', icon: <Icons.Target /> },
+              { id: 'impact', label: 'Social Impact', icon: <Icons.HeartHand /> },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -161,7 +162,7 @@ function WellnessPageContent() {
                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
                 }`}
               >
-                <span>{tab.icon}</span>
+                <span className="w-5 h-5">{tab.icon}</span>
                 {tab.label}
               </button>
             ))}
@@ -203,7 +204,7 @@ function WellnessPageContent() {
                           ? 'bg-emerald-500 text-white'
                           : `bg-gradient-to-br ${WELLNESS_DOMAINS[challenge.domain].gradient} text-white`
                       }`}>
-                        {challenge.completed ? '✓' : WELLNESS_DOMAINS[challenge.domain].icon}
+                        {challenge.completed ? <Icons.Check /> : <span className="text-lg">{WELLNESS_DOMAINS[challenge.domain].icon}</span>}
                       </div>
                       <div className="text-right">
                         <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">+{challenge.xpReward} XP</span>
@@ -273,7 +274,7 @@ function WellnessPageContent() {
                                 />
                               </div>
                               <div className="flex items-center gap-2 text-xs text-slate-500">
-                                <span>🔥 {activeJourney.currentStreak} day streak</span>
+                                <span className="flex items-center gap-1"><Icons.Fire /> {activeJourney.currentStreak} day streak</span>
                               </div>
                             </div>
                           ) : (
@@ -308,7 +309,7 @@ function WellnessPageContent() {
                     href="/tribes"
                     className="text-sm text-teal-600 dark:text-teal-400 hover:underline font-medium"
                   >
-                    View All Tribes →
+                    View All Tribes
                   </Link>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -325,8 +326,8 @@ function WellnessPageContent() {
                       >
                         {/* Primary Badge */}
                         {isPrimary && (
-                          <div className="absolute -top-2 -right-2 px-2 py-1 bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-xs font-bold rounded-full shadow-lg">
-                            ⭐ PRIMARY
+                          <div className="absolute -top-2 -right-2 px-2 py-1 bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-xs font-bold rounded-full shadow-lg flex items-center gap-1">
+                            <Icons.Star /> PRIMARY
                           </div>
                         )}
 
@@ -403,8 +404,8 @@ function WellnessPageContent() {
             {userTribes.length === 0 && (
               <section className="mb-8">
                 <div className="p-8 bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 rounded-2xl border border-teal-200 dark:border-teal-800 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center">
-                    <span className="text-3xl">🏘️</span>
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white">
+                    <Icons.Village />
                   </div>
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Join Your First Tribe</h3>
                   <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md mx-auto">
@@ -510,8 +511,8 @@ function WellnessPageContent() {
             {/* Create Village CTA */}
             <section className="mb-8">
               <div className="p-8 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                  <span className="text-3xl">🏘️</span>
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white">
+                  <Icons.Village />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Create Your Own Village</h3>
                 <p className="text-slate-400 mb-6 max-w-md mx-auto">
@@ -531,8 +532,8 @@ function WellnessPageContent() {
             <section className="mb-8">
               <div className="p-6 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl border border-amber-200 dark:border-amber-800">
                 <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-2xl flex-shrink-0">
-                    🎯
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white flex-shrink-0">
+                    <Icons.Target />
                   </div>
                   <div>
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">App-Taught Social Skills</h2>
@@ -554,7 +555,7 @@ function WellnessPageContent() {
                     id: 'communication',
                     title: 'Communication',
                     description: 'Express yourself clearly and listen deeply',
-                    icon: '💬',
+                    icon: <Icons.Chat />,
                     level: profile?.socialSkillsProgress?.skillLevels?.communication || 0,
                     color: 'blue',
                     modules: ['Active Listening', 'Assertive Expression', 'Non-Verbal Cues', 'Difficult Conversations']
@@ -563,7 +564,7 @@ function WellnessPageContent() {
                     id: 'boundaries',
                     title: 'Setting Boundaries',
                     description: 'Protect your time and energy while maintaining relationships',
-                    icon: '🛡️',
+                    icon: <Icons.Shield />,
                     level: profile?.socialSkillsProgress?.skillLevels?.boundaries || 0,
                     color: 'purple',
                     modules: ['Identifying Limits', 'Saying No Gracefully', 'Managing Expectations', 'Self-Advocacy']
@@ -572,7 +573,7 @@ function WellnessPageContent() {
                     id: 'empathy',
                     title: 'Empathy & Compassion',
                     description: 'Understand others while protecting your own wellbeing',
-                    icon: '💗',
+                    icon: <Icons.HeartHand />,
                     level: profile?.socialSkillsProgress?.skillLevels?.empathy || 0,
                     color: 'pink',
                     modules: ['Perspective Taking', 'Emotional Validation', 'Compassion Fatigue Prevention', 'Self-Compassion']
@@ -581,7 +582,7 @@ function WellnessPageContent() {
                     id: 'conflict',
                     title: 'Conflict Resolution',
                     description: 'Navigate disagreements constructively',
-                    icon: '🤝',
+                    icon: <Icons.Handshake />,
                     level: profile?.socialSkillsProgress?.skillLevels?.conflict || 0,
                     color: 'orange',
                     modules: ['Understanding Triggers', 'De-escalation', 'Finding Common Ground', 'Repair & Reconnection']
@@ -590,7 +591,7 @@ function WellnessPageContent() {
                     id: 'support',
                     title: 'Giving & Receiving Support',
                     description: 'Build a network that lifts everyone up',
-                    icon: '🌟',
+                    icon: <Icons.Star />,
                     level: profile?.socialSkillsProgress?.skillLevels?.support || 0,
                     color: 'amber',
                     modules: ['Asking for Help', 'Offering Support', 'Peer Mentoring', 'Building Your Village']
@@ -601,7 +602,7 @@ function WellnessPageContent() {
                     className="group p-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:shadow-xl hover:border-amber-300 transition-all"
                   >
                     <div className="flex items-start gap-4">
-                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br from-${skill.color}-400 to-${skill.color}-600 flex items-center justify-center text-xl flex-shrink-0`}>
+                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br from-${skill.color}-400 to-${skill.color}-600 flex items-center justify-center text-white flex-shrink-0`}>
                         {skill.icon}
                       </div>
                       <div className="flex-1">
@@ -650,8 +651,10 @@ function WellnessPageContent() {
             <section className="mb-8">
               <div className="p-8 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl">
                 <div className="flex flex-col md:flex-row items-center gap-6">
-                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0">
-                    <span className="text-5xl">🎧</span>
+                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0 text-white">
+                    <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+                    </svg>
                   </div>
                   <div className="flex-1 text-center md:text-left">
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/20 rounded-full text-amber-400 text-xs font-medium mb-2">
@@ -669,9 +672,9 @@ function WellnessPageContent() {
                       </button>
                       <div className="flex items-center gap-2 text-slate-400 text-sm">
                         <span>15 min</span>
-                        <span>•</span>
+                        <span className="text-slate-600">|</span>
                         <span>+50 XP</span>
-                        <span>•</span>
+                        <span className="text-slate-600">|</span>
                         <span>+15 VP</span>
                       </div>
                     </div>
@@ -688,21 +691,21 @@ function WellnessPageContent() {
                   {
                     title: 'The 2-Minute Rule',
                     tip: 'If a supportive text takes less than 2 minutes to send, do it now. Small gestures maintain big relationships.',
-                    icon: '⏱️'
+                    icon: <Icons.Timer />
                   },
                   {
                     title: 'Name It to Tame It',
                     tip: 'When stressed, name the emotion out loud. "I\'m feeling anxious about this presentation." Naming reduces intensity by 50%.',
-                    icon: '🏷️'
+                    icon: <Icons.Tag />
                   },
                   {
                     title: 'The Pause Button',
                     tip: 'Before responding to a triggering message, take 3 breaths. Your future self will thank you.',
-                    icon: '⏸️'
+                    icon: <Icons.Pause />
                   },
                 ].map((tip, idx) => (
                   <div key={idx} className="p-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
-                    <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-xl mb-3">
+                    <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-3">
                       {tip.icon}
                     </div>
                     <h3 className="font-semibold text-slate-900 dark:text-white mb-2">{tip.title}</h3>
@@ -721,7 +724,9 @@ function WellnessPageContent() {
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="p-6 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl text-white">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-3xl">💚</span>
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Icons.HeartHand />
+                    </div>
                     <div>
                       <p className="text-3xl font-bold">{stats?.donated || 0}</p>
                       <p className="text-emerald-100 text-sm">Points Donated</p>
@@ -731,7 +736,9 @@ function WellnessPageContent() {
                 </div>
                 <div className="p-6 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl text-white">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-3xl">🌍</span>
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Icons.Globe />
+                    </div>
                     <div>
                       <p className="text-3xl font-bold">{profile?.villagePoints.available || 0}</p>
                       <p className="text-purple-100 text-sm">Available to Donate</p>
@@ -741,7 +748,9 @@ function WellnessPageContent() {
                 </div>
                 <div className="p-6 bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl text-white">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-3xl">🤝</span>
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Icons.Handshake />
+                    </div>
                     <div>
                       <p className="text-3xl font-bold">{userVillages.length}</p>
                       <p className="text-pink-100 text-sm">Villages Joined</p>
@@ -808,14 +817,14 @@ function WellnessPageContent() {
                 <h2 className="text-xl font-bold text-white mb-6 text-center">How Village Points Work</h2>
                 <div className="grid md:grid-cols-4 gap-6">
                   {[
-                    { icon: '🧘', title: 'Practice Wellness', desc: 'Complete daily challenges and progress in your journeys' },
-                    { icon: '⭐', title: 'Earn Points', desc: 'Every activity earns Village Points for you and your community' },
-                    { icon: '💝', title: 'Donate Points', desc: 'Convert your points into real donations to causes you care about' },
-                    { icon: '🌍', title: 'Make Impact', desc: 'Watch your personal growth create collective change' },
+                    { icon: <Icons.Meditation />, title: 'Practice Wellness', desc: 'Complete daily challenges and progress in your journeys' },
+                    { icon: <Icons.Star />, title: 'Earn Points', desc: 'Every activity earns Village Points for you and your community' },
+                    { icon: <Icons.Gift />, title: 'Donate Points', desc: 'Convert your points into real donations to causes you care about' },
+                    { icon: <Icons.Globe />, title: 'Make Impact', desc: 'Watch your personal growth create collective change' },
                   ].map((step, i) => (
                     <div key={i} className="text-center">
-                      <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-white/10 flex items-center justify-center">
-                        <span className="text-2xl">{step.icon}</span>
+                      <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-white/10 flex items-center justify-center text-white">
+                        {step.icon}
                       </div>
                       <h3 className="font-semibold text-white mb-1">{step.title}</h3>
                       <p className="text-slate-400 text-sm">{step.desc}</p>
@@ -837,62 +846,65 @@ function WellnessPageContent() {
 
             {/* Mood */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">How's your mood?</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">How's your mood? (1-5)</label>
               <div className="flex justify-between">
-                {MOOD_EMOJIS.map((emoji, i) => (
+                {MOOD_LEVELS.map((level) => (
                   <button
-                    key={i}
-                    onClick={() => setMoodData(prev => ({ ...prev, mood: (i + 1) as 1|2|3|4|5 }))}
-                    className={`w-12 h-12 rounded-xl text-2xl transition-all ${
-                      moodData.mood === i + 1
-                        ? 'bg-purple-100 dark:bg-purple-900/30 scale-110 ring-2 ring-purple-500'
-                        : 'bg-slate-100 dark:bg-slate-700 hover:scale-105'
+                    key={level}
+                    onClick={() => setMoodData(prev => ({ ...prev, mood: level as 1|2|3|4|5 }))}
+                    className={`w-12 h-12 rounded-xl text-lg font-bold transition-all ${
+                      moodData.mood === level
+                        ? 'bg-purple-500 text-white scale-110 ring-2 ring-purple-500'
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:scale-105'
                     }`}
                   >
-                    {emoji}
+                    {level}
                   </button>
                 ))}
               </div>
+              <p className="text-xs text-slate-500 mt-1 text-center">1 = Low, 5 = Great</p>
             </div>
 
             {/* Energy */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Energy level?</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Energy level? (1-5)</label>
               <div className="flex justify-between">
-                {ENERGY_EMOJIS.map((emoji, i) => (
+                {ENERGY_LEVELS.map((level) => (
                   <button
-                    key={i}
-                    onClick={() => setMoodData(prev => ({ ...prev, energy: (i + 1) as 1|2|3|4|5 }))}
-                    className={`w-12 h-12 rounded-xl text-2xl transition-all ${
-                      moodData.energy === i + 1
-                        ? 'bg-amber-100 dark:bg-amber-900/30 scale-110 ring-2 ring-amber-500'
-                        : 'bg-slate-100 dark:bg-slate-700 hover:scale-105'
+                    key={level}
+                    onClick={() => setMoodData(prev => ({ ...prev, energy: level as 1|2|3|4|5 }))}
+                    className={`w-12 h-12 rounded-xl text-lg font-bold transition-all ${
+                      moodData.energy === level
+                        ? 'bg-amber-500 text-white scale-110 ring-2 ring-amber-500'
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:scale-105'
                     }`}
                   >
-                    {emoji}
+                    {level}
                   </button>
                 ))}
               </div>
+              <p className="text-xs text-slate-500 mt-1 text-center">1 = Exhausted, 5 = Energized</p>
             </div>
 
             {/* Stress */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Stress level?</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Stress level? (1-5)</label>
               <div className="flex justify-between">
-                {STRESS_EMOJIS.map((emoji, i) => (
+                {STRESS_LEVELS.map((level) => (
                   <button
-                    key={i}
-                    onClick={() => setMoodData(prev => ({ ...prev, stress: (i + 1) as 1|2|3|4|5 }))}
-                    className={`w-12 h-12 rounded-xl text-2xl transition-all ${
-                      moodData.stress === i + 1
-                        ? 'bg-rose-100 dark:bg-rose-900/30 scale-110 ring-2 ring-rose-500'
-                        : 'bg-slate-100 dark:bg-slate-700 hover:scale-105'
+                    key={level}
+                    onClick={() => setMoodData(prev => ({ ...prev, stress: level as 1|2|3|4|5 }))}
+                    className={`w-12 h-12 rounded-xl text-lg font-bold transition-all ${
+                      moodData.stress === level
+                        ? 'bg-rose-500 text-white scale-110 ring-2 ring-rose-500'
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:scale-105'
                     }`}
                   >
-                    {emoji}
+                    {level}
                   </button>
                 ))}
               </div>
+              <p className="text-xs text-slate-500 mt-1 text-center">1 = Calm, 5 = Very Stressed</p>
             </div>
 
             {/* Notes */}

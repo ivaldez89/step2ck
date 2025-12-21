@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/Header';
 import { TribeCard } from '@/components/tribes/TribeCard';
 import { CreateTribeModal } from '@/components/tribes/CreateTribeModal';
 import { useTribes } from '@/hooks/useTribes';
+import { Icons } from '@/components/ui/Icons';
 import type { TribeType, SocialCause, TribeFilter } from '@/types/tribes';
 
 type SortOption = 'popular' | 'newest' | 'points' | 'alphabetical';
@@ -228,7 +229,7 @@ export default function TribesPage() {
             </div>
           ) : (
             <div className="text-center py-12 bg-white rounded-xl border border-slate-200">
-              <div className="text-4xl mb-4">🔍</div>
+              <div className="w-12 h-12 mx-auto mb-4 text-slate-400"><Icons.Search /></div>
               <h3 className="text-lg font-semibold text-slate-700 mb-2">No tribes found</h3>
               <p className="text-slate-500 mb-4">
                 Try adjusting your filters or create your own tribe!
@@ -245,7 +246,7 @@ export default function TribesPage() {
           {/* Leaderboard Section */}
           <div className="mt-8 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <h2 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-              <span className="text-xl">🏆</span>
+              <span className="w-6 h-6 text-amber-500"><Icons.Trophy /></span>
               Top Tribes This Month
             </h2>
             <div className="space-y-3">

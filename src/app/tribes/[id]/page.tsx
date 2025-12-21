@@ -10,14 +10,15 @@ import { TribeLeaderboard } from '@/components/tribes/TribeLeaderboard';
 import { TribeGoalProgress } from '@/components/tribes/TribeGoalProgress';
 import { useTribe } from '@/hooks/useTribes';
 import { getUserMemberships, setPrimaryTribe as setStoragePrimaryTribe } from '@/lib/storage/tribeStorage';
+import { Icons } from '@/components/ui/Icons';
 
 type TabId = 'overview' | 'members' | 'chat' | 'leaderboard';
 
-const tabs: { id: TabId; label: string; icon: string }[] = [
-  { id: 'overview', label: 'Overview', icon: '📊' },
-  { id: 'members', label: 'Members', icon: '👥' },
-  { id: 'chat', label: 'Chat', icon: '💬' },
-  { id: 'leaderboard', label: 'Leaderboard', icon: '🏆' },
+const tabs: { id: TabId; label: string; icon: React.ReactNode }[] = [
+  { id: 'overview', label: 'Overview', icon: <Icons.Chart /> },
+  { id: 'members', label: 'Members', icon: <Icons.Users /> },
+  { id: 'chat', label: 'Chat', icon: <Icons.Chat /> },
+  { id: 'leaderboard', label: 'Leaderboard', icon: <Icons.Trophy /> },
 ];
 
 export default function TribePage() {
@@ -90,7 +91,7 @@ export default function TribePage() {
         <Header />
         <main className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pt-20 px-4 pb-8">
           <div className="max-w-4xl mx-auto text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
+            <div className="w-16 h-16 mx-auto mb-4 text-slate-400"><Icons.Search /></div>
             <h1 className="text-2xl font-bold text-slate-800 mb-2">Tribe Not Found</h1>
             <p className="text-slate-600 mb-6">
               This tribe doesn&apos;t exist or you don&apos;t have permission to view it.
@@ -135,7 +136,7 @@ export default function TribePage() {
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
                 >
-                  <span>{tab.icon}</span>
+                  <span className="w-5 h-5">{tab.icon}</span>
                   <span className="hidden sm:inline">{tab.label}</span>
                 </button>
               ))}
@@ -156,14 +157,14 @@ export default function TribePage() {
                   {/* Recent Activity */}
                   <div className="bg-white rounded-xl border border-slate-200 p-6">
                     <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                      <span className="text-lg">📈</span>
+                      <span className="w-5 h-5 text-teal-500"><Icons.Chart /></span>
                       Recent Activity
                     </h3>
                     <div className="space-y-3">
                       {messages.slice(-3).reverse().map((msg) => (
                         <div key={msg.id} className="flex items-start gap-3 text-sm">
-                          <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs">
-                            {msg.type === 'system' ? '🔔' : msg.type === 'achievement' ? '🏆' : '💬'}
+                          <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                            {msg.type === 'system' ? <Icons.Bell /> : msg.type === 'achievement' ? <Icons.Trophy /> : <Icons.Chat />}
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-slate-700 truncate">{msg.content}</p>
@@ -180,7 +181,7 @@ export default function TribePage() {
                   {/* Top Contributors */}
                   <div className="bg-white rounded-xl border border-slate-200 p-6">
                     <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                      <span className="text-lg">⭐</span>
+                      <span className="w-5 h-5 text-amber-500"><Icons.Star /></span>
                       Top Contributors
                     </h3>
                     <div className="space-y-3">
@@ -189,8 +190,10 @@ export default function TribePage() {
                         .slice(0, 3)
                         .map((member, index) => (
                           <div key={member.id} className="flex items-center gap-3">
-                            <span className="text-lg">
-                              {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                              index === 0 ? 'bg-yellow-100 text-yellow-700' : index === 1 ? 'bg-slate-200 text-slate-700' : 'bg-amber-100 text-amber-700'
+                            }`}>
+                              {index + 1}
                             </span>
                             <div className="flex-1 min-w-0">
                               <p className="font-medium text-slate-700 truncate">
@@ -212,24 +215,24 @@ export default function TribePage() {
                 {/* Point earning guide */}
                 <div className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl border border-teal-200 p-6">
                   <h3 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                    <span className="text-lg">💡</span>
+                    <span className="w-5 h-5 text-teal-600"><Icons.Lightbulb /></span>
                     How to Earn Points
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                     <div className="flex items-center gap-2 text-slate-600">
-                      <span className="text-teal-500">📚</span>
+                      <span className="w-4 h-4 text-teal-500"><Icons.Book /></span>
                       Complete flashcard sessions (+10 pts)
                     </div>
                     <div className="flex items-center gap-2 text-slate-600">
-                      <span className="text-teal-500">🔥</span>
+                      <span className="w-4 h-4 text-teal-500"><Icons.Fire /></span>
                       Maintain study streak (+5 pts/day)
                     </div>
                     <div className="flex items-center gap-2 text-slate-600">
-                      <span className="text-teal-500">🧘</span>
+                      <span className="w-4 h-4 text-teal-500"><Icons.Meditation /></span>
                       Complete wellness challenges (+5-12 pts)
                     </div>
                     <div className="flex items-center gap-2 text-slate-600">
-                      <span className="text-teal-500">🤝</span>
+                      <span className="w-4 h-4 text-teal-500"><Icons.Handshake /></span>
                       Help a peer (+15 pts)
                     </div>
                   </div>

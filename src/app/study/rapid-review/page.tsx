@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/Header';
 import { useFlashcards } from '@/hooks/useFlashcards';
 import { BackgroundSelector, useStudyBackground, getBackgroundUrl } from '@/components/study/BackgroundSelector';
 import { CalendarWidget } from '@/components/calendar/CalendarWidget';
+import { Icons } from '@/components/ui/Icons';
 
 // Rapid review stats type
 interface RapidReviewStats {
@@ -521,13 +522,14 @@ export default function RapidReviewPage() {
                       <button
                         key={filter}
                         onClick={() => setVoiceFilter(filter)}
-                        className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors capitalize ${
+                        className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors capitalize flex items-center justify-center gap-1 ${
                           voiceFilter === filter
                             ? 'bg-amber-500 text-white'
                             : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
                         }`}
                       >
-                        {filter === 'all' ? '👥 All' : filter === 'female' ? '👩 Female' : '👨 Male'}
+                        <span className="w-4 h-4">{filter === 'all' ? <Icons.Group /> : <Icons.Person />}</span>
+                        <span className="capitalize">{filter}</span>
                       </button>
                     ))}
                   </div>
@@ -546,13 +548,11 @@ export default function RapidReviewPage() {
                     >
                       {filteredVoices.map((voice, idx) => {
                         const originalIdx = voices.indexOf(voice);
-                        const gender = getVoiceGender(voice);
-                        const genderIcon = gender === 'female' ? '👩' : gender === 'male' ? '👨' : '🔊';
                         const qualityBadge = voice.name.includes('Premium') || voice.name.includes('Enhanced') || voice.name.includes('Siri')
-                          ? ' ⭐' : '';
+                          ? ' *' : '';
                         return (
                           <option key={originalIdx} value={originalIdx}>
-                            {genderIcon} {voice.name}{qualityBadge} ({voice.lang})
+                            {voice.name}{qualityBadge} ({voice.lang})
                           </option>
                         );
                       })}
@@ -619,8 +619,9 @@ export default function RapidReviewPage() {
               </div>
 
               {/* Voice tip */}
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                💡 Tip: On Mac, go to System Settings → Accessibility → Spoken Content → System Voice → Manage Voices to download premium voices like "Siri Voice 1" for the most natural sound.
+              <p className="text-xs text-slate-500 dark:text-slate-400 flex items-start gap-1">
+                <span className="w-4 h-4 flex-shrink-0"><Icons.Lightbulb /></span>
+                <span>Tip: On Mac, go to System Settings → Accessibility → Spoken Content → System Voice → Manage Voices to download premium voices like "Siri Voice 1" for the most natural sound.</span>
               </p>
             </div>
           </div>
@@ -697,8 +698,9 @@ export default function RapidReviewPage() {
 
                   {currentCard.content.explanation && (
                     <div className="mt-6 p-4 bg-white/60 dark:bg-slate-800/50 rounded-xl border border-emerald-200 dark:border-emerald-800">
-                      <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                        💡 {currentCard.content.explanation}
+                      <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed flex items-start gap-2">
+                        <span className="w-4 h-4 flex-shrink-0"><Icons.Lightbulb /></span>
+                        <span>{currentCard.content.explanation}</span>
                       </p>
                     </div>
                   )}
@@ -787,8 +789,9 @@ export default function RapidReviewPage() {
         {/* Current voice indicator */}
         {voices[selectedVoiceIndex] && (
           <div className="mt-4 text-center">
-            <span className="text-xs text-slate-500 dark:text-slate-400">
-              🔊 {voices[selectedVoiceIndex].name} @ {speechRate}x speed
+            <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1">
+              <span className="w-4 h-4"><Icons.Headphones /></span>
+              {voices[selectedVoiceIndex].name} @ {speechRate}x speed
             </span>
           </div>
         )}

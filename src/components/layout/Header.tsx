@@ -121,7 +121,7 @@ function NavDropdown({ label, href, items }: NavDropdownProps) {
 
 // Dropdown menu configurations
 const studyDropdownItems: DropdownItem[] = [
-  { label: 'Study Dashboard', href: '/study', description: 'Overview of your progress' },
+  { label: 'Clinical Cases', href: '/cases', description: 'Interactive patient scenarios' },
   { label: 'Flashcards', href: '/study/flashcards', description: 'Spaced repetition review' },
   { label: 'Rapid Review', href: '/study/rapid-review', description: 'Quick concept review' },
   { label: 'Progress', href: '/study/progress', description: 'Track your learning' },
@@ -129,20 +129,13 @@ const studyDropdownItems: DropdownItem[] = [
   { label: 'Resources', href: '/resources', description: 'Visual guides & infographics' },
 ];
 
-const casesDropdownItems: DropdownItem[] = [
-  { label: 'Browse Cases', href: '/cases', description: 'Clinical case library' },
-  { label: 'Create Case', href: '/cases/create', description: 'Build a new case' },
-];
-
 const wellnessDropdownItems: DropdownItem[] = [
-  { label: 'TribeWellz Hub', href: '/wellness', description: 'Your village & wellness home' },
   { label: 'My Journey', href: '/wellness?tab=journey', description: 'Daily challenges & wellness journeys' },
   { label: 'Social Skills', href: '/wellness?tab=skills', description: 'App-taught interpersonal skills' },
   { label: 'Social Impact', href: '/wellness?tab=impact', description: 'Donate points to causes' },
 ];
 
 const communityDropdownItems: DropdownItem[] = [
-  { label: 'Community Hub', href: '/community', description: 'Connect with your tribe' },
   { label: 'Tribes', href: '/tribes', description: 'Join group communities' },
   { label: 'PreMed', href: '/premed', description: 'Resources for pre-med students' },
 ];
@@ -175,7 +168,6 @@ export function Header({ stats }: HeaderProps) {
           <nav className="hidden md:flex items-center gap-1">
             <NavLink href="/">Home</NavLink>
             <NavDropdown label="Study" href="/study" items={studyDropdownItems} />
-            <NavDropdown label="Cases" href="/cases" items={casesDropdownItems} />
             <NavDropdown label="Wellness" href="/wellness" items={wellnessDropdownItems} />
             <NavDropdown label="Community" href="/community" items={communityDropdownItems} />
           </nav>

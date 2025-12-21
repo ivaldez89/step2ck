@@ -2,10 +2,13 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 import Link from 'next/link';
 import { StudyStatsDisplay, getStudyStats } from '@/components/study/StudyStats';
 import { PerformanceAnalytics } from '@/components/deck/PerformanceAnalytics';
 import { CalendarWidget } from '@/components/calendar/CalendarWidget';
+import { Icons } from '@/components/ui/Icons';
+import { useStreak, VERIFICATION_MULTIPLIERS, type VerificationTier } from '@/hooks/useStreak';
 import type { TopicPerformance } from '@/types';
 
 interface DayData {
@@ -27,7 +30,10 @@ export default function ProgressPage() {
   const [studySessions, setStudySessions] = useState<StudySession[]>([]);
   const [topicPerformance, setTopicPerformance] = useState<TopicPerformance[]>([]);
   const [stats, setStats] = useState<ReturnType<typeof getStudyStats> | null>(null);
-  const [activeTab, setActiveTab] = useState<'calendar' | 'schedule' | 'performance' | 'achievements'>('calendar');
+  const [activeTab, setActiveTab] = useState<'overview' | 'calendar' | 'schedule' | 'performance' | 'achievements'>('overview');
+
+  // Get streak data for Village Points
+  const { streakData } = useStreak();
 
   useEffect(() => {
     // Load study stats
@@ -164,7 +170,7 @@ export default function ProgressPage() {
         </Link>
 
         {/* Hero Banner */}
-        <section className="mb-8">
+        <section className="mb-8 animate-fade-in-up">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600 p-8 md:p-10 shadow-2xl">
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden">
@@ -213,27 +219,187 @@ export default function ProgressPage() {
         </section>
 
         {/* Tab Navigation */}
-        <div className="flex gap-2 mb-6 border-b border-slate-200 dark:border-slate-700 overflow-x-auto">
+        <div className="flex gap-2 mb-6 border-b border-slate-200 dark:border-slate-700 overflow-x-auto animate-fade-in-up animation-delay-100">
           {[
-            { id: 'calendar', label: 'Study Activity', icon: '📅' },
-            { id: 'schedule', label: 'My Schedule', icon: '🗓️' },
-            { id: 'performance', label: 'Performance', icon: '📊' },
-            { id: 'achievements', label: 'Achievements', icon: '🏆' },
+            { id: 'overview', label: 'Overview', icon: <Icons.Chart /> },
+            { id: 'calendar', label: 'Study Activity', icon: <Icons.Calendar /> },
+            { id: 'schedule', label: 'My Schedule', icon: <Icons.CalendarSchedule /> },
+            { id: 'performance', label: 'Performance', icon: <Icons.Target /> },
+            { id: 'achievements', label: 'Achievements', icon: <Icons.Trophy /> },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
-              className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-colors border-b-2 -mb-px ${
+              className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-colors border-b-2 -mb-px whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'text-teal-600 dark:text-teal-400 border-teal-600 dark:border-teal-400'
                   : 'text-slate-600 dark:text-slate-400 border-transparent hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <span>{tab.icon}</span>
+              <span className="w-5 h-5">{tab.icon}</span>
               {tab.label}
             </button>
           ))}
         </div>
+
+        {/* Overview Tab - All Metrics in One Place */}
+        {activeTab === 'overview' && !streakData && (
+          <div className="flex items-center justify-center py-16">
+            <div className="animate-spin w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full" />
+          </div>
+        )}
+        {activeTab === 'overview' && streakData && (
+          <div className="space-y-6">
+            {/* Main Stats Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* XP Card */}
+              <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-5 text-white">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Icons.Lightning />
+                  </div>
+                  <span className="text-white/80 text-sm font-medium">Experience Points</span>
+                </div>
+                <p className="text-3xl font-bold">{streakData.totalXP.toLocaleString()}</p>
+                <p className="text-white/60 text-sm mt-1">Level {streakData.level}</p>
+              </div>
+
+              {/* Village Points Card */}
+              <div className="bg-gradient-to-br from-teal-500 to-emerald-600 rounded-2xl p-5 text-white">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Icons.Heart />
+                  </div>
+                  <span className="text-white/80 text-sm font-medium">Village Points</span>
+                </div>
+                <p className="text-3xl font-bold">{streakData.totalVillagePoints.toLocaleString()}</p>
+                <p className="text-white/60 text-sm mt-1">
+                  ${(streakData.totalVillagePoints / 1000).toFixed(2)} to charity
+                </p>
+              </div>
+
+              {/* Streak Card */}
+              <div className="bg-gradient-to-br from-orange-500 to-amber-600 rounded-2xl p-5 text-white">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Icons.Fire />
+                  </div>
+                  <span className="text-white/80 text-sm font-medium">Current Streak</span>
+                </div>
+                <p className="text-3xl font-bold">{streakData.currentStreak} days</p>
+                <p className="text-white/60 text-sm mt-1">Best: {streakData.longestStreak} days</p>
+              </div>
+
+              {/* Cards Reviewed Card */}
+              <div className="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-5 text-white">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Icons.Cards />
+                  </div>
+                  <span className="text-white/80 text-sm font-medium">Cards Reviewed</span>
+                </div>
+                <p className="text-3xl font-bold">{stats?.totalCardsReviewed || 0}</p>
+                <p className="text-white/60 text-sm mt-1">{stats?.totalStudyDays || 0} study days</p>
+              </div>
+            </div>
+
+            {/* Daily Progress */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Today's Progress</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-slate-600 dark:text-slate-400">Daily XP Goal</span>
+                    <span className="font-medium text-slate-900 dark:text-white">
+                      {streakData.todayXP} / {streakData.dailyGoalXP} XP
+                    </span>
+                  </div>
+                  <div className="h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full transition-all"
+                      style={{ width: `${Math.min((streakData.todayXP / streakData.dailyGoalXP) * 100, 100)}%` }}
+                    />
+                  </div>
+                </div>
+                {streakData.todayXP >= streakData.dailyGoalXP && (
+                  <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="font-medium">Daily goal achieved!</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Village Points Breakdown */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Village Points Breakdown</h3>
+                <Link
+                  href="/impact"
+                  className="text-sm text-teal-600 dark:text-teal-400 hover:underline"
+                >
+                  Learn more
+                </Link>
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {(Object.entries(streakData.villagePointsByTier) as [VerificationTier, number][]).map(([tier, points]) => (
+                  <div
+                    key={tier}
+                    className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-medium text-slate-900 dark:text-white capitalize">
+                        {tier.replace('-', ' ')}
+                      </span>
+                      <span className="text-xs px-2 py-0.5 bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300 rounded-full">
+                        {VERIFICATION_MULTIPLIERS[tier]}x
+                      </span>
+                    </div>
+                    <p className="text-xl font-bold text-teal-600 dark:text-teal-400">{points}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 p-4 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 rounded-xl border border-teal-200 dark:border-teal-800">
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  This week: <span className="font-semibold text-teal-600 dark:text-teal-400">{streakData.weeklyVillagePoints} VP</span> earned
+                  <span className="mx-2">•</span>
+                  Conversion: 10 XP = 1 Village Point • 1,000 VP = $1 to charity
+                </p>
+              </div>
+            </div>
+
+            {/* Weekly Activity Summary */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">This Week</h3>
+              <div className="flex items-center justify-between gap-2">
+                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => {
+                  const isActive = streakData.weeklyActivity[6 - i]; // weeklyActivity[0] = today
+                  const isToday = i === new Date().getDay();
+                  return (
+                    <div key={i} className="flex-1 text-center">
+                      <p className={`text-xs mb-2 ${isToday ? 'font-bold text-teal-600' : 'text-slate-500'}`}>{day}</p>
+                      <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center ${
+                        isActive
+                          ? 'bg-emerald-500 text-white'
+                          : 'bg-slate-100 dark:bg-slate-700 text-slate-400'
+                      }`}>
+                        {isActive ? (
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        ) : (
+                          <span className="w-2 h-2 bg-slate-300 dark:bg-slate-600 rounded-full" />
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Calendar Tab */}
         {activeTab === 'calendar' && (
@@ -350,8 +516,8 @@ export default function ProgressPage() {
             {stats && (
               <div className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30 rounded-2xl border border-orange-200 dark:border-orange-800/50 p-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center text-4xl">
-                    {stats.currentStreak > 0 ? '🔥' : '❄️'}
+                  <div className="w-16 h-16 rounded-2xl bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center text-orange-500 dark:text-orange-400">
+                    {stats.currentStreak > 0 ? <Icons.Fire /> : <Icons.Snowflake />}
                   </div>
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
@@ -381,8 +547,8 @@ export default function ProgressPage() {
             {/* Info Banner */}
             <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 rounded-2xl border border-indigo-200 dark:border-indigo-800/50 p-6">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-2xl">
-                  🗓️
+                <div className="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                  <Icons.CalendarSchedule />
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 dark:text-white mb-1">
@@ -488,6 +654,8 @@ export default function ProgressPage() {
           </Link>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

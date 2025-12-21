@@ -1,9 +1,37 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'footer' }),
+      });
+
+      if (response.ok) {
+        setSubscribed(true);
+        setEmail('');
+      }
+    } catch {
+      // Silent fail for footer
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <footer className="bg-slate-900 text-slate-300">
@@ -70,6 +98,22 @@ export function Footer() {
                 </svg>
               </a>
             </div>
+            {/* Install App Link */}
+            <button
+              onClick={() => {
+                if ('standalone' in window.navigator && (window.navigator as Navigator & { standalone?: boolean }).standalone) {
+                  return; // Already installed
+                }
+                // Show install prompt or instructions
+                alert('To install TribeWellMD:\n\n• iOS: Tap Share → Add to Home Screen\n• Android: Tap Menu → Install App\n• Desktop: Click the install icon in your browser\'s address bar');
+              }}
+              className="mt-4 flex items-center gap-2 text-slate-400 hover:text-teal-400 transition-colors text-sm group"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span className="group-hover:underline">Install App</span>
+            </button>
           </div>
 
           {/* Study Tools */}
@@ -164,16 +208,33 @@ export function Footer() {
             {/* Newsletter Signup */}
             <div className="mt-6">
               <h4 className="text-white text-sm font-medium mb-2">Stay Updated</h4>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-teal-500"
-                />
-                <button className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium rounded-lg transition-colors">
-                  Subscribe
-                </button>
-              </div>
+              {subscribed ? (
+                <p className="text-teal-400 text-sm flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  You're subscribed!
+                </p>
+              ) : (
+                <form onSubmit={handleSubscribe} className="flex gap-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    required
+                    disabled={loading}
+                    className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-teal-500 disabled:opacity-50"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    {loading ? '...' : 'Subscribe'}
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </div>

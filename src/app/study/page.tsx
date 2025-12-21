@@ -14,10 +14,9 @@ import { BackgroundSelector, useStudyBackground, getBackgroundUrl } from '@/comp
 import { CalendarWidget } from '@/components/calendar/CalendarWidget';
 import { ExamCountdown } from '@/components/study/ExamCountdown';
 import { useFlashcards } from '@/hooks/useFlashcards';
-import { useMissedConcepts } from '@/hooks/useMissedConcepts';
-import { QBankLookup } from '@/components/study/QBankLookup';
 import { shelfCategories, topicCategories } from '@/data/tribewellmd-library';
-import type { Rating, Flashcard } from '@/types';
+import { Icons } from '@/components/ui/Icons';
+import type { Rating } from '@/types';
 
 // Achievement type for notifications
 interface Achievement {
@@ -30,24 +29,42 @@ interface Achievement {
   type: 'cards' | 'streak' | 'days' | 'pomodoro';
 }
 
+// Helper to render audio icons
+const AudioIcon = ({ iconId }: { iconId: string }) => {
+  const iconMap: Record<string, React.ReactNode> = {
+    'radio': <Icons.Radio />,
+    'pink': <Icons.PinkNoise />,
+    'brown': <Icons.BrownNoise />,
+    'rain': <Icons.Rain />,
+    'wind': <Icons.Wind />,
+    'brain': <Icons.Brain />,
+    'headphones': <Icons.Headphones />,
+    'violin': <Icons.Violin />,
+    'piano': <Icons.Piano />,
+    'saxophone': <Icons.Saxophone />,
+    'leaf': <Icons.Leaf />,
+  };
+  return <span className="w-5 h-5 flex items-center justify-center">{iconMap[iconId] || <Icons.Music />}</span>;
+};
+
 // Ambient sound definitions - generated using Web Audio API
 const AMBIENT_SOUNDS = [
-  { id: 'whitenoise', name: 'White Noise', emoji: '📻' },
-  { id: 'pinknoise', name: 'Pink Noise', emoji: '🩷' },
-  { id: 'brownnoise', name: 'Brown Noise', emoji: '🟤' },
-  { id: 'rain', name: 'Rain', emoji: '🌧️' },
-  { id: 'wind', name: 'Wind', emoji: '💨' },
-  { id: 'binaural', name: 'Focus 40Hz', emoji: '🧠' },
+  { id: 'whitenoise', name: 'White Noise', icon: 'radio' },
+  { id: 'pinknoise', name: 'Pink Noise', icon: 'pink' },
+  { id: 'brownnoise', name: 'Brown Noise', icon: 'brown' },
+  { id: 'rain', name: 'Rain', icon: 'rain' },
+  { id: 'wind', name: 'Wind', icon: 'wind' },
+  { id: 'binaural', name: 'Focus 40Hz', icon: 'brain' },
 ];
 
 // Study music streams - verified reliable radio stations
 const MUSIC_STREAMS = [
-  { id: 'lofi', name: 'Lofi Beats', emoji: '🎧', url: 'https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/' },
-  { id: 'classical', name: 'Classical', emoji: '🎻', url: 'https://live.musopen.org:8085/streamvbr0' },
-  { id: 'piano', name: 'Piano', emoji: '🎹', url: 'https://pianosolo.streamguys1.com/live' },
-  { id: 'jazz', name: 'Jazz', emoji: '🎷', url: 'https://jazzradio.ice.infomaniak.ch/jazzradio-high.mp3' },
-  { id: 'nature', name: 'Nature Sounds', emoji: '🌿', url: 'https://ice5.somafm.com/dronezone-128-mp3' },
-  { id: 'focus', name: 'Deep Focus', emoji: '🧠', url: 'https://ice5.somafm.com/deepspaceone-128-mp3' },
+  { id: 'lofi', name: 'Lofi Beats', icon: 'headphones', url: 'https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/' },
+  { id: 'classical', name: 'Classical', icon: 'violin', url: 'https://live.musopen.org:8085/streamvbr0' },
+  { id: 'piano', name: 'Piano', icon: 'piano', url: 'https://pianosolo.streamguys1.com/live' },
+  { id: 'jazz', name: 'Jazz', icon: 'saxophone', url: 'https://jazzradio.ice.infomaniak.ch/jazzradio-high.mp3' },
+  { id: 'nature', name: 'Nature Sounds', icon: 'leaf', url: 'https://ice5.somafm.com/dronezone-128-mp3' },
+  { id: 'focus', name: 'Deep Focus', icon: 'brain', url: 'https://ice5.somafm.com/deepspaceone-128-mp3' },
 ];
 
 // Noise generator using Web Audio API
@@ -325,19 +342,6 @@ export default function StudyPage() {
   const [cramIndex, setCramIndex] = useState(0);
   const [cramRevealed, setCramRevealed] = useState(false);
   const [isStudying, setIsStudying] = useState(false);
-  const [showQBankLookup, setShowQBankLookup] = useState(false);
-
-  // Missed concepts tracking
-  const {
-    getStats: getMissedStats,
-    getHighPriorityConcepts,
-    getDueConceptsToday,
-    recordMissedConcept
-  } = useMissedConcepts();
-
-  const missedStats = getMissedStats();
-  const priorityConcepts = getHighPriorityConcepts(3);
-  const dueConceptsCount = getDueConceptsToday().length;
 
   // Cram mode: cards with lapses (cards user got wrong before)
   const cramCards = cards.filter(card => card.spacedRepetition.lapses > 0);
@@ -573,7 +577,7 @@ export default function StudyPage() {
         {!isStudying && (
           <>
             {/* Hero Study Section - Primary CTA */}
-            <section className="mb-8">
+            <section className="mb-8 animate-fade-in-up">
               <div className={`relative rounded-3xl ${
                 stats.dueToday > 0
                   ? 'bg-gradient-to-br from-teal-500 via-cyan-500 to-blue-600'
@@ -736,129 +740,77 @@ export default function StudyPage() {
               </div>
             </section>
 
-            {/* Main 4-Box Navigation Grid - Matching Cases page style */}
-            <section className="mb-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* 3-Box Navigation Grid */}
+            <section className="mb-8 animate-fade-in-up animation-delay-100">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-                {/* Box 1: Shelf Exams */}
+                {/* Box 1: Rapid Review */}
                 <Link
-                  href="/library?view=shelves"
-                  className="group relative p-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
+                  href="/study/rapid-review"
+                  className="group relative p-6 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
                 >
+                  <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+                  </div>
                   <div className="relative z-10">
-                    <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center mb-4">
-                      <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-3">
+                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     </div>
-                    <h3 className="font-bold text-xl mb-1">Shelf Exams</h3>
-                    <p className="text-white/70 text-sm mb-3">Study by rotation</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-3xl font-bold">{shelfCategories.length}</span>
-                      <span className="text-white/60 text-sm">rotations</span>
-                    </div>
+                    <h3 className="font-bold text-lg mb-1">Rapid Review</h3>
+                    <p className="text-white/70 text-sm">Audio-powered TTS study mode</p>
                   </div>
                   <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
                   </div>
                 </Link>
 
-                {/* Box 2: Topics */}
+                {/* Box 2: Clinical Cases */}
                 <Link
-                  href="/library?view=topics"
-                  className="group relative p-6 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
+                  href="/cases"
+                  className="group relative p-6 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
                 >
+                  <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+                  </div>
                   <div className="relative z-10">
-                    <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center mb-4">
-                      <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-3">
+                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
-                    <h3 className="font-bold text-xl mb-1">Topics</h3>
-                    <p className="text-white/70 text-sm mb-3">Study by system</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-3xl font-bold">{topicCategories.length}</span>
-                      <span className="text-white/60 text-sm">systems</span>
-                    </div>
+                    <h3 className="font-bold text-lg mb-1">Clinical Cases</h3>
+                    <p className="text-white/70 text-sm">Learn to think, not memorize</p>
                   </div>
                   <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
                   </div>
                 </Link>
 
-                {/* Box 3: QBank Lookup - PROMOTED! Differentiator Feature */}
-                <button
-                  onClick={() => setShowQBankLookup(!showQBankLookup)}
-                  className={`group relative p-6 rounded-2xl shadow-lg transition-all duration-300 text-white overflow-hidden text-left ${
-                    showQBankLookup
-                      ? 'bg-gradient-to-br from-orange-500 to-red-600 shadow-orange-500/40 scale-[1.02]'
-                      : 'bg-gradient-to-br from-orange-500 to-amber-600 shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-[1.02]'
-                  }`}
-                >
-                  <div className="relative z-10">
-                    <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center mb-4">
-                      <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
-                    </div>
-                    <h3 className="font-bold text-xl mb-1 flex items-center gap-2">
-                      QBank Lookup
-                      <span className="px-1.5 py-0.5 text-xs bg-white/20 rounded-full">UNIQUE</span>
-                    </h3>
-                    <p className="text-white/70 text-sm mb-3">Find missed concepts</p>
-                    <div className="flex items-center gap-2">
-                      {missedStats.totalTracked > 0 ? (
-                        <>
-                          <span className="text-3xl font-bold">{missedStats.totalTracked}</span>
-                          <span className="text-white/60 text-sm">tracked</span>
-                        </>
-                      ) : (
-                        <>
-                          <span className="text-lg font-medium text-white/80">UWorld + AMBOSS</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <svg className={`w-6 h-6 transition-transform ${showQBankLookup ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </button>
-
-                {/* Box 4: Your Progress */}
+                {/* Box 3: Progress */}
                 <Link
                   href="/study/progress"
                   className="group relative p-6 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
                 >
+                  <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+                  </div>
                   <div className="relative z-10">
-                    <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center mb-4">
-                      <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-3">
+                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>
                     </div>
-                    <h3 className="font-bold text-xl mb-1">Your Progress</h3>
-                    <p className="text-white/70 text-sm mb-3">Track your mastery</p>
-                    {/* Progress Bar */}
-                    <div className="mb-2">
-                      <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-white rounded-full transition-all duration-500"
-                          style={{ width: `${stats.totalCards > 0 ? Math.round((stats.dueToday / stats.totalCards) * 100) : 0}%` }}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-white/70">{stats.totalCards} cards</span>
-                      <span className="font-bold">{stats.averageEase.toFixed(0)}% ease</span>
-                    </div>
+                    <h3 className="font-bold text-lg mb-1">Progress</h3>
+                    <p className="text-white/70 text-sm">All your stats in one place</p>
                   </div>
                   <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
                   </div>
@@ -866,53 +818,85 @@ export default function StudyPage() {
               </div>
             </section>
 
-            {/* QBank Lookup Expanded Panel */}
-            {showQBankLookup && (
-              <section className="mb-8 -mt-4">
-                <div className="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-lg">
-                  <QBankLookup />
-
-                  {/* Missed Concepts Summary */}
-                  {missedStats.totalTracked > 0 && priorityConcepts.length > 0 && (
-                    <div className="mt-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border border-amber-200 dark:border-amber-800">
-                      <div className="flex items-center justify-between mb-3">
-                        <h4 className="font-medium text-amber-900 dark:text-amber-100 text-sm flex items-center gap-2">
-                          Weak Concepts
-                          {dueConceptsCount > 0 && (
-                            <span className="px-2 py-0.5 bg-amber-500 text-white text-xs rounded-full">
-                              {dueConceptsCount} due
-                            </span>
-                          )}
-                        </h4>
-                      </div>
-                      <div className="space-y-2">
-                        {priorityConcepts.slice(0, 3).map(({ conceptCode, missCount, concept }) => (
-                          <div
-                            key={conceptCode}
-                            className="flex items-center justify-between p-3 bg-white dark:bg-slate-800 rounded-lg border border-amber-200 dark:border-amber-700"
-                          >
-                            <div>
-                              <p className="font-medium text-slate-900 dark:text-white text-sm">
-                                {concept?.name || conceptCode}
-                              </p>
-                              <p className="text-xs text-teal-600 dark:text-teal-400">
-                                {concept?.clinicalDecision}
-                              </p>
-                            </div>
-                            <span className="px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs rounded">
-                              {missCount}x
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+            {/* Browse by Category Section */}
+            <section className="mb-8 animate-fade-in-up animation-delay-200">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">Browse by Category</h2>
+                <Link
+                  href="/library"
+                  className="text-sm text-teal-600 dark:text-teal-400 hover:underline flex items-center gap-1"
+                >
+                  View all
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {shelfCategories.slice(0, 4).map((category) => (
+                  <Link
+                    key={category.id}
+                    href={`/library?category=${category.id}`}
+                    className="group p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-600 hover:shadow-md transition-all"
+                  >
+                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${category.color} flex items-center justify-center text-xl mb-2`}>
+                      {category.icon}
                     </div>
-                  )}
-                </div>
-              </section>
-            )}
+                    <h3 className="font-medium text-slate-900 dark:text-white text-sm group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                      {category.name}
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      {category.subcategories?.length || 0} topics
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </section>
+
+            {/* QBank Lookup Section */}
+            <section className="mb-8 animate-fade-in-up animation-delay-300">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">QBank Lookup</h2>
+              </div>
+              <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+                  Missed a UWorld or Amboss question? Enter the code to study related cards.
+                </p>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const input = e.currentTarget.querySelector('input') as HTMLInputElement;
+                    const code = input?.value.trim();
+                    if (code) {
+                      // Store the code and navigate to library with qbank filter
+                      sessionStorage.setItem('qbankCode', code);
+                      window.location.href = `/library?qbank=${encodeURIComponent(code)}`;
+                    }
+                  }}
+                  className="flex gap-2"
+                >
+                  <input
+                    type="text"
+                    placeholder="e.g., UW-12345 or AMBOSS-678"
+                    className="flex-1 px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  />
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-medium rounded-lg hover:from-teal-600 hover:to-cyan-600 transition-all shadow-md hover:shadow-lg"
+                  >
+                    <span className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                      Find Cards
+                    </span>
+                  </button>
+                </form>
+              </div>
+            </section>
 
             {/* Secondary Actions Row */}
-            <section className="mb-8">
+            <section className="mb-8 animate-fade-in-up animation-delay-400">
               <div className="grid grid-cols-2 gap-4">
                 {/* AI Generate */}
                 <Link
@@ -1009,7 +993,7 @@ export default function StudyPage() {
                   }`}
                   title={cramCards.length === 0 ? 'No cards to cram' : `Cram ${cramCards.length} missed cards`}
                 >
-                  <span className="text-base">🔥</span>
+                  <span className="w-4 h-4 text-orange-500"><Icons.Fire /></span>
                   <span>Cram</span>
                   {cramCards.length > 0 && (
                     <span className={`text-xs px-1.5 py-0.5 rounded-full ${
@@ -1034,8 +1018,8 @@ export default function StudyPage() {
                       <span className="flex items-center gap-1">
                         <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
                         {isPlaying
-                          ? AMBIENT_SOUNDS.find(s => s.id === currentSound)?.emoji
-                          : MUSIC_STREAMS.find(s => s.id === currentMusic)?.emoji
+                          ? <AudioIcon iconId={AMBIENT_SOUNDS.find(s => s.id === currentSound)?.icon || 'radio'} />
+                          : <AudioIcon iconId={MUSIC_STREAMS.find(s => s.id === currentMusic)?.icon || 'headphones'} />
                         }
                       </span>
                     ) : (
@@ -1060,7 +1044,7 @@ export default function StudyPage() {
                         <div className="p-4">
                           <div className="flex items-center justify-between mb-3">
                             <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                              <span>🎵</span>
+                              <Icons.Music />
                               <span>Audio</span>
                             </h3>
                             {(isPlaying || isMusicPlaying) && (
@@ -1088,7 +1072,7 @@ export default function StudyPage() {
                                   }`}
                                   title={sound.name}
                                 >
-                                  <span className="text-lg">{sound.emoji}</span>
+                                  <AudioIcon iconId={sound.icon} />
                                   <span className="text-[10px] truncate w-full text-center text-slate-600 dark:text-slate-300">{sound.name.split(' ')[0]}</span>
                                   {currentSound === sound.id && isPlaying && (
                                     <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse" />
@@ -1133,7 +1117,7 @@ export default function StudyPage() {
                                   } ${isMusicLoading && currentMusic !== music.id ? 'opacity-50' : ''}`}
                                   title={music.name}
                                 >
-                                  <span className="text-lg">{music.emoji}</span>
+                                  <AudioIcon iconId={music.icon} />
                                   <span className="text-[10px] truncate w-full text-center text-slate-600 dark:text-slate-300">{music.name.split(' ')[0]}</span>
                                   {currentMusic === music.id && isMusicLoading && (
                                     <span className="absolute top-1 right-1 w-2 h-2 border border-indigo-500 border-t-transparent rounded-full animate-spin" />
@@ -1228,7 +1212,7 @@ export default function StudyPage() {
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-4 p-4 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 rounded-xl border border-orange-200 dark:border-orange-800">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">🔥</span>
+                    <span className="w-8 h-8 text-orange-500"><Icons.Fire /></span>
                     <div>
                       <h2 className="font-semibold text-orange-900 dark:text-orange-100">Cram Mode</h2>
                       <p className="text-sm text-orange-700 dark:text-orange-300">Cards you've missed before</p>
@@ -1316,7 +1300,7 @@ export default function StudyPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">All Caught Up! 🎉</h2>
+                <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">All Caught Up!</h2>
                 <p className="text-lg text-slate-600 dark:text-slate-400 mb-8">Great work! Come back later for your next review.</p>
 
                 {session && session.cardsReviewed > 0 && (

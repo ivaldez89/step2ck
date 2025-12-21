@@ -3,17 +3,39 @@
 import { useState } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { Icons } from '@/components/ui/Icons';
 import Link from 'next/link';
 
 export default function CommunityPage() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      setSubscribed(true);
-      setEmail('');
+    if (!email) return;
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'community-page' }),
+      });
+
+      if (response.ok) {
+        setSubscribed(true);
+        setEmail('');
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,14 +109,17 @@ export default function CommunityPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Enter your email"
                       required
-                      className="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      disabled={loading}
+                      className="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:opacity-50"
                     />
                     <button
                       type="submit"
-                      className="w-full px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-xl shadow-lg shadow-orange-500/25 transition-all hover:scale-105"
+                      disabled={loading}
+                      className="w-full px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-xl shadow-lg shadow-orange-500/25 transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
                     >
-                      Notify Me
+                      {loading ? 'Saving...' : 'Notify Me'}
                     </button>
+                    {error && <p className="text-red-500 text-sm text-center">{error}</p>}
                   </form>
                 )}
                 <p className="text-slate-500 text-xs text-center mt-3">No spam, ever.</p>
@@ -114,8 +139,8 @@ export default function CommunityPage() {
               </div>
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-2xl">
-                    🎯
+                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-white">
+                    <Icons.Target />
                   </div>
                   <span className="px-3 py-1 bg-white/20 text-white/90 text-xs font-medium rounded-full">
                     Coming Soon
@@ -142,8 +167,8 @@ export default function CommunityPage() {
               </div>
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-2xl">
-                    📸
+                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-white">
+                    <Icons.Camera />
                   </div>
                   <span className="px-3 py-1 bg-white/20 text-white/90 text-xs font-medium rounded-full">
                     Coming Soon
@@ -173,8 +198,8 @@ export default function CommunityPage() {
               </div>
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-2xl">
-                    📚
+                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-white">
+                    <Icons.Book />
                   </div>
                   <span className="px-3 py-1 bg-emerald-400/40 text-white text-xs font-medium rounded-full">
                     Active
@@ -204,8 +229,8 @@ export default function CommunityPage() {
               </div>
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-2xl">
-                    💬
+                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-white">
+                    <Icons.Chat />
                   </div>
                   <span className="px-3 py-1 bg-white/20 text-white/90 text-xs font-medium rounded-full">
                     Coming Soon
@@ -301,8 +326,8 @@ export default function CommunityPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center">
-                  <span className="text-lg">🎯</span>
+                <div className="w-10 h-10 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 dark:text-teal-400">
+                  <Icons.Target />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-slate-900 dark:text-white">0</p>
@@ -313,8 +338,8 @@ export default function CommunityPage() {
 
             <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
-                  <span className="text-lg">👥</span>
+                <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                  <Icons.Users />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-slate-900 dark:text-white">12</p>
@@ -325,8 +350,8 @@ export default function CommunityPage() {
 
             <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center">
-                  <span className="text-lg">📸</span>
+                <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                  <Icons.Camera />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-slate-900 dark:text-white">0</p>
@@ -337,8 +362,8 @@ export default function CommunityPage() {
 
             <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-pink-100 dark:bg-pink-900/50 flex items-center justify-center">
-                  <span className="text-lg">💬</span>
+                <div className="w-10 h-10 rounded-lg bg-pink-100 dark:bg-pink-900/50 flex items-center justify-center text-pink-600 dark:text-pink-400">
+                  <Icons.Chat />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-slate-900 dark:text-white">0</p>
@@ -357,24 +382,26 @@ export default function CommunityPage() {
               {
                 quote: "I wish I had something like this when I was applying. Finding a mentor in interventional cardiology was pure luck.",
                 author: "PGY-3, Internal Medicine",
-                avatar: "👨‍⚕️"
+                iconColor: "bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400"
               },
               {
                 quote: "The anonymous support would have helped so much during my surgery rotation. I thought I was the only one struggling.",
                 author: "MS3, Midwest Medical School",
-                avatar: "👩‍⚕️"
+                iconColor: "bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400"
               },
               {
                 quote: "Knowing what programs are actually like before rank day would be invaluable. The interview day experience isn't reality.",
                 author: "PGY-1, Emergency Medicine",
-                avatar: "🧑‍⚕️"
+                iconColor: "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400"
               },
             ].map((testimonial, index) => (
               <div
                 key={index}
                 className="p-5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700"
               >
-                <div className="text-3xl mb-3">{testimonial.avatar}</div>
+                <div className={`w-10 h-10 rounded-xl ${testimonial.iconColor} flex items-center justify-center mb-3`}>
+                  <Icons.Doctor />
+                </div>
                 <p className="text-slate-600 dark:text-slate-300 text-sm italic mb-3">"{testimonial.quote}"</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">- {testimonial.author}</p>
               </div>
