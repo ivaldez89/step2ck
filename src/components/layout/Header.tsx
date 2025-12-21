@@ -7,6 +7,26 @@ import { ThemeToggle } from '@/components/theme/ThemeProvider';
 import { ProfileDropdown } from '@/components/profile/ProfileDropdown';
 import { StreakCounter } from '@/components/gamification/StreakCounter';
 
+// Check if user is authenticated by looking for the auth cookie
+function useIsAuthenticated() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const cookies = document.cookie.split(';');
+      const authCookie = cookies.find(c => c.trim().startsWith('tribewellmd-auth='));
+      setIsAuthenticated(authCookie?.includes('authenticated') ?? false);
+    };
+
+    checkAuth();
+    // Re-check on focus (in case user logged in/out in another tab)
+    window.addEventListener('focus', checkAuth);
+    return () => window.removeEventListener('focus', checkAuth);
+  }, []);
+
+  return isAuthenticated;
+}
+
 interface NavLinkProps {
   href: string;
   children: React.ReactNode;
@@ -147,6 +167,8 @@ interface HeaderProps {
 }
 
 export function Header({ stats }: HeaderProps) {
+  const isAuthenticated = useIsAuthenticated();
+
   return (
     <header className="sticky top-0 z-50 bg-gradient-to-r from-teal-50 via-cyan-50 to-emerald-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 backdrop-blur-md border-b border-teal-100 dark:border-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -171,16 +193,16 @@ export function Header({ stats }: HeaderProps) {
             <NavDropdown label="Community" href="/community" items={communityDropdownItems} />
           </nav>
           
-          {/* Right side: Streak, Theme toggle, Stats & Profile */}
+          {/* Right side: Streak, Theme toggle, Stats & Profile/Auth */}
           <div className="flex items-center gap-3">
-            {/* Streak Counter - Duolingo style */}
-            <StreakCounter variant="compact" />
+            {/* Only show streak counter when authenticated */}
+            {isAuthenticated && <StreakCounter variant="compact" />}
 
             {/* Theme Toggle */}
             <ThemeToggle />
 
-            {/* Stats Badge */}
-            {stats && stats.dueToday > 0 && (
+            {/* Stats Badge - only when authenticated */}
+            {isAuthenticated && stats && stats.dueToday > 0 && (
               <>
                 <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-full">
                   <span className="relative flex h-2 w-2">
@@ -203,8 +225,28 @@ export function Header({ stats }: HeaderProps) {
               </>
             )}
 
-            {/* Profile Dropdown */}
-            <ProfileDropdown />
+            {/* Show Profile Dropdown when authenticated, Login/Register when not */}
+            {isAuthenticated === null ? (
+              // Loading state - show nothing to prevent flash
+              <div className="w-9 h-9" />
+            ) : isAuthenticated ? (
+              <ProfileDropdown />
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/register"
+                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 rounded-lg shadow-md shadow-teal-500/25 transition-all"
+                >
+                  Get Started
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

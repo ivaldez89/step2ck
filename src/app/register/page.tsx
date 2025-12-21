@@ -10,52 +10,91 @@ interface RoleOption {
   id: UserRole;
   title: string;
   description: string;
-  icon: string;
+  icon: React.ReactNode;
   color: string;
 }
+
+// SVG icons for each role
+const BookIcon = () => (
+  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+  </svg>
+);
+
+const StethoscopeIcon = () => (
+  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+  </svg>
+);
+
+const UserMdIcon = () => (
+  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+  </svg>
+);
+
+const AcademicCapIcon = () => (
+  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path d="M12 14l9-5-9-5-9 5 9 5z" />
+    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+  </svg>
+);
+
+const TeacherIcon = () => (
+  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+  </svg>
+);
+
+const BuildingIcon = () => (
+  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+  </svg>
+);
 
 const roleOptions: RoleOption[] = [
   {
     id: 'premed',
     title: 'Pre-Med Student',
     description: 'Undergraduate preparing for medical school',
-    icon: '📚',
+    icon: <BookIcon />,
     color: 'from-blue-500 to-indigo-500',
   },
   {
     id: 'medical-student',
     title: 'Medical Student',
     description: 'MS1, MS2, MS3, or MS4',
-    icon: '🩺',
+    icon: <StethoscopeIcon />,
     color: 'from-teal-500 to-cyan-500',
   },
   {
     id: 'resident',
     title: 'Resident',
     description: 'In residency training',
-    icon: '👨‍⚕️',
+    icon: <UserMdIcon />,
     color: 'from-emerald-500 to-green-500',
   },
   {
     id: 'fellow',
     title: 'Fellow',
     description: 'In fellowship training',
-    icon: '🎓',
+    icon: <AcademicCapIcon />,
     color: 'from-purple-500 to-violet-500',
   },
   {
     id: 'attending',
     title: 'Attending / Faculty',
     description: 'Practicing physician or educator',
-    icon: '👩‍🏫',
+    icon: <TeacherIcon />,
     color: 'from-amber-500 to-orange-500',
   },
   {
     id: 'institution',
     title: 'Institution',
     description: 'School administrator or wellness coordinator',
-    icon: '🏛️',
-    color: 'from-slate-600 to-slate-700',
+    icon: <BuildingIcon />,
+    color: 'from-slate-500 to-slate-600',
   },
 ];
 
@@ -67,12 +106,9 @@ export default function RegisterPage() {
     lastName: '',
     email: '',
     institution: '',
-    // Medical student specific
     currentYear: '',
-    // Resident/Fellow specific
     specialty: '',
     pgyYear: '',
-    // Institution specific
     jobTitle: '',
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -94,14 +130,12 @@ export default function RegisterPage() {
     setIsLoading(true);
     setError('');
 
-    // Basic validation
     if (!formData.firstName || !formData.lastName || !formData.email) {
       setError('Please fill in all required fields');
       setIsLoading(false);
       return;
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError('Please enter a valid email address');
@@ -110,7 +144,6 @@ export default function RegisterPage() {
     }
 
     try {
-      // Map role to currentYear format for profile storage
       let currentYear: string | undefined;
       switch (selectedRole) {
         case 'premed':
@@ -133,7 +166,6 @@ export default function RegisterPage() {
           break;
       }
 
-      // Create profile object
       const profile = {
         id: crypto.randomUUID(),
         firstName: formData.firstName,
@@ -142,7 +174,6 @@ export default function RegisterPage() {
         school: formData.institution,
         currentYear,
         role: selectedRole,
-        // Additional fields based on role
         ...(selectedRole === 'resident' || selectedRole === 'fellow' ? {
           interestedSpecialties: formData.specialty ? [formData.specialty] : [],
           pgyYear: formData.pgyYear,
@@ -156,13 +187,8 @@ export default function RegisterPage() {
         updatedAt: new Date().toISOString(),
       };
 
-      // Save to localStorage
       localStorage.setItem('tribewellmd_user_profile', JSON.stringify(profile));
-
-      // Set auth cookie
-      document.cookie = 'tribewellmd-auth=authenticated; path=/; max-age=604800'; // 7 days
-
-      // Redirect to profile page to complete setup
+      document.cookie = 'tribewellmd-auth=authenticated; path=/; max-age=604800';
       router.push('/profile');
       router.refresh();
     } catch (err) {
@@ -174,25 +200,36 @@ export default function RegisterPage() {
   const selectedRoleData = roleOptions.find(r => r.id === selectedRole);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-500 via-cyan-500 to-emerald-500 flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl">
+    <div className="min-h-screen bg-gradient-to-br from-teal-100 via-cyan-50 to-emerald-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-teal-200/40 to-cyan-200/40 dark:from-teal-900/20 dark:to-cyan-900/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-emerald-200/40 to-teal-200/40 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-cyan-100/30 to-indigo-100/30 dark:from-cyan-900/10 dark:to-indigo-900/10 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative w-full max-w-2xl">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur rounded-2xl mb-4">
-            <span className="text-4xl">🏥</span>
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-teal-500 via-cyan-500 to-indigo-500 rounded-2xl mb-4 shadow-xl shadow-teal-500/25">
+            <img src="/icons/icon.svg" alt="TribeWellMD" className="w-14 h-14" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Join TribeWellMD</h1>
-          <p className="text-white/80">
+          <h1 className="text-3xl font-bold mb-2">
+            <span className="text-slate-900 dark:text-white">Join </span>
+            <span className="text-slate-900 dark:text-white">Tribe</span>
+            <span className="text-teal-600 dark:text-teal-400">Well</span>
+            <span className="text-indigo-600 dark:text-indigo-400">MD</span>
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400">
             {step === 'role' ? 'Select your role to get started' : 'Tell us about yourself'}
           </p>
         </div>
 
         {/* Registration Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl shadow-2xl shadow-slate-200/50 dark:shadow-slate-900/50 border border-white/50 dark:border-slate-700/50 p-8">
           {step === 'role' ? (
-            /* Role Selection */
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-slate-800 mb-4">I am a...</h2>
+              <h2 className="text-lg font-semibold text-slate-800 dark:text-white mb-4">I am a...</h2>
               <div className="grid sm:grid-cols-2 gap-3">
                 {roleOptions.map((role) => (
                   <button
@@ -202,41 +239,39 @@ export default function RegisterPage() {
                       relative p-4 rounded-xl border-2 text-left transition-all duration-200
                       hover:border-teal-500 hover:shadow-lg hover:scale-[1.02]
                       ${selectedRole === role.id
-                        ? 'border-teal-500 bg-teal-50'
-                        : 'border-slate-200 bg-white'
+                        ? 'border-teal-500 bg-teal-50 dark:bg-teal-900/20'
+                        : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700/50'
                       }
                     `}
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${role.color} flex items-center justify-center text-2xl shadow-lg`}>
+                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${role.color} flex items-center justify-center text-white shadow-lg`}>
                         {role.icon}
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-slate-900">{role.title}</h3>
-                        <p className="text-sm text-slate-500 mt-0.5">{role.description}</p>
+                        <h3 className="font-semibold text-slate-900 dark:text-white">{role.title}</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{role.description}</p>
                       </div>
                     </div>
                   </button>
                 ))}
               </div>
 
-              <div className="pt-4 border-t border-slate-100 mt-6">
-                <p className="text-center text-sm text-slate-500">
+              <div className="pt-4 border-t border-slate-200 dark:border-slate-700 mt-6">
+                <p className="text-center text-sm text-slate-500 dark:text-slate-400">
                   Already have an account?{' '}
-                  <Link href="/login" className="text-teal-600 hover:text-teal-700 font-medium">
+                  <Link href="/login" className="text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300 font-medium">
                     Sign in
                   </Link>
                 </p>
               </div>
             </div>
           ) : (
-            /* Details Form */
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Back Button */}
               <button
                 type="button"
                 onClick={handleBack}
-                className="flex items-center gap-2 text-slate-500 hover:text-slate-700 transition-colors"
+                className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -244,18 +279,16 @@ export default function RegisterPage() {
                 Back to role selection
               </button>
 
-              {/* Selected Role Badge */}
               {selectedRoleData && (
                 <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${selectedRoleData.color} text-white text-sm font-medium`}>
-                  <span>{selectedRoleData.icon}</span>
+                  {selectedRoleData.icon}
                   <span>{selectedRoleData.title}</span>
                 </div>
               )}
 
-              {/* Basic Info */}
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-slate-700 mb-2">
+                  <label htmlFor="firstName" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     First Name <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -263,13 +296,13 @@ export default function RegisterPage() {
                     type="text"
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    className="w-full px-4 py-3 bg-slate-100 border-0 rounded-xl text-slate-900 placeholder-slate-500 focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                     placeholder="John"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-slate-700 mb-2">
+                  <label htmlFor="lastName" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Last Name <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -277,7 +310,7 @@ export default function RegisterPage() {
                     type="text"
                     value={formData.lastName}
                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    className="w-full px-4 py-3 bg-slate-100 border-0 rounded-xl text-slate-900 placeholder-slate-500 focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                     placeholder="Doe"
                     required
                   />
@@ -285,7 +318,7 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Email <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -293,15 +326,15 @@ export default function RegisterPage() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 bg-slate-100 border-0 rounded-xl text-slate-900 placeholder-slate-500 focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all"
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                   placeholder="john.doe@school.edu"
                   required
                 />
-                <p className="mt-1 text-xs text-slate-500">Use your .edu email for automatic school verification</p>
+                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Use your .edu email for automatic school verification</p>
               </div>
 
               <div>
-                <label htmlFor="institution" className="block text-sm font-medium text-slate-700 mb-2">
+                <label htmlFor="institution" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   {selectedRole === 'institution' ? 'Institution Name' : 'School / Program'} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -309,23 +342,22 @@ export default function RegisterPage() {
                   type="text"
                   value={formData.institution}
                   onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
-                  className="w-full px-4 py-3 bg-slate-100 border-0 rounded-xl text-slate-900 placeholder-slate-500 focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all"
+                  className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                   placeholder={selectedRole === 'institution' ? 'University of Example' : 'Example Medical School'}
                   required
                 />
               </div>
 
-              {/* Role-specific fields */}
               {selectedRole === 'medical-student' && (
                 <div>
-                  <label htmlFor="currentYear" className="block text-sm font-medium text-slate-700 mb-2">
+                  <label htmlFor="currentYear" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Current Year <span className="text-red-500">*</span>
                   </label>
                   <select
                     id="currentYear"
                     value={formData.currentYear}
                     onChange={(e) => setFormData({ ...formData, currentYear: e.target.value })}
-                    className="w-full px-4 py-3 bg-slate-100 border-0 rounded-xl text-slate-900 focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                     required
                   >
                     <option value="">Select your year...</option>
@@ -340,14 +372,14 @@ export default function RegisterPage() {
               {(selectedRole === 'resident' || selectedRole === 'fellow') && (
                 <>
                   <div>
-                    <label htmlFor="specialty" className="block text-sm font-medium text-slate-700 mb-2">
+                    <label htmlFor="specialty" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       Specialty <span className="text-red-500">*</span>
                     </label>
                     <select
                       id="specialty"
                       value={formData.specialty}
                       onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
-                      className="w-full px-4 py-3 bg-slate-100 border-0 rounded-xl text-slate-900 focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all"
+                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                       required
                     >
                       <option value="">Select specialty...</option>
@@ -368,14 +400,14 @@ export default function RegisterPage() {
                     </select>
                   </div>
                   <div>
-                    <label htmlFor="pgyYear" className="block text-sm font-medium text-slate-700 mb-2">
+                    <label htmlFor="pgyYear" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       PGY Year
                     </label>
                     <select
                       id="pgyYear"
                       value={formData.pgyYear}
                       onChange={(e) => setFormData({ ...formData, pgyYear: e.target.value })}
-                      className="w-full px-4 py-3 bg-slate-100 border-0 rounded-xl text-slate-900 focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all"
+                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                     >
                       <option value="">Select PGY year...</option>
                       <option value="PGY-1">PGY-1</option>
@@ -391,7 +423,7 @@ export default function RegisterPage() {
 
               {selectedRole === 'institution' && (
                 <div>
-                  <label htmlFor="jobTitle" className="block text-sm font-medium text-slate-700 mb-2">
+                  <label htmlFor="jobTitle" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Job Title <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -399,7 +431,7 @@ export default function RegisterPage() {
                     type="text"
                     value={formData.jobTitle}
                     onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
-                    className="w-full px-4 py-3 bg-slate-100 border-0 rounded-xl text-slate-900 placeholder-slate-500 focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                     placeholder="Dean of Student Wellness"
                     required
                   />
@@ -407,7 +439,7 @@ export default function RegisterPage() {
               )}
 
               {error && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm text-center">
+                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm text-center">
                   {error}
                 </div>
               )}
@@ -415,24 +447,24 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-4 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold rounded-xl shadow-lg shadow-teal-500/25 transition-all disabled:opacity-50"
+                className="w-full py-4 bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-500 hover:from-teal-600 hover:via-cyan-600 hover:to-teal-600 text-white font-bold rounded-xl shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 transition-all disabled:opacity-50"
               >
                 {isLoading ? 'Creating account...' : 'Create Account'}
               </button>
 
-              <p className="text-center text-sm text-slate-500">
+              <p className="text-center text-sm text-slate-500 dark:text-slate-400">
                 By creating an account, you agree to our{' '}
-                <Link href="/terms" className="text-teal-600 hover:text-teal-700">Terms</Link>
+                <Link href="/terms" className="text-teal-600 hover:text-teal-700 dark:text-teal-400">Terms</Link>
                 {' '}and{' '}
-                <Link href="/privacy" className="text-teal-600 hover:text-teal-700">Privacy Policy</Link>
+                <Link href="/privacy" className="text-teal-600 hover:text-teal-700 dark:text-teal-400">Privacy Policy</Link>
               </p>
             </form>
           )}
         </div>
 
         {/* Footer */}
-        <p className="mt-8 text-center text-sm text-white/60">
-          Built with care for medical students
+        <p className="mt-8 text-center text-sm text-slate-500 dark:text-slate-400">
+          Study Smart. Find Your Tribe. Stay Well.
         </p>
       </div>
     </div>
