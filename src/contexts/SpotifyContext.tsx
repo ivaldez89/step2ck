@@ -160,10 +160,27 @@ export function SpotifyProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// Default context values for SSR/when provider is not available
+const defaultContext: SpotifyContextType = {
+  isConnected: false,
+  selectedPlaylist: null,
+  isPlayerVisible: false,
+  isMinimized: false,
+  connect: () => {},
+  disconnect: () => {},
+  selectPlaylist: () => {},
+  stopPlayback: () => {},
+  toggleMinimize: () => {},
+  hidePlayer: () => {},
+  showPlayer: () => {},
+  getSelectedPlaylistData: () => undefined,
+};
+
 export function useSpotify() {
   const context = useContext(SpotifyContext);
+  // Return default values instead of throwing for SSR safety
   if (context === undefined) {
-    throw new Error('useSpotify must be used within a SpotifyProvider');
+    return defaultContext;
   }
   return context;
 }
