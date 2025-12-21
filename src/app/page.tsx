@@ -370,27 +370,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Philosophy Quote */}
-        <section className="bg-white dark:bg-slate-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 text-center">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-teal-100 to-cyan-100 dark:from-teal-900/50 dark:to-cyan-900/50 flex items-center justify-center text-teal-600 dark:text-teal-400">
-              <Icons.Lightbulb />
-            </div>
-            <blockquote className="text-2xl md:text-3xl font-serif text-slate-800 dark:text-slate-200 max-w-4xl mx-auto mb-6 leading-relaxed">
-              &ldquo;Most people believe <span className="text-teal-600 dark:text-teal-400 font-semibold">individualism</span> and{' '}
-              <span className="text-indigo-600 dark:text-indigo-400 font-semibold">community</span> are mutually exclusive.{' '}
-              <br className="hidden md:block" />
-              Our mission is to show they are{' '}
-              <span className="bg-gradient-to-r from-teal-500 to-indigo-500 bg-clip-text text-transparent font-bold">
-                mutually reinforcing
-              </span>.&rdquo;
-            </blockquote>
-            <p className="text-slate-500 dark:text-slate-400 italic">
-              — TribeWellMD Philosophy
-            </p>
-          </div>
-        </section>
-
         {/* The Virtuous Cycle - Core Philosophy */}
         <section className="bg-gradient-to-b from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border-y border-slate-200 dark:border-slate-700" ref={frameworkRef}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
