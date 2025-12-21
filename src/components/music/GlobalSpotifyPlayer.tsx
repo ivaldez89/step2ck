@@ -126,10 +126,10 @@ export function GlobalSpotifyPlayer() {
             </div>
           </div>
 
-          {/* Embedded Spotify Player - invisible but functional */}
+          {/* Embedded Spotify Player */}
           <div className="px-3 pb-3">
             <iframe
-              src={`https://open.spotify.com/embed/playlist/${selectedPlaylist}?utm_source=generator&theme=0`}
+              src={`https://open.spotify.com/embed/playlist/${selectedPlaylistData.spotifyUri}?utm_source=generator&theme=0`}
               width="100%"
               height="80"
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"

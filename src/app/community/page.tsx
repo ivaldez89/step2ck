@@ -53,10 +53,12 @@ export default function CommunityPage() {
                     <p className="text-2xl md:text-3xl font-bold text-white">6</p>
                     <p className="text-white/60 text-xs">Features</p>
                   </div>
+                  <div className="w-px h-10 bg-white/20" />
                   <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
                     <p className="text-2xl md:text-3xl font-bold text-white">4</p>
-                    <p className="text-white/60 text-xs">Research Tools</p>
+                    <p className="text-white/60 text-xs">Resources</p>
                   </div>
+                  <div className="w-px h-10 bg-white/20" />
                   <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
                     <p className="text-2xl md:text-3xl font-bold text-white">24/7</p>
                     <p className="text-white/60 text-xs">Support</p>
@@ -101,15 +103,12 @@ export default function CommunityPage() {
           </div>
         </section>
 
-        {/* 4-Box Grid - Community Features */}
+        {/* Main 4-Box Navigation Grid - Matching Study page style */}
         <section className="mb-8">
           <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Connect & Support</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Box 1: Mentorship Matching */}
-            <Link
-              href="/community"
-              className="group relative p-6 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 hover:scale-[1.02] transition-all duration-300 text-white"
-            >
+            <div className="group relative p-6 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden cursor-pointer">
               <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
               </div>
@@ -122,23 +121,22 @@ export default function CommunityPage() {
                     Coming Soon
                   </span>
                 </div>
-                <h3 className="font-bold text-xl mb-2">Mentorship Matching</h3>
-                <p className="text-white/80 text-sm mb-4">
-                  Connect with residents and attendings in your specialty of interest for guidance and advice
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-2 py-1 bg-white/10 rounded-lg text-xs">Specialty-specific</span>
-                  <span className="px-2 py-1 bg-white/10 rounded-lg text-xs">Video calls</span>
-                  <span className="px-2 py-1 bg-white/10 rounded-lg text-xs">Career guidance</span>
+                <h3 className="font-bold text-xl mb-1">Mentorship</h3>
+                <p className="text-white/70 text-sm mb-3">Find your guide</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold">0</span>
+                  <span className="text-white/60 text-sm">mentors</span>
                 </div>
               </div>
-            </Link>
+              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </div>
 
             {/* Box 2: Day-in-the-Life */}
-            <Link
-              href="/community"
-              className="group relative p-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all duration-300 text-white"
-            >
+            <div className="group relative p-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden cursor-pointer">
               <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
               </div>
@@ -151,22 +149,24 @@ export default function CommunityPage() {
                     Coming Soon
                   </span>
                 </div>
-                <h3 className="font-bold text-xl mb-2">Day-in-the-Life</h3>
-                <p className="text-white/80 text-sm mb-4">
-                  See what residency is really like through posts from current residents at programs nationwide
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-2 py-1 bg-white/10 rounded-lg text-xs">Real experiences</span>
-                  <span className="px-2 py-1 bg-white/10 rounded-lg text-xs">Program insights</span>
-                  <span className="px-2 py-1 bg-white/10 rounded-lg text-xs">Specialty exploration</span>
+                <h3 className="font-bold text-xl mb-1">Day-in-the-Life</h3>
+                <p className="text-white/70 text-sm mb-3">Real residency stories</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold">0</span>
+                  <span className="text-white/60 text-sm">posts</span>
                 </div>
               </div>
-            </Link>
+              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </div>
 
-            {/* Box 3: Study Groups */}
+            {/* Box 3: Study Groups - Active! */}
             <Link
               href="/tribes"
-              className="group relative p-6 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all duration-300 text-white"
+              className="group relative p-6 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
             >
               <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
@@ -180,14 +180,11 @@ export default function CommunityPage() {
                     Active
                   </span>
                 </div>
-                <h3 className="font-bold text-xl mb-2">Study Groups</h3>
-                <p className="text-white/80 text-sm mb-4">
-                  Find study partners for boards, shelf exams, or just getting through the week
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-2 py-1 bg-white/10 rounded-lg text-xs">Location-based</span>
-                  <span className="px-2 py-1 bg-white/10 rounded-lg text-xs">Virtual rooms</span>
-                  <span className="px-2 py-1 bg-white/10 rounded-lg text-xs">Accountability</span>
+                <h3 className="font-bold text-xl mb-1">Study Groups</h3>
+                <p className="text-white/70 text-sm mb-3">Join your tribe</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold">12</span>
+                  <span className="text-white/60 text-sm">tribes</span>
                 </div>
               </div>
               <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -200,7 +197,7 @@ export default function CommunityPage() {
             {/* Box 4: Anonymous Support */}
             <Link
               href="/wellness"
-              className="group relative p-6 bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 hover:scale-[1.02] transition-all duration-300 text-white"
+              className="group relative p-6 bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
             >
               <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
@@ -214,17 +211,62 @@ export default function CommunityPage() {
                     Coming Soon
                   </span>
                 </div>
-                <h3 className="font-bold text-xl mb-2">Anonymous Support</h3>
-                <p className="text-white/80 text-sm mb-4">
-                  A safe space to share struggles, ask questions, and support each other
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-2 py-1 bg-white/10 rounded-lg text-xs">Moderated</span>
-                  <span className="px-2 py-1 bg-white/10 rounded-lg text-xs">Peer support</span>
-                  <span className="px-2 py-1 bg-white/10 rounded-lg text-xs">Professional resources</span>
+                <h3 className="font-bold text-xl mb-1">Support</h3>
+                <p className="text-white/70 text-sm mb-3">Anonymous help</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold">0</span>
+                  <span className="text-white/60 text-sm">threads</span>
                 </div>
               </div>
+              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
             </Link>
+          </div>
+        </section>
+
+        {/* Secondary Actions Row - Like Study page */}
+        <section className="mb-8">
+          <div className="grid grid-cols-2 gap-4">
+            {/* Resources Hub */}
+            <Link
+              href="/wellness"
+              className="group flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-violet-300 dark:hover:border-violet-600 hover:shadow-lg transition-all"
+            >
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">Wellness Hub</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Resources & self-care</p>
+              </div>
+              <svg className="w-5 h-5 text-slate-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </Link>
+
+            {/* Events Calendar */}
+            <div className="group flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-600 hover:shadow-lg transition-all cursor-pointer">
+              <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 group-hover:bg-teal-500 flex items-center justify-center transition-colors">
+                <svg className="w-6 h-6 text-slate-600 dark:text-slate-400 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors flex items-center gap-2">
+                  Events
+                  <span className="px-1.5 py-0.5 text-xs bg-slate-100 dark:bg-slate-700 text-slate-500 rounded-full">Soon</span>
+                </h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Workshops & meetups</p>
+              </div>
+              <svg className="w-5 h-5 text-slate-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </div>
           </div>
         </section>
 
@@ -254,7 +296,7 @@ export default function CommunityPage() {
           </div>
         </section>
 
-        {/* Quick Stats Bar */}
+        {/* Quick Stats Bar - 4 columns like Study page */}
         <section className="mb-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
@@ -264,7 +306,7 @@ export default function CommunityPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-slate-900 dark:text-white">0</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Mentors Available</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Mentors</p>
                 </div>
               </div>
             </div>
