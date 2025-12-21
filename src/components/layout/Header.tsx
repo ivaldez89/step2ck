@@ -166,12 +166,21 @@ export function Header({ stats }: HeaderProps) {
             </div>
           </Link>
 
-          {/* Navigation with Dropdowns */}
+          {/* Navigation - different for logged in vs logged out */}
           <nav className="hidden md:flex items-center gap-1">
             <NavLink href="/">Home</NavLink>
-            <NavDropdown label="Study" href="/study" items={studyDropdownItems} />
-            <NavDropdown label="Wellness" href="/wellness" items={wellnessDropdownItems} />
-            <NavDropdown label="Community" href="/community" items={communityDropdownItems} />
+            {isAuthenticated ? (
+              <>
+                <NavDropdown label="Study" href="/study" items={studyDropdownItems} />
+                <NavDropdown label="Wellness" href="/wellness" items={wellnessDropdownItems} />
+                <NavDropdown label="Community" href="/community" items={communityDropdownItems} />
+              </>
+            ) : (
+              <>
+                <NavLink href="/about">About</NavLink>
+                <NavLink href="/investors">For Investors</NavLink>
+              </>
+            )}
           </nav>
           
           {/* Right side: Streak, Theme toggle, Stats & Profile/Auth */}

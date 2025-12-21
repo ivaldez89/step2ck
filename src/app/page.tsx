@@ -106,44 +106,44 @@ const Icons = {
 const PLATFORM_PILLARS = [
   {
     title: 'Study',
-    description: 'FSRS-powered flashcards, rapid review, and exam prep designed for medical education',
+    description: 'AI-powered adaptive learning with FSRS spaced repetition. Smart review targets your weak areas. Audio mode for on-the-go learning.',
     href: '/study',
     icon: 'Study',
     gradient: 'from-teal-400 to-cyan-500',
-    features: ['Spaced Repetition', 'Step 2 CK & Shelf Exams', 'AI Card Generation']
+    features: ['Adaptive AI Review', 'Text-to-Speech', 'Step 2 CK & Shelf']
   },
   {
     title: 'Wellness',
-    description: 'Mental health resources, stress management, and support for your wellbeing journey',
+    description: 'Earn points through self-care activities that convert to real charitable donations. Your wellness journey creates real-world impact.',
     href: '/wellness',
     icon: 'Wellness',
     gradient: 'from-rose-400 to-pink-500',
-    features: ['Mental Health Tools', 'Crisis Resources', 'Self-Care Guides']
+    features: ['Points → Donations', 'Activity Tracking', 'Wellness Challenges']
   },
   {
     title: 'Resources',
-    description: 'High-yield infographics, survival guides, and curated content for medical education',
+    description: 'High-yield visual guides, clinical pearls, and curated content from medical educators. Everything you need in one place.',
     href: '/resources',
     icon: 'Resources',
     gradient: 'from-amber-400 to-orange-500',
-    features: ['Visual Summaries', 'Clinical Pearls', 'Study Guides']
+    features: ['Visual Summaries', 'Clinical Pearls', 'Rapid Review']
   },
   {
     title: 'Community',
-    description: 'Connect with mentors, join study groups, and find your tribe in medicine',
+    description: 'Join tribes of peers at your stage. Connect with mentors who have walked your path. Shared accountability drives success.',
     href: '/community',
     icon: 'Community',
     gradient: 'from-violet-400 to-purple-500',
-    features: ['Mentorship', 'Research & News', 'Study Groups'],
+    features: ['Mentorship', 'Study Tribes', 'Peer Support'],
     comingSoon: true
   },
   {
     title: 'PreMed',
-    description: 'Guidance, mentorship, and resources for your journey to medical school',
+    description: 'Guidance from medical students who recently matched. Application strategy, MCAT prep, and honest advice.',
     href: '/premed',
     icon: 'PreMed',
     gradient: 'from-emerald-400 to-teal-500',
-    features: ['MCAT Prep', 'Application Guide', 'Med Student Mentors'],
+    features: ['MCAT Strategy', 'Application Guide', 'Med Student Mentors'],
     comingSoon: true
   },
 ];
