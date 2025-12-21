@@ -11,6 +11,8 @@ import {
   ACADEMIC_YEARS,
   type UserProfile
 } from '@/lib/storage/profileStorage';
+import { SchoolSelector } from '@/components/profile/SchoolSelector';
+import type { SchoolType } from '@/lib/data/schools';
 import {
   getConnectedUsers,
   getPendingRequestUsers,
@@ -472,14 +474,22 @@ export default function ProfilePage() {
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     School / Institution
                   </label>
-                  <input
-                    type="text"
+                  <SchoolSelector
                     value={profile.school || ''}
-                    onChange={(e) => setProfile({ ...profile, school: e.target.value })}
+                    schoolId={profile.schoolId}
+                    schoolType={profile.schoolType}
+                    email={profile.email}
                     disabled={!isEditing}
-                    placeholder="Enter your school name"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                    onChange={(school) => setProfile({
+                      ...profile,
+                      school: school.name,
+                      schoolId: school.id,
+                      schoolType: school.type,
+                    })}
                   />
+                  <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                    Use your .edu email to auto-verify your school, or search from our database
+                  </p>
                 </div>
               </div>
             </div>

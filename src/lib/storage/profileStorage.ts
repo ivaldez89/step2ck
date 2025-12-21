@@ -7,9 +7,12 @@ export interface UserProfile {
   lastName: string;
   email: string;
   avatar?: string; // Base64 or URL
+  emailVerified?: boolean; // Has user verified their .edu email
 
   // Academic Info
-  school?: string;
+  school?: string; // School display name (for backward compatibility)
+  schoolId?: string; // Reference to school in schools.ts
+  schoolType?: 'md' | 'do' | 'undergrad' | 'caribbean' | 'international';
   graduationYear?: number;
   currentYear?: 'MS1' | 'MS2' | 'MS3' | 'MS4' | 'Resident' | 'Fellow' | 'Attending' | 'Pre-Med' | 'Other';
 
