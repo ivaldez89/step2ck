@@ -10,32 +10,27 @@ export default function AboutPage() {
       <Header />
 
       <main>
-        {/* Hero Section - Dark Banner (matching Investors/Partners/Home style) */}
-        <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-            <div className="max-w-4xl">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-teal-500/20 text-teal-300 rounded-full text-sm font-medium mb-6">
-                <span className="w-2 h-2 bg-teal-400 rounded-full animate-pulse" />
-                Our Story
-              </div>
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                Born From Experience.{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">
-                  Built for Change.
-                </span>
-              </h1>
-              <p className="text-xl text-slate-300 mb-8 max-w-3xl">
-                TribeWellMD was founded by physicians who lived the paradox: training to heal others while watching themselves and colleagues struggle with burnout, isolation, and a system that treats wellness as an afterthought.
+        {/* Hero Section - Clean White (matching Homepage) */}
+        <section className="bg-white dark:bg-slate-900 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 text-center">
+            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
+              Born From Experience.
+              <br />
+              <span className="text-shimmer">Built for Change.</span>
+            </h1>
+
+            <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-10">
+              TribeWellMD was founded by physicians who lived the paradox: training to heal others while watching themselves and colleagues struggle with burnout, isolation, and a system that treats wellness as an afterthought.
+            </p>
+
+            <blockquote className="max-w-2xl mx-auto bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-6 border border-teal-100 dark:border-slate-600">
+              <p className="text-lg text-slate-700 dark:text-slate-200 italic mb-3">
+                &ldquo;We kept asking ourselves: why does becoming a doctor require sacrificing your own health? What if the same tools that help us learn could help us thrive?&rdquo;
               </p>
-              <blockquote className="border-l-4 border-teal-400 pl-6 py-4 bg-white/5 rounded-r-xl max-w-3xl">
-                <p className="text-xl text-slate-200 italic mb-2">
-                  "We kept asking ourselves: why does becoming a doctor require sacrificing your own health? What if the same tools that help us learn could help us thrive?"
-                </p>
-                <cite className="text-sm text-slate-400 not-italic">
-                  — TribeWellMD Founding Team
-                </cite>
-              </blockquote>
-            </div>
+              <cite className="text-sm text-slate-500 dark:text-slate-400 not-italic">
+                — TribeWellMD Founding Team
+              </cite>
+            </blockquote>
           </div>
         </section>
 
