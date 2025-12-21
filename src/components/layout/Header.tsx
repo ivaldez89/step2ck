@@ -179,6 +179,7 @@ export function Header({ stats }: HeaderProps) {
               <>
                 <NavLink href="/about">About</NavLink>
                 <NavLink href="/investors">For Investors</NavLink>
+                <NavLink href="/partners">For Partners</NavLink>
               </>
             )}
           </nav>
