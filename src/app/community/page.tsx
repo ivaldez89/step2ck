@@ -37,15 +37,15 @@ export default function CommunityPage() {
             <div className="relative z-10">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur rounded-full text-white/90 text-sm font-medium mb-4">
                 <span className="w-2 h-2 bg-orange-300 rounded-full animate-pulse" />
-                <span>Your Community</span>
+                <span>For Everyone in Medicine</span>
               </div>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
-                Community <span className="text-orange-200">Hub</span>
+                Our <span className="text-orange-200">Community</span>
               </h1>
 
               <p className="text-white/80 text-lg max-w-2xl mb-6">
-                Connect with your tribes, track your collective impact, and grow together.
+                From pre-meds to attendings, we are building tools for every stage of your journey. Connect with your tribes, track your collective impact, and grow together.
               </p>
 
               {/* Quick stats row */}
