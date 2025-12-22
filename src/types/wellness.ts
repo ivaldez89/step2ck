@@ -181,51 +181,51 @@ export const WELLNESS_DOMAINS: Record<WellnessDomain, {
   'mindfulness': {
     title: 'Mindfulness',
     description: 'Cultivate present-moment awareness and inner peace',
-    icon: '🧘',
+    icon: 'Meditation',
     color: 'purple',
-    gradient: 'from-purple-500 to-indigo-500'
+    gradient: 'from-[#D4C4B0] to-[#C4A77D]'
   },
   'stress-management': {
     title: 'Stress Management',
     description: 'Build resilience and healthy coping strategies',
-    icon: '🌊',
+    icon: 'Wave',
     color: 'blue',
-    gradient: 'from-blue-500 to-cyan-500'
+    gradient: 'from-[#D4C4B0] to-[#C4A77D]'
   },
   'sleep': {
     title: 'Sleep Optimization',
     description: 'Improve sleep quality and establish healthy routines',
-    icon: '😴',
+    icon: 'Moon',
     color: 'indigo',
-    gradient: 'from-indigo-500 to-purple-500'
+    gradient: 'from-[#D4C4B0] to-[#C4A77D]'
   },
   'physical-fitness': {
     title: 'Physical Wellness',
     description: 'Stay active with quick, effective workouts',
-    icon: '💪',
+    icon: 'Running',
     color: 'orange',
-    gradient: 'from-orange-500 to-red-500'
+    gradient: 'from-[#D4C4B0] to-[#C4A77D]'
   },
   'nutrition': {
     title: 'Nutrition',
     description: 'Fuel your body and mind with smart eating habits',
-    icon: '🥗',
+    icon: 'Leaf',
     color: 'green',
-    gradient: 'from-green-500 to-emerald-500'
+    gradient: 'from-[#D4C4B0] to-[#C4A77D]'
   },
   'social-connection': {
     title: 'Social Connection',
     description: 'Build and maintain meaningful relationships',
-    icon: '🤝',
+    icon: 'Users',
     color: 'pink',
-    gradient: 'from-pink-500 to-rose-500'
+    gradient: 'from-[#D4C4B0] to-[#C4A77D]'
   },
   'work-life-balance': {
     title: 'Work-Life Balance',
     description: 'Set boundaries and protect your personal time',
-    icon: '⚖️',
+    icon: 'Shield',
     color: 'teal',
-    gradient: 'from-teal-500 to-emerald-500'
+    gradient: 'from-[#D4C4B0] to-[#C4A77D]'
   }
 };
 
@@ -238,31 +238,31 @@ export const CHARITABLE_CAUSES: Record<CharitableCause, {
   'mental-health-awareness': {
     title: 'Mental Health Awareness',
     description: 'Support mental health education and destigmatization',
-    icon: '💚',
+    icon: 'Heart',
     organization: 'NAMI'
   },
   'healthcare-access': {
     title: 'Healthcare Access',
     description: 'Provide healthcare to underserved communities',
-    icon: '🏥',
+    icon: 'Hospital',
     organization: 'Remote Area Medical'
   },
   'medical-education': {
     title: 'Medical Education',
     description: 'Support scholarships for future physicians',
-    icon: '🎓',
+    icon: 'GraduationCap',
     organization: 'SNMA'
   },
   'physician-wellness': {
     title: 'Physician Wellness',
     description: 'Support programs addressing physician burnout',
-    icon: '💜',
+    icon: 'HeartHand',
     organization: 'Dr. Lorna Breen Heroes Foundation'
   },
   'community-health': {
     title: 'Community Health',
     description: 'Fund community health initiatives',
-    icon: '🌍',
+    icon: 'Globe',
     organization: 'Partners in Health'
   }
 };

@@ -74,7 +74,7 @@ function WellnessPageContent() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <section className="mb-8 animate-fade-in-up">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#C4A77D] via-[#A89070] to-[#8B7355] p-8 md:p-10 shadow-2xl">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#E8E0D5] via-[#D4C4B0] to-[#C4A77D] p-8 md:p-10 shadow-2xl">
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
@@ -85,32 +85,32 @@ function WellnessPageContent() {
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
               {/* Left side - Welcome & Stats */}
               <div className="text-center md:text-left">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur rounded-full text-white/90 text-sm font-medium mb-4">
-                  <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-800/20 backdrop-blur rounded-full text-slate-800 text-sm font-medium mb-4">
+                  <span className="w-2 h-2 bg-slate-700 rounded-full animate-pulse" />
                   <span>Your wellness village awaits</span>
                 </div>
 
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
-                  Welcome to <span className="text-white/90">TribeWellz</span>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-800 mb-3 leading-tight">
+                  Welcome to <span className="text-slate-700">TribeWellz</span>
                 </h1>
 
-                <p className="text-white/80 text-lg max-w-md mb-6">
+                <p className="text-slate-700 text-lg max-w-md mb-6">
                   Personal growth and collective progress are mutually reinforcing. Your wellness journey helps you and your community thrive.
                 </p>
 
                 {/* Stats row */}
                 <div className="flex items-center gap-4 md:gap-6">
-                  <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
-                    <p className="text-2xl md:text-3xl font-bold text-white">{stats?.villagePoints || 0}</p>
-                    <p className="text-white/60 text-xs">Village Points</p>
+                  <div className="text-center px-4 py-2 bg-slate-800/10 backdrop-blur rounded-xl">
+                    <p className="text-2xl md:text-3xl font-bold text-slate-800">{stats?.villagePoints || 0}</p>
+                    <p className="text-slate-600 text-xs">Village Points</p>
                   </div>
-                  <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
-                    <p className="text-2xl md:text-3xl font-bold text-white">{stats?.donated || 0}</p>
-                    <p className="text-white/60 text-xs">Points Donated</p>
+                  <div className="text-center px-4 py-2 bg-slate-800/10 backdrop-blur rounded-xl">
+                    <p className="text-2xl md:text-3xl font-bold text-slate-800">{stats?.donated || 0}</p>
+                    <p className="text-slate-600 text-xs">Points Donated</p>
                   </div>
-                  <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
-                    <p className="text-2xl md:text-3xl font-bold text-white">{stats?.activeJourneys || 0}</p>
-                    <p className="text-white/60 text-xs">Active Journeys</p>
+                  <div className="text-center px-4 py-2 bg-slate-800/10 backdrop-blur rounded-xl">
+                    <p className="text-2xl md:text-3xl font-bold text-slate-800">{stats?.activeJourneys || 0}</p>
+                    <p className="text-slate-600 text-xs">Active Journeys</p>
                   </div>
                 </div>
               </div>
@@ -118,13 +118,13 @@ function WellnessPageContent() {
               {/* Right side - Quick Actions */}
               <div className="flex flex-col items-center gap-4">
                 {/* Daily Check-in Card */}
-                <div className="p-5 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 w-full max-w-xs">
+                <div className="p-5 bg-white/60 backdrop-blur-sm rounded-2xl border border-slate-200 w-full max-w-xs">
                   <div className="text-center">
-                    <h3 className="text-white font-semibold mb-2">Daily Check-In</h3>
-                    <p className="text-white/70 text-sm mb-4">How are you feeling today?</p>
+                    <h3 className="text-slate-800 font-semibold mb-2">Daily Check-In</h3>
+                    <p className="text-slate-600 text-sm mb-4">How are you feeling today?</p>
                     <button
                       onClick={() => setShowMoodModal(true)}
-                      className="w-full px-6 py-3 bg-white hover:bg-[#F5F0E8] text-slate-900 font-bold rounded-xl shadow-lg transition-all hover:scale-105"
+                      className="w-full px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl shadow-lg transition-all hover:scale-105"
                     >
                       Log My Mood
                     </button>
@@ -134,7 +134,7 @@ function WellnessPageContent() {
                 {/* Crisis Resources */}
                 <a
                   href="tel:988"
-                  className="flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur hover:bg-white/30 text-white font-medium rounded-xl transition-all"
+                  className="flex items-center gap-2 px-6 py-3 bg-slate-800/20 backdrop-blur hover:bg-slate-800/30 text-slate-800 font-medium rounded-xl transition-all"
                 >
                   <Icons.Emergency />
                   988 Crisis Line (24/7)
@@ -158,7 +158,7 @@ function WellnessPageContent() {
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-[#C4A77D] to-[#A89070] text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-[#D4C4B0] to-[#C4A77D] text-slate-800 shadow-lg'
                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
                 }`}
               >
@@ -204,7 +204,10 @@ function WellnessPageContent() {
                           ? 'bg-emerald-500 text-white'
                           : `bg-gradient-to-br ${WELLNESS_DOMAINS[challenge.domain].gradient} text-white`
                       }`}>
-                        {challenge.completed ? <Icons.Check /> : <span className="text-lg">{WELLNESS_DOMAINS[challenge.domain].icon}</span>}
+                        {challenge.completed ? <Icons.Check /> : (() => {
+                          const IconComponent = Icons[WELLNESS_DOMAINS[challenge.domain].icon as keyof typeof Icons];
+                          return IconComponent ? <IconComponent /> : null;
+                        })()}
                       </div>
                       <div className="text-right">
                         <span className="text-xs text-[#A89070] dark:text-[#C4A77D] font-medium">+{challenge.xpReward} XP</span>
@@ -254,8 +257,11 @@ function WellnessPageContent() {
                       }`}
                     >
                       <div className="flex items-start gap-4">
-                        <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${domain.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
-                          <span className="text-2xl">{domain.icon}</span>
+                        <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${domain.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform text-white`}>
+                          {(() => {
+                            const IconComponent = Icons[domain.icon as keyof typeof Icons];
+                            return IconComponent ? <IconComponent /> : null;
+                          })()}
                         </div>
                         <div className="flex-1">
                           <h3 className="font-semibold text-slate-900 dark:text-white mb-1">{domain.title}</h3>
@@ -778,8 +784,11 @@ function WellnessPageContent() {
                     onClick={() => setSelectedCause(key as CharitableCause)}
                   >
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F5F0E8] to-[#E8F0ED] dark:from-[#C4A77D]/30 dark:to-[#A89070]/30 flex items-center justify-center text-2xl">
-                        {cause.icon}
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F5F0E8] to-[#E8F0ED] dark:from-[#C4A77D]/30 dark:to-[#A89070]/30 flex items-center justify-center text-[#C4A77D] dark:text-[#D4A574]">
+                        {(() => {
+                          const IconComponent = Icons[cause.icon as keyof typeof Icons];
+                          return IconComponent ? <IconComponent /> : null;
+                        })()}
                       </div>
                       <div className="flex-1">
                         <h3 className="font-semibold text-slate-900 dark:text-white mb-1">{cause.title}</h3>

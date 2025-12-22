@@ -93,7 +93,7 @@ export default function WellnessProgressPage() {
 
         {/* Hero Banner */}
         <section className="mb-8 animate-fade-in-up">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#C4A77D] via-[#A89070] to-[#8B7355] p-8 md:p-10 shadow-2xl">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#E8E0D5] via-[#D4C4B0] to-[#C4A77D] p-8 md:p-10 shadow-2xl">
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
@@ -102,36 +102,36 @@ export default function WellnessProgressPage() {
             </div>
 
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur rounded-full text-white/90 text-sm font-medium mb-4">
-                <span className="w-2 h-2 bg-[#D4C4B0] rounded-full animate-pulse" />
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-800/20 backdrop-blur rounded-full text-slate-800 text-sm font-medium mb-4">
+                <span className="w-2 h-2 bg-slate-700 rounded-full animate-pulse" />
                 <span>Your Wellness Journey</span>
               </div>
 
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
-                Wellness <span className="text-[#D4C4B0]">Progress</span>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-800 mb-3 leading-tight">
+                Wellness <span className="text-slate-700">Progress</span>
               </h1>
 
-              <p className="text-white/80 text-lg max-w-2xl mb-6">
+              <p className="text-slate-700 text-lg max-w-2xl mb-6">
                 Track your wellness journey, mood patterns, and community impact over time.
               </p>
 
               {/* Quick stats row */}
               <div className="flex items-center gap-4 md:gap-6 flex-wrap">
-                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
-                  <p className="text-2xl md:text-3xl font-bold text-white">{stats?.villagePoints || 0}</p>
-                  <p className="text-white/60 text-xs">Village Points</p>
+                <div className="text-center px-4 py-2 bg-slate-800/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold text-slate-800">{stats?.villagePoints || 0}</p>
+                  <p className="text-slate-600 text-xs">Village Points</p>
                 </div>
-                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
-                  <p className="text-2xl md:text-3xl font-bold text-white">{stats?.donated || 0}</p>
-                  <p className="text-white/60 text-xs">Points Donated</p>
+                <div className="text-center px-4 py-2 bg-slate-800/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold text-slate-800">{stats?.donated || 0}</p>
+                  <p className="text-slate-600 text-xs">Points Donated</p>
                 </div>
-                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
-                  <p className="text-2xl md:text-3xl font-bold text-white">{journeyStats.total}</p>
-                  <p className="text-white/60 text-xs">Active Journeys</p>
+                <div className="text-center px-4 py-2 bg-slate-800/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold text-slate-800">{journeyStats.total}</p>
+                  <p className="text-slate-600 text-xs">Active Journeys</p>
                 </div>
-                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
-                  <p className="text-2xl md:text-3xl font-bold text-white">{userTribes.length}</p>
-                  <p className="text-white/60 text-xs">Tribes Joined</p>
+                <div className="text-center px-4 py-2 bg-slate-800/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold text-slate-800">{userTribes.length}</p>
+                  <p className="text-slate-600 text-xs">Tribes Joined</p>
                 </div>
               </div>
             </div>
@@ -273,8 +273,11 @@ export default function WellnessProgressPage() {
                         className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl"
                       >
                         <div className="flex items-center gap-3 mb-2">
-                          <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${domain.gradient} flex items-center justify-center text-lg`}>
-                            {domain.icon}
+                          <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${domain.gradient} flex items-center justify-center text-white`}>
+                            {(() => {
+                              const IconComponent = Icons[domain.icon as keyof typeof Icons];
+                              return IconComponent ? <IconComponent /> : null;
+                            })()}
                           </div>
                           <div>
                             <p className="font-medium text-slate-900 dark:text-white">{domain.title}</p>
@@ -453,8 +456,11 @@ export default function WellnessProgressPage() {
                         className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6"
                       >
                         <div className="flex items-start gap-4">
-                          <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${domain.gradient} flex items-center justify-center text-2xl shadow-lg`}>
-                            {domain.icon}
+                          <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${domain.gradient} flex items-center justify-center text-white shadow-lg`}>
+                            {(() => {
+                              const IconComponent = Icons[domain.icon as keyof typeof Icons];
+                              return IconComponent ? <IconComponent /> : null;
+                            })()}
                           </div>
                           <div className="flex-1">
                             <h3 className="font-semibold text-slate-900 dark:text-white">{domain.title}</h3>
