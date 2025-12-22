@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 import { TribeCard } from '@/components/tribes/TribeCard';
 import { CreateTribeModal } from '@/components/tribes/CreateTribeModal';
 import { useTribes } from '@/hooks/useTribes';
@@ -64,9 +65,9 @@ export default function TribesPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-amber-50/30 dark:from-slate-900 dark:to-amber-950/20">
         <Header />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse space-y-6">
             <div className="h-48 bg-slate-200 dark:bg-slate-800 rounded-3xl"></div>
             <div className="h-16 bg-slate-200 dark:bg-slate-800 rounded-2xl"></div>
@@ -82,13 +83,13 @@ export default function TribesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-amber-50/30 dark:from-slate-900 dark:to-amber-950/20">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Banner */}
-        <section className="mb-8">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 p-8 md:p-10 shadow-2xl">
+        <section className="mb-8 animate-fade-in-up">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 via-orange-500 to-yellow-500 p-8 md:p-10 shadow-2xl">
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
@@ -100,9 +101,7 @@ export default function TribesPage() {
               {/* Left side - Title & Description */}
               <div className="flex-1">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur rounded-full text-white/90 text-sm font-medium mb-4">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
+                  <span className="w-5 h-5"><Icons.Users /></span>
                   <span>Study together, make an impact</span>
                 </div>
 
@@ -124,7 +123,7 @@ export default function TribesPage() {
                         href={`/tribes/${tribe.id}`}
                         className="px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur rounded-full text-sm font-medium text-white transition-colors flex items-center gap-1.5"
                       >
-                        <span>{tribe.icon}</span>
+                        <span className="w-4 h-4"><Icons.Village /></span>
                         <span>{tribe.name}</span>
                       </Link>
                     ))}
@@ -268,8 +267,8 @@ export default function TribesPage() {
           </div>
         ) : (
           <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 mb-8">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
-              <div className="w-8 h-8 text-slate-400"><Icons.Search /></div>
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-400">
+              <Icons.Search />
             </div>
             <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">No tribes found</h3>
             <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-md mx-auto">
@@ -288,8 +287,8 @@ export default function TribesPage() {
         <section className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="p-6 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/25">
-                <span className="w-5 h-5 text-white"><Icons.Trophy /></span>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/25 text-white">
+                <Icons.Trophy />
               </div>
               Top Tribes This Month
             </h2>
@@ -318,8 +317,8 @@ export default function TribesPage() {
                   >
                     {index + 1}
                   </span>
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tribe.color} flex items-center justify-center text-2xl shadow-md`}>
-                    {tribe.icon}
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tribe.color} flex items-center justify-center shadow-md text-white`}>
+                    <Icons.Village />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-slate-900 dark:text-white truncate">{tribe.name}</p>
@@ -338,7 +337,20 @@ export default function TribesPage() {
               ))}
           </div>
         </section>
+
+        {/* Quick Action */}
+        <div className="mt-8 text-center">
+          <Link
+            href="/community"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-semibold rounded-xl transition-colors shadow-lg"
+          >
+            <Icons.Users />
+            Back to Community Hub
+          </Link>
+        </div>
       </main>
+
+      <Footer />
 
       {/* Create Tribe Modal */}
       <CreateTribeModal
