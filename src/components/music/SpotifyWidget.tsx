@@ -81,7 +81,7 @@ export function SpotifyWidget({ variant = 'compact', className = '' }: SpotifyWi
             <div className="fixed inset-0 z-[100]" onClick={() => setIsOpen(false)} />
             <div
               ref={panelRef}
-              className="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 z-[110] overflow-hidden"
+              className="absolute top-full right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 z-[110] overflow-hidden"
             >
             {/* Header */}
             <div className="px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-between">

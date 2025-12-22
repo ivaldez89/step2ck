@@ -11,10 +11,13 @@
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
-  
+
   body {
     @apply bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100;
+    overflow-x: hidden;
+    position: relative;
   }
   
   /* Custom scrollbar - Light */

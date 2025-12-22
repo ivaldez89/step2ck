@@ -247,7 +247,7 @@ export function CalendarWidget({ variant = 'compact', onEventClick }: CalendarWi
             <div className="fixed inset-0 z-[100]" onClick={() => setIsOpen(false)} />
             <div
               ref={dropdownRef}
-              className="absolute right-0 mt-2 w-80 rounded-2xl shadow-xl border z-[110] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 overflow-hidden"
+              className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-2xl shadow-xl border z-[110] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 overflow-hidden"
             >
               {/* Header */}
               <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-indigo-500 to-purple-500">

@@ -191,7 +191,7 @@ export function PomodoroTimer({ onSessionComplete }: PomodoroTimerProps) {
           />
 
           {/* Panel */}
-          <div className="absolute right-0 mt-2 w-72 rounded-xl shadow-xl border z-[110] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+          <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl shadow-xl border z-[110] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
