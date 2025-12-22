@@ -96,16 +96,21 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
     </svg>
   ),
+  Tools: () => (
+    <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
+    </svg>
+  ),
 };
 
 const PLATFORM_PILLARS = [
   {
     title: 'Study',
-    description: 'AI-powered adaptive learning with FSRS spaced repetition. Smart review targets your weak areas. Audio mode for on-the-go learning.',
+    description: 'AI-powered adaptive learning with FSRS spaced repetition. High-yield visual guides, clinical pearls, and audio mode for on-the-go learning.',
     href: '/study',
     icon: 'Study',
     gradient: 'from-teal-400 to-cyan-500',
-    features: ['Adaptive AI Review', 'Text-to-Speech', 'Step 2 CK & Shelf']
+    features: ['Adaptive AI Review', 'Visual Guides', 'Clinical Pearls', 'Text-to-Speech']
   },
   {
     title: 'Wellness',
@@ -116,29 +121,20 @@ const PLATFORM_PILLARS = [
     features: ['Points to Donations', 'Activity Tracking', 'Wellness Challenges']
   },
   {
-    title: 'Resources',
-    description: 'High-yield visual guides, clinical pearls, and curated content from medical educators. Everything you need in one place.',
-    href: '/resources',
-    icon: 'Resources',
+    title: 'Tools',
+    description: 'Stay organized with task management, calendar tracking, and focus timers. Everything you need to manage your busy schedule.',
+    href: '/tasks',
+    icon: 'Tools',
     gradient: 'from-amber-400 to-orange-500',
-    features: ['Visual Summaries', 'Clinical Pearls', 'Rapid Review']
+    features: ['Task Manager', 'Calendar', 'Pomodoro Timer']
   },
   {
     title: 'Community',
     description: 'Join tribes of peers at your stage. Connect with mentors who have walked your path. Shared accountability drives success.',
     href: '/community',
     icon: 'Community',
-    gradient: 'from-violet-400 to-purple-500',
+    gradient: 'from-yellow-400 to-amber-500',
     features: ['Mentorship', 'Study Tribes', 'Peer Support'],
-    comingSoon: true
-  },
-  {
-    title: 'PreMed',
-    description: 'Guidance from medical students who recently matched. Application strategy, MCAT prep, and honest advice.',
-    href: '/premed',
-    icon: 'PreMed',
-    gradient: 'from-emerald-400 to-teal-500',
-    features: ['MCAT Strategy', 'Application Guide', 'Med Student Mentors'],
     comingSoon: true
   },
 ];
@@ -147,7 +143,6 @@ const USER_TYPES = [
   { type: 'Medical Students', description: 'Ace your exams while staying sane', icon: 'MedStudent' },
   { type: 'Residents', description: 'Stay sharp, pay it forward', icon: 'Resident' },
   { type: 'Attendings', description: 'Share wisdom, stay connected', icon: 'Attending' },
-  { type: 'Pre-Meds', description: 'Start your journey right', icon: 'PreMedStudent' },
 ];
 
 const VALUE_PROPS = [
@@ -304,7 +299,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Top row - 2 featured cards */}
+            {/* Top row - 2 cards */}
             <div className={`grid md:grid-cols-2 gap-6 mb-6 transition-all duration-700 delay-200 ${pillarsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               {PLATFORM_PILLARS.slice(0, 2).map((pillar, index) => (
                 <Link
@@ -313,6 +308,11 @@ export default function HomePage() {
                   className={`group relative p-8 rounded-2xl bg-gradient-to-br ${pillar.gradient} text-white overflow-hidden hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-2xl`}
                   style={{ transitionDelay: pillarsVisible ? `${300 + index * 100}ms` : '0ms' }}
                 >
+                  {pillar.comingSoon && (
+                    <div className="absolute top-4 right-4 px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs font-medium">
+                      Coming Soon
+                    </div>
+                  )}
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="w-14 h-14 mb-4 rounded-xl bg-white/20 flex items-center justify-center">
@@ -333,13 +333,13 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* Bottom row - 3 cards */}
-            <div className={`grid md:grid-cols-3 gap-6 transition-all duration-700 delay-400 ${pillarsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            {/* Bottom row - 2 cards (same size as top) */}
+            <div className={`grid md:grid-cols-2 gap-6 transition-all duration-700 delay-400 ${pillarsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               {PLATFORM_PILLARS.slice(2).map((pillar, index) => (
                 <Link
                   key={index}
                   href={pillar.href}
-                  className={`group relative p-6 rounded-2xl bg-gradient-to-br ${pillar.gradient} text-white overflow-hidden hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-2xl`}
+                  className={`group relative p-8 rounded-2xl bg-gradient-to-br ${pillar.gradient} text-white overflow-hidden hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-2xl`}
                   style={{ transitionDelay: pillarsVisible ? `${500 + index * 100}ms` : '0ms' }}
                 >
                   {pillar.comingSoon && (
@@ -347,15 +347,18 @@ export default function HomePage() {
                       Coming Soon
                     </div>
                   )}
-
-                  <div className="w-12 h-12 mb-4 rounded-xl bg-white/20 flex items-center justify-center">
-                    {renderIcon(pillar.icon)}
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="w-14 h-14 mb-4 rounded-xl bg-white/20 flex items-center justify-center">
+                        {renderIcon(pillar.icon)}
+                      </div>
+                      <h3 className="text-3xl font-bold mb-3">{pillar.title}</h3>
+                      <p className="text-white/90 mb-6 max-w-md">{pillar.description}</p>
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-bold mb-2">{pillar.title}</h3>
-                  <p className="text-white/80 text-sm mb-4">{pillar.description}</p>
                   <div className="flex flex-wrap gap-2">
                     {pillar.features.map((feature, idx) => (
-                      <span key={idx} className="px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs">
+                      <span key={idx} className="px-4 py-1.5 bg-white/20 backdrop-blur rounded-full text-sm">
                         {feature}
                       </span>
                     ))}
@@ -416,7 +419,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
               {USER_TYPES.map((user, index) => {
                 const colors = ['teal', 'violet', 'rose', 'amber'];
                 const color = colors[index % colors.length];

@@ -244,13 +244,13 @@ Return ONLY the JSON array, no other text.`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <Header stats={stats} />
       
       <main className="max-w-5xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-4">
+          <Link href="/" className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white mb-4">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -264,8 +264,8 @@ Return ONLY the JSON array, no other text.`;
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">AI Card Generator</h1>
-              <p className="text-slate-600">Paste lecture notes or describe a topic to generate flashcards</p>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">AI Card Generator</h1>
+              <p className="text-slate-600 dark:text-slate-400">Paste lecture notes or describe a topic to generate flashcards</p>
             </div>
           </div>
         </div>
@@ -297,13 +297,13 @@ Return ONLY the JSON array, no other text.`;
 
         {/* Success message */}
         {savedCount > 0 && (
-          <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-3">
-            <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl flex items-center gap-3">
+            <svg className="w-6 h-6 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            <p className="text-emerald-800">
+            <p className="text-emerald-800 dark:text-emerald-300">
               Successfully added {savedCount} cards to your deck!{' '}
-              <Link href="/flashcards" className="underline font-medium">Start studying →</Link>
+              <Link href="/flashcards" className="underline font-medium hover:text-emerald-900 dark:hover:text-emerald-200">Start studying →</Link>
             </p>
           </div>
         )}
@@ -312,8 +312,8 @@ Return ONLY the JSON array, no other text.`;
           {/* Input Section */}
           <div className="space-y-6">
             {/* Content Input */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6">
-              <label className="block text-sm font-semibold text-slate-900 mb-2">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+              <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                 Lecture Notes / Content
               </label>
               <textarea
@@ -325,21 +325,21 @@ Example:
 - Paste a paragraph about heart failure management
 - Copy notes from your pathology lecture
 - Write 'Common causes of acute pancreatitis and their management'"
-                className="w-full h-48 px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-violet-500 resize-none text-slate-900 placeholder:text-slate-400"
+                className="w-full h-48 px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-violet-500 resize-none text-slate-900 dark:text-white bg-white dark:bg-slate-700 placeholder:text-slate-400 dark:placeholder:text-slate-500"
               />
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
                 {input.length} characters • More detail = better cards
               </p>
             </div>
 
             {/* Options */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6">
-              <h3 className="font-semibold text-slate-900 mb-4">Card Settings</h3>
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+              <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Card Settings</h3>
               
               <div className="grid sm:grid-cols-2 gap-4">
                 {/* Topic Focus */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     Topic Focus (optional)
                   </label>
                   <input
@@ -347,19 +347,19 @@ Example:
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     placeholder="e.g., Heart Failure"
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-sm"
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
                   />
                 </div>
 
                 {/* System */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     System
                   </label>
                   <select
                     value={system}
                     onChange={(e) => setSystem(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-sm"
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                   >
                     {SYSTEMS.map(s => (
                       <option key={s} value={s}>{s}</option>
@@ -369,13 +369,13 @@ Example:
 
                 {/* Rotation */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     Rotation
                   </label>
                   <select
                     value={rotation}
                     onChange={(e) => setRotation(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-sm"
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                   >
                     {ROTATIONS.map(r => (
                       <option key={r} value={r}>{r}</option>
@@ -385,13 +385,13 @@ Example:
 
                 {/* Number of Cards */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     Number of Cards
                   </label>
                   <select
                     value={numCards}
                     onChange={(e) => setNumCards(parseInt(e.target.value))}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-sm"
+                    className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                   >
                     <option value={5}>5 cards</option>
                     <option value={10}>10 cards</option>
@@ -404,7 +404,7 @@ Example:
 
               {/* Card Style */}
               <div className="mt-4">
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                   Card Style
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -418,14 +418,14 @@ Example:
                       onClick={() => setCardStyle(style.id as typeof cardStyle)}
                       className={`p-3 rounded-xl border-2 text-left transition-all ${
                         cardStyle === style.id
-                          ? 'border-violet-500 bg-violet-50'
-                          : 'border-slate-200 hover:border-slate-300'
+                          ? 'border-violet-500 bg-violet-50 dark:bg-violet-900/30'
+                          : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
                       }`}
                     >
-                      <p className={`font-medium text-sm ${cardStyle === style.id ? 'text-violet-700' : 'text-slate-900'}`}>
+                      <p className={`font-medium text-sm ${cardStyle === style.id ? 'text-violet-700 dark:text-violet-300' : 'text-slate-900 dark:text-white'}`}>
                         {style.label}
                       </p>
-                      <p className="text-xs text-slate-500">{style.desc}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{style.desc}</p>
                     </button>
                   ))}
                 </div>
@@ -455,7 +455,7 @@ Example:
 
             {/* Error */}
             {error && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 text-sm">
+              <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-800 dark:text-red-300 text-sm">
                 {error}
               </div>
             )}
@@ -464,7 +464,7 @@ Example:
           {/* Preview Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-slate-900">
+              <h3 className="font-semibold text-slate-900 dark:text-white">
                 Generated Cards ({generatedCards.length})
               </h3>
               {generatedCards.length > 0 && (
@@ -481,24 +481,24 @@ Example:
             </div>
 
             {generatedCards.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center">
-                  <svg className="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-12 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                  <svg className="w-8 h-8 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                 </div>
-                <p className="text-slate-600">Generated cards will appear here</p>
-                <p className="text-sm text-slate-400 mt-1">You can edit them before saving</p>
+                <p className="text-slate-600 dark:text-slate-400">Generated cards will appear here</p>
+                <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">You can edit them before saving</p>
               </div>
             ) : (
               <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
                 {generatedCards.map((card, index) => (
-                  <div key={index} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                    <div className="flex items-center justify-between px-4 py-2 bg-slate-50 border-b border-slate-200">
-                      <span className="text-sm font-medium text-slate-600">Card {index + 1}</span>
+                  <div key={index} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+                    <div className="flex items-center justify-between px-4 py-2 bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
+                      <span className="text-sm font-medium text-slate-600 dark:text-slate-300">Card {index + 1}</span>
                       <button
                         onClick={() => handleRemoveCard(index)}
-                        className="text-slate-400 hover:text-red-500 transition-colors"
+                        className="text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                       >
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -507,30 +507,30 @@ Example:
                     </div>
                     <div className="p-4 space-y-3">
                       <div>
-                        <label className="block text-xs font-medium text-slate-500 mb-1">Question</label>
+                        <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Question</label>
                         <textarea
                           value={card.front}
                           onChange={(e) => handleEditCard(index, 'front', e.target.value)}
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm resize-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                          className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-sm resize-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                           rows={2}
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-slate-500 mb-1">Answer</label>
+                        <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Answer</label>
                         <textarea
                           value={card.back}
                           onChange={(e) => handleEditCard(index, 'back', e.target.value)}
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm resize-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                          className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-sm resize-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                           rows={2}
                         />
                       </div>
                       {card.explanation && (
                         <div>
-                          <label className="block text-xs font-medium text-slate-500 mb-1">Explanation</label>
+                          <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Explanation</label>
                           <textarea
                             value={card.explanation}
                             onChange={(e) => handleEditCard(index, 'explanation', e.target.value)}
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm resize-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 bg-amber-50"
+                            className="w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-sm resize-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 bg-amber-50 dark:bg-amber-900/20 text-slate-900 dark:text-white"
                             rows={2}
                           />
                         </div>

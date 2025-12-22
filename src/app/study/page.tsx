@@ -613,7 +613,7 @@ export default function StudyPage() {
 
                     <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
                       {stats.dueToday > 0 ? (
-                        <>Ready to <span className="text-yellow-300">Study</span>?</>
+                        <><span className="text-yellow-300">Flashcards</span></>
                       ) : (
                         <>Great Job! <span className="text-yellow-300">Rest Up</span></>
                       )}

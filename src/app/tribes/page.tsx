@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { TribeCard } from '@/components/tribes/TribeCard';
 import { CreateTribeModal } from '@/components/tribes/CreateTribeModal';
@@ -57,76 +58,113 @@ export default function TribesPage() {
     setShowCreateModal(false);
   };
 
+  // Calculate total impact from user's tribes
+  const totalWeeklyPoints = userTribes.reduce((acc, t) => acc + (t.weeklyPoints || 0), 0);
+  const totalMembers = userTribes.reduce((acc, t) => acc + (t.memberCount || 0), 0);
+
   if (isLoading) {
     return (
-      <>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
         <Header />
-        <main className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pt-20 px-4 pb-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="animate-pulse space-y-4">
-              <div className="h-8 bg-slate-200 rounded w-1/3"></div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={i} className="h-64 bg-slate-200 rounded-xl"></div>
-                ))}
-              </div>
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="animate-pulse space-y-6">
+            <div className="h-48 bg-slate-200 dark:bg-slate-800 rounded-3xl"></div>
+            <div className="h-16 bg-slate-200 dark:bg-slate-800 rounded-2xl"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="h-64 bg-slate-200 dark:bg-slate-800 rounded-2xl"></div>
+              ))}
             </div>
           </div>
         </main>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       <Header />
-      <main className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pt-20 px-4 pb-8">
-        <div className="max-w-6xl mx-auto">
-          {/* Hero Section */}
-          <div className="bg-gradient-to-r from-teal-500 via-cyan-500 to-emerald-500 rounded-2xl p-6 md:p-8 mb-6 text-white">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold mb-2">Find Your Tribe</h1>
-                <p className="text-teal-100 max-w-xl">
-                  Join a community working toward meaningful goals. Study together,
-                  support each other, and make a social impact.
-                </p>
-              </div>
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="px-6 py-3 bg-white text-teal-600 rounded-xl font-semibold hover:bg-teal-50 transition-colors shadow-lg flex items-center gap-2 self-start"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Create Tribe
-              </button>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Hero Banner */}
+        <section className="mb-8">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 p-8 md:p-10 shadow-2xl">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
+              <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+              <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-orange-300/20 rounded-full blur-2xl" />
             </div>
 
-            {/* User's tribes summary */}
-            {userTribes.length > 0 && (
-              <div className="mt-6 pt-6 border-t border-white/20">
-                <p className="text-sm text-teal-100 mb-2">
-                  Your Tribes ({userTribes.length}/{maxTribesPerUser})
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {userTribes.map((tribe) => (
-                    <a
-                      key={tribe.id}
-                      href={`/tribes/${tribe.id}`}
-                      className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-full text-sm font-medium transition-colors flex items-center gap-1.5"
-                    >
-                      <span>{tribe.icon}</span>
-                      <span>{tribe.name}</span>
-                    </a>
-                  ))}
+            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              {/* Left side - Title & Description */}
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur rounded-full text-white/90 text-sm font-medium mb-4">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <span>Study together, make an impact</span>
                 </div>
-              </div>
-            )}
-          </div>
 
-          {/* Filters */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
+                  Find Your <span className="text-yellow-200">Tribe</span>
+                </h1>
+
+                <p className="text-white/80 text-lg max-w-lg mb-6">
+                  Join a community working toward meaningful goals. Study together, support each other, and make a social impact.
+                </p>
+
+                {/* User's tribes summary */}
+                {userTribes.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    <span className="text-white/60 text-sm self-center mr-1">Your Tribes ({userTribes.length}/{maxTribesPerUser})</span>
+                    {userTribes.map((tribe) => (
+                      <Link
+                        key={tribe.id}
+                        href={`/tribes/${tribe.id}`}
+                        className="px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur rounded-full text-sm font-medium text-white transition-colors flex items-center gap-1.5"
+                      >
+                        <span>{tribe.icon}</span>
+                        <span>{tribe.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Right side - Stats & Create Button */}
+              <div className="flex flex-col items-end gap-4">
+                <button
+                  onClick={() => setShowCreateModal(true)}
+                  className="px-6 py-3 bg-white text-amber-600 rounded-xl font-semibold hover:bg-amber-50 transition-colors shadow-lg flex items-center gap-2"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Create Tribe
+                </button>
+
+                {/* Stats cards */}
+                {userTribes.length > 0 && (
+                  <div className="flex gap-3">
+                    <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
+                      <p className="text-2xl font-bold text-white">{totalWeeklyPoints}</p>
+                      <p className="text-white/60 text-xs">Points This Week</p>
+                    </div>
+                    <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
+                      <p className="text-2xl font-bold text-white">{totalMembers}</p>
+                      <p className="text-white/60 text-xs">Tribe Members</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Filters */}
+        <section className="mb-6">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-4">
             <div className="flex flex-col md:flex-row gap-4">
               {/* Search */}
               <div className="flex-1">
@@ -149,7 +187,7 @@ export default function TribesPage() {
                     placeholder="Search tribes..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
                   />
                 </div>
               </div>
@@ -158,7 +196,7 @@ export default function TribesPage() {
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value as TribeType | 'all')}
-                className="px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white"
+                className="px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
               >
                 <option value="all">All Types</option>
                 <option value="study">Study Group</option>
@@ -171,7 +209,7 @@ export default function TribesPage() {
               <select
                 value={causeFilter}
                 onChange={(e) => setCauseFilter(e.target.value as SocialCause | 'all')}
-                className="px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white"
+                className="px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
               >
                 <option value="all">All Causes</option>
                 <option value="environment">Environment</option>
@@ -186,7 +224,7 @@ export default function TribesPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white"
+                className="px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
               >
                 <option value="popular">Most Popular</option>
                 <option value="newest">Newest</option>
@@ -195,102 +233,111 @@ export default function TribesPage() {
               </select>
             </div>
           </div>
+        </section>
 
-          {/* Results count */}
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm text-slate-600">
-              {filteredTribes.length} tribe{filteredTribes.length !== 1 ? 's' : ''} found
-            </p>
-            {(searchQuery || typeFilter !== 'all' || causeFilter !== 'all') && (
-              <button
-                onClick={() => {
-                  setSearchQuery('');
-                  setTypeFilter('all');
-                  setCauseFilter('all');
-                }}
-                className="text-sm text-teal-600 hover:text-teal-700 font-medium"
-              >
-                Clear filters
-              </button>
-            )}
-          </div>
-
-          {/* Tribes Grid */}
-          {filteredTribes.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredTribes.map((tribe) => (
-                <TribeCard
-                  key={tribe.id}
-                  tribe={tribe}
-                  isMember={checkMembership(tribe.id)}
-                  onJoin={handleJoinTribe}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 bg-white rounded-xl border border-slate-200">
-              <div className="w-12 h-12 mx-auto mb-4 text-slate-400"><Icons.Search /></div>
-              <h3 className="text-lg font-semibold text-slate-700 mb-2">No tribes found</h3>
-              <p className="text-slate-500 mb-4">
-                Try adjusting your filters or create your own tribe!
-              </p>
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="px-6 py-2 bg-teal-500 text-white rounded-lg font-medium hover:bg-teal-600 transition-colors"
-              >
-                Create a Tribe
-              </button>
-            </div>
+        {/* Results count */}
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-sm text-slate-600 dark:text-slate-400">
+            {filteredTribes.length} tribe{filteredTribes.length !== 1 ? 's' : ''} found
+          </p>
+          {(searchQuery || typeFilter !== 'all' || causeFilter !== 'all') && (
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setTypeFilter('all');
+                setCauseFilter('all');
+              }}
+              className="text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium"
+            >
+              Clear filters
+            </button>
           )}
+        </div>
 
-          {/* Leaderboard Section */}
-          <div className="mt-8 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <h2 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-              <span className="w-6 h-6 text-amber-500"><Icons.Trophy /></span>
+        {/* Tribes Grid */}
+        {filteredTribes.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {filteredTribes.map((tribe) => (
+              <TribeCard
+                key={tribe.id}
+                tribe={tribe}
+                isMember={checkMembership(tribe.id)}
+                onJoin={handleJoinTribe}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 mb-8">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+              <div className="w-8 h-8 text-slate-400"><Icons.Search /></div>
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">No tribes found</h3>
+            <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-md mx-auto">
+              Try adjusting your filters or create your own tribe to get started!
+            </p>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-medium hover:from-amber-600 hover:to-orange-600 transition-colors shadow-lg shadow-amber-500/25"
+            >
+              Create a Tribe
+            </button>
+          </div>
+        )}
+
+        {/* Leaderboard Section */}
+        <section className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div className="p-6 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/25">
+                <span className="w-5 h-5 text-white"><Icons.Trophy /></span>
+              </div>
               Top Tribes This Month
             </h2>
-            <div className="space-y-3">
-              {tribes
-                .filter((t) => t.visibility === 'public' && t.rank > 0)
-                .sort((a, b) => a.rank - b.rank)
-                .slice(0, 5)
-                .map((tribe, index) => (
-                  <a
-                    key={tribe.id}
-                    href={`/tribes/${tribe.id}`}
-                    className="flex items-center gap-4 p-3 rounded-lg hover:bg-slate-50 transition-colors"
-                  >
-                    <span
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                        index === 0
-                          ? 'bg-yellow-100 text-yellow-700'
-                          : index === 1
-                          ? 'bg-slate-100 text-slate-700'
-                          : index === 2
-                          ? 'bg-amber-100 text-amber-700'
-                          : 'bg-slate-50 text-slate-500'
-                      }`}
-                    >
-                      {index + 1}
-                    </span>
-                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-r ${tribe.color} flex items-center justify-center text-xl`}>
-                      {tribe.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-800 truncate">{tribe.name}</p>
-                      <p className="text-sm text-slate-500">{tribe.memberCount} members</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-semibold text-teal-600">
-                        {tribe.totalPoints.toLocaleString()}
-                      </p>
-                      <p className="text-xs text-slate-400">points</p>
-                    </div>
-                  </a>
-                ))}
-            </div>
           </div>
-        </div>
+          <div className="divide-y divide-slate-100 dark:divide-slate-700">
+            {tribes
+              .filter((t) => t.visibility === 'public' && t.rank > 0)
+              .sort((a, b) => a.rank - b.rank)
+              .slice(0, 5)
+              .map((tribe, index) => (
+                <Link
+                  key={tribe.id}
+                  href={`/tribes/${tribe.id}`}
+                  className="flex items-center gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+                >
+                  <span
+                    className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
+                      index === 0
+                        ? 'bg-gradient-to-br from-yellow-400 to-amber-500 text-white shadow-lg shadow-amber-500/25'
+                        : index === 1
+                        ? 'bg-gradient-to-br from-slate-300 to-slate-400 text-white'
+                        : index === 2
+                        ? 'bg-gradient-to-br from-amber-600 to-amber-700 text-white'
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+                    }`}
+                  >
+                    {index + 1}
+                  </span>
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tribe.color} flex items-center justify-center text-2xl shadow-md`}>
+                    {tribe.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-slate-900 dark:text-white truncate">{tribe.name}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">{tribe.memberCount} members</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-bold text-amber-600 dark:text-amber-400">
+                      {tribe.totalPoints.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500">points</p>
+                  </div>
+                  <svg className="w-5 h-5 text-slate-300 dark:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              ))}
+          </div>
+        </section>
       </main>
 
       {/* Create Tribe Modal */}
@@ -299,6 +346,6 @@ export default function TribesPage() {
         onClose={() => setShowCreateModal(false)}
         onCreate={handleCreateTribe}
       />
-    </>
+    </div>
   );
 }

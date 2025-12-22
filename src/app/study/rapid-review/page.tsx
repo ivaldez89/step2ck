@@ -4,8 +4,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { useFlashcards } from '@/hooks/useFlashcards';
-import { BackgroundSelector, useStudyBackground, getBackgroundUrl } from '@/components/study/BackgroundSelector';
-import { CalendarWidget } from '@/components/calendar/CalendarWidget';
 import { Icons } from '@/components/ui/Icons';
 
 // Rapid review stats type
@@ -92,9 +90,6 @@ export default function RapidReviewPage() {
   const [cardsReviewedThisSession, setCardsReviewedThisSession] = useState(0);
   const [rapidStats, setRapidStats] = useState<RapidReviewStats>({ totalCardsReviewed: 0, totalSessions: 0, lastSessionDate: null, todayCardsReviewed: 0, streak: 0 });
 
-  // Study background state
-  const { selectedBackground, setSelectedBackground, opacity, setOpacity } = useStudyBackground();
-  
   // Voice selection
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoiceIndex, setSelectedVoiceIndex] = useState<number>(-1);
@@ -401,23 +396,7 @@ export default function RapidReviewPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 relative">
       <Header />
 
-      {/* Background overlay - positioned below header */}
-      {selectedBackground !== 'none' && (
-        <div
-          className="fixed left-0 right-0 bottom-0 bg-no-repeat transition-opacity duration-500 pointer-events-none"
-          style={{
-            top: '64px',
-            backgroundImage: `url(${getBackgroundUrl(selectedBackground)})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center bottom',
-            backgroundAttachment: 'fixed',
-            opacity: opacity,
-            zIndex: 0
-          }}
-        />
-      )}
-
-      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" style={{ zIndex: 2 }}>
+      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Banner */}
         <section className="mb-8">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 p-8 md:p-10 shadow-2xl">
@@ -467,165 +446,198 @@ export default function RapidReviewPage() {
                 </div>
               </div>
 
-              {/* Right side - Quick Actions */}
+              {/* Right side - Back link only */}
               <div className="flex flex-col items-center gap-3">
-                <div className="p-3 bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
-                  <div className="flex items-center gap-3">
-                    <BackgroundSelector
-                      selectedBackground={selectedBackground}
-                      opacity={opacity}
-                      onBackgroundChange={setSelectedBackground}
-                      onOpacityChange={setOpacity}
-                      variant="light"
-                    />
-                    <CalendarWidget variant="compact" />
-                    <button
-                      onClick={() => setShowSettings(!showSettings)}
-                      className={`p-2 rounded-lg transition-colors ${showSettings ? 'bg-amber-100 text-amber-700' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'}`}
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
                 <Link
                   href="/study"
-                  className="px-3 py-1 bg-white/90 dark:bg-slate-800/90 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-sm transition-colors shadow-sm"
+                  className="px-4 py-2 bg-white/90 dark:bg-slate-800/90 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-sm font-medium transition-colors shadow-sm"
                 >
-                  ← Back to Study Dashboard
+                  ← Back to Flashcards
                 </Link>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Settings Panel */}
-        {showSettings && (
-          <div className="mb-6 p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
-            <h3 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        {/* Text-to-Speech Control Bar - Always visible, collapsible */}
+        <div className="mb-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+          {/* Header - always visible */}
+          <button
+            onClick={() => setShowSettings(!showSettings)}
+            className="w-full px-4 py-3 flex items-center justify-between bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 hover:from-amber-100 hover:to-orange-100 dark:hover:from-amber-900/30 dark:hover:to-orange-900/30 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-lg shadow-amber-500/25">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                </svg>
+              </div>
+              <div className="text-left">
+                <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                  Text-to-Speech Controls
+                  <span className="px-2 py-0.5 text-xs bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 rounded-full">
+                    {voices[selectedVoiceIndex]?.name?.split(' ')[0] || 'Default'} @ {speechRate}x
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Listen and learn hands-free • {showSettings ? 'Click to minimize' : 'Click to expand settings'}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Quick play button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  togglePlay();
+                }}
+                className={`p-2 rounded-lg transition-colors ${
+                  isPlaying
+                    ? 'bg-red-500 text-white'
+                    : 'bg-amber-500 text-white hover:bg-amber-600'
+                }`}
+              >
+                {isPlaying ? (
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                )}
+              </button>
+              {/* Expand/collapse arrow */}
+              <svg
+                className={`w-5 h-5 text-slate-400 transition-transform ${showSettings ? 'rotate-180' : ''}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
-              Voice Settings
-            </h3>
-            <div className="space-y-5">
-              {/* Voice Selection Row */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Gender Filter */}
-                <div>
-                  <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">Voice Type</label>
-                  <div className="flex gap-1">
-                    {(['all', 'female', 'male'] as const).map((filter) => (
-                      <button
-                        key={filter}
-                        onClick={() => setVoiceFilter(filter)}
-                        className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors capitalize flex items-center justify-center gap-1 ${
-                          voiceFilter === filter
-                            ? 'bg-amber-500 text-white'
-                            : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
-                        }`}
+            </div>
+          </button>
+
+          {/* Expanded Settings */}
+          {showSettings && (
+            <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+              <div className="space-y-4">
+                {/* Voice Selection Row */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Gender Filter */}
+                  <div>
+                    <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">Voice Type</label>
+                    <div className="flex gap-1">
+                      {(['all', 'female', 'male'] as const).map((filter) => (
+                        <button
+                          key={filter}
+                          onClick={() => setVoiceFilter(filter)}
+                          className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors capitalize flex items-center justify-center gap-1 ${
+                            voiceFilter === filter
+                              ? 'bg-amber-500 text-white'
+                              : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                          }`}
+                        >
+                          <span className="w-4 h-4">{filter === 'all' ? <Icons.Group /> : <Icons.Person />}</span>
+                          <span className="capitalize">{filter}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Voice Dropdown */}
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+                      Select Voice ({filteredVoices.length} available)
+                    </label>
+                    <div className="flex gap-2">
+                      <select
+                        value={selectedVoiceIndex}
+                        onChange={(e) => setSelectedVoiceIndex(parseInt(e.target.value))}
+                        className="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-slate-600 focus:border-amber-500 focus:outline-none text-sm"
                       >
-                        <span className="w-4 h-4">{filter === 'all' ? <Icons.Group /> : <Icons.Person />}</span>
-                        <span className="capitalize">{filter}</span>
+                        {filteredVoices.map((voice, idx) => {
+                          const originalIdx = voices.indexOf(voice);
+                          const qualityBadge = voice.name.includes('Premium') || voice.name.includes('Enhanced') || voice.name.includes('Siri')
+                            ? ' ★' : '';
+                          return (
+                            <option key={originalIdx} value={originalIdx}>
+                              {voice.name}{qualityBadge} ({voice.lang})
+                            </option>
+                          );
+                        })}
+                      </select>
+                      <button
+                        onClick={testVoice}
+                        className="px-4 py-2 bg-slate-100 dark:bg-slate-600 text-slate-700 dark:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-slate-500 transition-colors text-sm font-medium"
+                      >
+                        Test
                       </button>
-                    ))}
+                    </div>
                   </div>
                 </div>
 
-                {/* Voice Dropdown */}
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
-                    Select Voice ({filteredVoices.length} available)
-                  </label>
-                  <div className="flex gap-2">
+                {/* Speed and Auto-advance Row */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Speech Speed - Dropdown */}
+                  <div>
+                    <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">Speech Speed</label>
                     <select
-                      value={selectedVoiceIndex}
-                      onChange={(e) => setSelectedVoiceIndex(parseInt(e.target.value))}
-                      className="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-slate-600 focus:border-amber-500 focus:outline-none text-sm"
+                      value={speechRate}
+                      onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
+                      className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-slate-600 focus:border-amber-500 focus:outline-none text-sm"
                     >
-                      {filteredVoices.map((voice, idx) => {
-                        const originalIdx = voices.indexOf(voice);
-                        const qualityBadge = voice.name.includes('Premium') || voice.name.includes('Enhanced') || voice.name.includes('Siri')
-                          ? ' *' : '';
-                        return (
-                          <option key={originalIdx} value={originalIdx}>
-                            {voice.name}{qualityBadge} ({voice.lang})
-                          </option>
-                        );
-                      })}
+                      {speedOptions.map((speed) => (
+                        <option key={speed} value={speed}>
+                          {speed.toFixed(2)}x {speed === 1 ? '(Normal)' : speed < 1 ? '(Slow)' : speed >= 2 ? '(Fast)' : ''}
+                        </option>
+                      ))}
                     </select>
+                  </div>
+
+                  {/* Auto Advance */}
+                  <div>
+                    <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">Auto-Advance</label>
                     <button
-                      onClick={testVoice}
-                      className="px-4 py-2 bg-slate-100 dark:bg-slate-600 text-slate-700 dark:text-white rounded-lg hover:bg-slate-200 dark:hover:bg-slate-500 transition-colors text-sm font-medium"
+                      onClick={() => setAutoAdvance(!autoAdvance)}
+                      className={`w-full px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                        autoAdvance
+                          ? 'bg-amber-500 text-white'
+                          : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                      }`}
                     >
-                      Test
+                      {autoAdvance ? '✓ Auto-advance On' : 'Auto-advance Off'}
                     </button>
                   </div>
-                </div>
-              </div>
 
-              {/* Speed and Auto-advance Row */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Speech Speed - Dropdown */}
-                <div>
-                  <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">Speech Speed</label>
-                  <select
-                    value={speechRate}
-                    onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white rounded-lg border border-slate-200 dark:border-slate-600 focus:border-amber-500 focus:outline-none text-sm"
-                  >
-                    {speedOptions.map((speed) => (
-                      <option key={speed} value={speed}>
-                        {speed.toFixed(2)}x {speed === 1 ? '(Normal)' : speed < 1 ? '(Slow)' : speed >= 2 ? '(Fast)' : ''}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Auto Advance */}
-                <div>
-                  <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">Auto-Advance</label>
-                  <button
-                    onClick={() => setAutoAdvance(!autoAdvance)}
-                    className={`w-full px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      autoAdvance
-                        ? 'bg-amber-500 text-white'
-                        : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
-                    }`}
-                  >
-                    {autoAdvance ? '✓ Auto-advance On' : 'Auto-advance Off'}
-                  </button>
-                </div>
-
-                {/* Delay */}
-                <div>
-                  <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">Pause After Answer</label>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="range"
-                      min="1"
-                      max="10"
-                      step="1"
-                      value={autoAdvanceDelay}
-                      onChange={(e) => setAutoAdvanceDelay(parseInt(e.target.value))}
-                      className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500"
-                    />
-                    <span className="text-sm text-slate-900 dark:text-white font-medium w-12 text-right">{autoAdvanceDelay}s</span>
+                  {/* Delay */}
+                  <div>
+                    <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">Pause After Answer</label>
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="range"
+                        min="1"
+                        max="10"
+                        step="1"
+                        value={autoAdvanceDelay}
+                        onChange={(e) => setAutoAdvanceDelay(parseInt(e.target.value))}
+                        className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                      />
+                      <span className="text-sm text-slate-900 dark:text-white font-medium w-12 text-right">{autoAdvanceDelay}s</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Voice tip */}
-              <p className="text-xs text-slate-500 dark:text-slate-400 flex items-start gap-1">
-                <span className="w-4 h-4 flex-shrink-0"><Icons.Lightbulb /></span>
-                <span>Tip: On Mac, go to System Settings → Accessibility → Spoken Content → System Voice → Manage Voices to download premium voices like "Siri Voice 1" for the most natural sound.</span>
-              </p>
+                {/* Voice tip */}
+                <p className="text-xs text-slate-500 dark:text-slate-400 flex items-start gap-1 pt-2 border-t border-slate-100 dark:border-slate-700">
+                  <span className="w-4 h-4 flex-shrink-0"><Icons.Lightbulb /></span>
+                  <span>Tip: On Mac, go to System Settings → Accessibility → Spoken Content → System Voice → Manage Voices to download premium voices like "Siri Voice 1" for the most natural sound.</span>
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Progress Bar */}
         <div className="mb-6 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
