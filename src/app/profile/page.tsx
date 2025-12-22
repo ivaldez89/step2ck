@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
@@ -13,8 +13,10 @@ import {
   getUserProfile,
   getUserInitials,
   MEDICAL_SPECIALTIES,
+  getCurrentUserId,
   type UserProfile
 } from '@/lib/storage/profileStorage';
+import { uploadAvatar } from '@/lib/storage/supabaseStorage';
 import {
   getConnectedUsers,
   getPendingRequestUsers,
@@ -44,6 +46,11 @@ export default function ProfilePage() {
   const { streakData } = useStreak();
   const { profile: wellnessProfile } = useWellness();
   const { userTribes, primaryTribe } = useTribes();
+
+  // Avatar upload state
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [connections, setConnections] = useState<DemoUser[]>([]);
@@ -98,6 +105,45 @@ export default function ProfilePage() {
       removeConnection(request.id);
       setPendingRequests(getPendingRequestUsers());
       setPendingCount(getPendingRequestCount());
+    }
+  };
+
+// Handle avatar upload to Supabase Storage
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !profile) return;
+
+    const userId = getCurrentUserId();
+    if (!userId) {
+      setAvatarError('Please log in to upload an avatar');
+      return;
+    }
+
+    setAvatarUploading(true);
+    setAvatarError(null);
+
+    try {
+      const result = await uploadAvatar(file, userId);
+
+      if (result.success && result.url) {
+        setProfile({ ...profile, avatar: result.url });
+      } else {
+        // Fallback to base64 for local storage if Supabase fails
+        console.warn('Supabase upload failed, using local storage:', result.error);
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const base64 = event.target?.result as string;
+          setProfile({ ...profile, avatar: base64 });
+          setAvatarError('Photo saved locally (cloud sync unavailable)');
+          setTimeout(() => setAvatarError(null), 5000);
+        };
+        reader.readAsDataURL(file);
+      }
+    } catch (error) {
+      console.error('Avatar upload error:', error);
+      setAvatarError('Failed to upload photo. Please try again.');
+    } finally {
+      setAvatarUploading(false);
     }
   };
 
@@ -175,18 +221,64 @@ export default function ProfilePage() {
             {/* Avatar - Overlapping cover */}
             <div className="flex flex-col md:flex-row md:items-end gap-4 -mt-16 md:-mt-20">
               <div className="relative">
-                {profile?.avatar ? (
-                  <img
-                    src={profile.avatar}
-                    alt="Profile"
-                    className="w-28 h-28 md:w-36 md:h-36 rounded-2xl object-cover border-4 border-white dark:border-slate-800 shadow-xl"
-                  />
-                ) : (
-                  <div className="w-28 h-28 md:w-36 md:h-36 rounded-2xl bg-gradient-to-br from-teal-400 via-cyan-500 to-indigo-500 flex items-center justify-center text-white text-4xl md:text-5xl font-bold border-4 border-white dark:border-slate-800 shadow-xl">
-                    {initials}
+                <div
+                  onClick={() => !avatarUploading && fileInputRef.current?.click()}
+                  className={`
+                    w-28 h-28 md:w-36 md:h-36 rounded-2xl overflow-hidden
+                    border-4 border-white dark:border-slate-800 shadow-xl
+                    cursor-pointer group
+                    ${avatarUploading ? 'opacity-70' : ''}
+                  `}
+                >
+                  {profile?.avatar ? (
+                    <img
+                      src={profile.avatar}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-teal-400 via-cyan-500 to-indigo-500 flex items-center justify-center text-white text-4xl md:text-5xl font-bold">
+                      {initials}
+                    </div>
+                  )}
+
+                  {/* Upload loading overlay */}
+                  {avatarUploading && (
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                      <div className="w-8 h-8 border-3 border-white border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  )}
+
+                  {/* Hover overlay to change photo */}
+                  {!avatarUploading && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarUpload}
+                  className="hidden"
+                  disabled={avatarUploading}
+                />
+
+                {/* Online indicator */}
+                {!avatarUploading && (
+                  <span className="absolute bottom-2 right-2 w-5 h-5 md:w-6 md:h-6 bg-emerald-500 border-3 border-white dark:border-slate-800 rounded-full" />
+                )}
+
+                {/* Avatar error message */}
+                {avatarError && (
+                  <div className="absolute -bottom-8 left-0 right-0 text-center">
+                    <span className="text-xs text-amber-500 dark:text-amber-400">{avatarError}</span>
                   </div>
                 )}
-                <span className="absolute bottom-2 right-2 w-5 h-5 md:w-6 md:h-6 bg-emerald-500 border-3 border-white dark:border-slate-800 rounded-full" />
               </div>
 
               {/* Name & Info */}
