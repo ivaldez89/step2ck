@@ -67,7 +67,7 @@ export default function WellnessProgressPage() {
         <Header />
         <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 64px)' }}>
           <div className="text-center">
-            <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <div className="w-12 h-12 border-4 border-[#8B4A3C] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-slate-600 dark:text-slate-400">Loading your wellness progress...</p>
           </div>
         </div>
@@ -76,14 +76,14 @@ export default function WellnessProgressPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-rose-50/30 dark:from-slate-900 dark:to-rose-950/20">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-[#F5F0E8]/30 dark:from-slate-900 dark:to-[#8B4A3C]/10">
       <Header />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Link */}
         <Link
           href="/wellness"
-          className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 mb-6 transition-colors"
+          className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-[#8B4A3C] dark:hover:text-[#D4A574] mb-6 transition-colors"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -93,22 +93,22 @@ export default function WellnessProgressPage() {
 
         {/* Hero Banner */}
         <section className="mb-8 animate-fade-in-up">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-500 via-purple-500 to-indigo-600 p-8 md:p-10 shadow-2xl">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#8B4A3C] via-[#5D6B5E] to-[#2D5A4A] p-8 md:p-10 shadow-2xl">
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
               <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
-              <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-pink-300/20 rounded-full blur-2xl" />
+              <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-[#D4C4B0]/20 rounded-full blur-2xl" />
             </div>
 
             <div className="relative z-10">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur rounded-full text-white/90 text-sm font-medium mb-4">
-                <span className="w-2 h-2 bg-pink-300 rounded-full animate-pulse" />
+                <span className="w-2 h-2 bg-[#D4C4B0] rounded-full animate-pulse" />
                 <span>Your Wellness Journey</span>
               </div>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
-                Wellness <span className="text-pink-200">Progress</span>
+                Wellness <span className="text-[#D4C4B0]">Progress</span>
               </h1>
 
               <p className="text-white/80 text-lg max-w-2xl mb-6">
@@ -151,7 +151,7 @@ export default function WellnessProgressPage() {
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
               className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-colors border-b-2 -mb-px whitespace-nowrap ${
                 activeTab === tab.id
-                  ? 'text-rose-600 dark:text-rose-400 border-rose-600 dark:border-rose-400'
+                  ? 'text-[#8B4A3C] dark:text-[#D4A574] border-[#8B4A3C] dark:border-[#D4A574]'
                   : 'text-slate-600 dark:text-slate-400 border-transparent hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -167,7 +167,7 @@ export default function WellnessProgressPage() {
             {/* Main Stats Grid */}
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Village Points Card */}
-              <div className="bg-gradient-to-br from-teal-500 to-emerald-600 rounded-2xl p-5 text-white">
+              <div className="bg-gradient-to-br from-[#2D5A4A] to-[#3D6B5A] rounded-2xl p-5 text-white">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
                     <Icons.Heart />
@@ -181,7 +181,7 @@ export default function WellnessProgressPage() {
               </div>
 
               {/* Points Donated Card */}
-              <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-5 text-white">
+              <div className="bg-gradient-to-br from-[#8B4A3C] to-[#9B5A4C] rounded-2xl p-5 text-white">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
                     <Icons.Gift />
@@ -195,7 +195,7 @@ export default function WellnessProgressPage() {
               </div>
 
               {/* Challenges Card */}
-              <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-white">
+              <div className="bg-gradient-to-br from-[#5D6B5E] to-[#4D5B4E] rounded-2xl p-5 text-white">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
                     <Icons.Target />
@@ -209,7 +209,7 @@ export default function WellnessProgressPage() {
               </div>
 
               {/* Tribes Card */}
-              <div className="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-5 text-white">
+              <div className="bg-gradient-to-br from-[#6B5344] to-[#5B4334] rounded-2xl p-5 text-white">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
                     <Icons.Village />
@@ -236,7 +236,7 @@ export default function WellnessProgressPage() {
                   </div>
                   <div className="h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-rose-500 to-pink-500 rounded-full transition-all"
+                      className="h-full bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] rounded-full transition-all"
                       style={{ width: `${dailyChallenges.length > 0 ? (dailyChallenges.filter(c => c.completed).length / dailyChallenges.length) * 100 : 0}%` }}
                     />
                   </div>
@@ -259,7 +259,7 @@ export default function WellnessProgressPage() {
                   <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Active Journeys</h3>
                   <button
                     onClick={() => setActiveTab('journeys')}
-                    className="text-sm text-rose-600 dark:text-rose-400 hover:underline"
+                    className="text-sm text-[#8B4A3C] dark:text-[#D4A574] hover:underline"
                   >
                     View All
                   </button>
@@ -288,7 +288,7 @@ export default function WellnessProgressPage() {
                           </div>
                           <div className="h-2 bg-slate-200 dark:bg-slate-600 rounded-full overflow-hidden">
                             <div
-                              className="h-full bg-gradient-to-r from-rose-500 to-pink-500 rounded-full"
+                              className="h-full bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] rounded-full"
                               style={{ width: `${(journey.xp / journey.xpToNextLevel) * 100}%` }}
                             />
                           </div>
@@ -307,7 +307,7 @@ export default function WellnessProgressPage() {
                   <h3 className="text-lg font-semibold text-slate-900 dark:text-white">My Tribes</h3>
                   <Link
                     href="/tribes"
-                    className="text-sm text-rose-600 dark:text-rose-400 hover:underline"
+                    className="text-sm text-[#8B4A3C] dark:text-[#D4A574] hover:underline"
                   >
                     View All
                   </Link>
@@ -352,21 +352,21 @@ export default function WellnessProgressPage() {
                 {/* Mood Summary */}
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
-                    <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                    <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-[#F5F0E8] dark:bg-[#8B4A3C]/30 flex items-center justify-center text-[#8B4A3C] dark:text-[#D4A574]">
                       <Icons.Heart />
                     </div>
                     <p className="text-3xl font-bold text-slate-900 dark:text-white">{moodTrends.avgMood.toFixed(1)}</p>
                     <p className="text-slate-600 dark:text-slate-400">Avg Mood (7 days)</p>
                   </div>
                   <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
-                    <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                    <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-[#E8F0ED] dark:bg-[#5D6B5E]/30 flex items-center justify-center text-[#5D6B5E] dark:text-[#A0B0A0]">
                       <Icons.Lightning />
                     </div>
                     <p className="text-3xl font-bold text-slate-900 dark:text-white">{moodTrends.avgEnergy.toFixed(1)}</p>
                     <p className="text-slate-600 dark:text-slate-400">Avg Energy (7 days)</p>
                   </div>
                   <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
-                    <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center text-rose-600 dark:text-rose-400">
+                    <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-[#E8F0ED] dark:bg-[#2D5A4A]/30 flex items-center justify-center text-[#2D5A4A] dark:text-[#6B9080]">
                       <Icons.Fire />
                     </div>
                     <p className="text-3xl font-bold text-slate-900 dark:text-white">{moodTrends.avgStress.toFixed(1)}</p>
@@ -385,15 +385,15 @@ export default function WellnessProgressPage() {
                         </div>
                         <div className="flex-1 flex items-center gap-4">
                           <div className="flex items-center gap-2">
-                            <span className="text-purple-500">Mood:</span>
+                            <span className="text-[#8B4A3C]">Mood:</span>
                             <span className="font-medium">{entry.mood}/5</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-amber-500">Energy:</span>
+                            <span className="text-[#5D6B5E]">Energy:</span>
                             <span className="font-medium">{entry.energy}/5</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-rose-500">Stress:</span>
+                            <span className="text-[#2D5A4A]">Stress:</span>
                             <span className="font-medium">{entry.stress}/5</span>
                           </div>
                         </div>
@@ -404,7 +404,7 @@ export default function WellnessProgressPage() {
               </>
             ) : (
               <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-12 text-center">
-                <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center text-rose-600 dark:text-rose-400">
+                <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-[#F5F0E8] dark:bg-[#8B4A3C]/30 flex items-center justify-center text-[#8B4A3C] dark:text-[#D4A574]">
                   <Icons.Heart />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Mood Data Yet</h3>
@@ -413,7 +413,7 @@ export default function WellnessProgressPage() {
                 </p>
                 <Link
                   href="/wellness"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white font-medium rounded-xl hover:from-rose-600 hover:to-pink-600 transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] text-white font-medium rounded-xl hover:from-[#7A3F33] hover:to-[#234539] transition-all"
                 >
                   Log Your First Mood
                 </Link>
@@ -430,15 +430,15 @@ export default function WellnessProgressPage() {
                 {/* Journey Stats */}
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
-                    <p className="text-3xl font-bold text-rose-600 dark:text-rose-400">{journeyStats.total}</p>
+                    <p className="text-3xl font-bold text-[#8B4A3C] dark:text-[#D4A574]">{journeyStats.total}</p>
                     <p className="text-slate-600 dark:text-slate-400">Active Journeys</p>
                   </div>
                   <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
-                    <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{journeyStats.totalXp}</p>
+                    <p className="text-3xl font-bold text-[#5D6B5E] dark:text-[#A0B0A0]">{journeyStats.totalXp}</p>
                     <p className="text-slate-600 dark:text-slate-400">Total XP Earned</p>
                   </div>
                   <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
-                    <p className="text-3xl font-bold text-amber-600 dark:text-amber-400">{journeyStats.avgLevel}</p>
+                    <p className="text-3xl font-bold text-[#2D5A4A] dark:text-[#6B9080]">{journeyStats.avgLevel}</p>
                     <p className="text-slate-600 dark:text-slate-400">Average Level</p>
                   </div>
                 </div>
@@ -461,12 +461,12 @@ export default function WellnessProgressPage() {
                             <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">{domain.description}</p>
                             <div className="space-y-2">
                               <div className="flex items-center justify-between text-xs">
-                                <span className="text-rose-600 dark:text-rose-400 font-medium">Level {journey.level}</span>
+                                <span className="text-[#8B4A3C] dark:text-[#D4A574] font-medium">Level {journey.level}</span>
                                 <span className="text-slate-500">{journey.xp}/{journey.xpToNextLevel} XP</span>
                               </div>
                               <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                                 <div
-                                  className="h-full bg-gradient-to-r from-rose-500 to-pink-500 rounded-full"
+                                  className="h-full bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] rounded-full"
                                   style={{ width: `${(journey.xp / journey.xpToNextLevel) * 100}%` }}
                                 />
                               </div>
@@ -484,7 +484,7 @@ export default function WellnessProgressPage() {
               </>
             ) : (
               <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-12 text-center">
-                <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center text-rose-600 dark:text-rose-400">
+                <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-[#F5F0E8] dark:bg-[#8B4A3C]/30 flex items-center justify-center text-[#8B4A3C] dark:text-[#D4A574]">
                   <Icons.Compass />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Active Journeys</h3>
@@ -493,7 +493,7 @@ export default function WellnessProgressPage() {
                 </p>
                 <Link
                   href="/wellness?tab=journey"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white font-medium rounded-xl hover:from-rose-600 hover:to-pink-600 transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] text-white font-medium rounded-xl hover:from-[#7A3F33] hover:to-[#234539] transition-all"
                 >
                   Start a Journey
                 </Link>
@@ -507,7 +507,7 @@ export default function WellnessProgressPage() {
           <div className="space-y-6">
             {/* Impact Stats */}
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-gradient-to-br from-teal-500 to-emerald-600 rounded-2xl p-6 text-white">
+              <div className="bg-gradient-to-br from-[#2D5A4A] to-[#3D6B5A] rounded-2xl p-6 text-white">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
                     <Icons.Heart />
@@ -522,7 +522,7 @@ export default function WellnessProgressPage() {
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-6 text-white">
+              <div className="bg-gradient-to-br from-[#8B4A3C] to-[#9B5A4C] rounded-2xl p-6 text-white">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
                     <Icons.Gift />
@@ -549,7 +549,7 @@ export default function WellnessProgressPage() {
                   { icon: <Icons.Globe />, title: 'Make Impact', desc: 'Help verified charities' },
                 ].map((step, i) => (
                   <div key={i} className="text-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
-                    <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 dark:text-teal-400">
+                    <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-[#E8F0ED] dark:bg-[#2D5A4A]/30 flex items-center justify-center text-[#2D5A4A] dark:text-[#6B9080]">
                       {step.icon}
                     </div>
                     <h4 className="font-medium text-slate-900 dark:text-white mb-1">{step.title}</h4>
@@ -557,7 +557,7 @@ export default function WellnessProgressPage() {
                   </div>
                 ))}
               </div>
-              <div className="mt-4 p-4 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 rounded-xl border border-teal-200 dark:border-teal-800">
+              <div className="mt-4 p-4 bg-gradient-to-r from-[#F5F0E8] to-[#E8F0ED] dark:from-[#8B4A3C]/20 dark:to-[#2D5A4A]/20 rounded-xl border border-[#8B4A3C]/30 dark:border-[#8B4A3C]/50">
                 <p className="text-sm text-slate-600 dark:text-slate-400 text-center">
                   <span className="font-semibold">1,000 Village Points = $1.00</span> to verified 501(c)(3) charities
                 </p>
@@ -566,7 +566,7 @@ export default function WellnessProgressPage() {
 
             {/* Learn More CTA */}
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-white">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#8B4A3C] to-[#2D5A4A] flex items-center justify-center text-white">
                 <Icons.HeartHand />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Ready to Make a Difference?</h3>
@@ -575,7 +575,7 @@ export default function WellnessProgressPage() {
               </p>
               <Link
                 href="/wellness?tab=impact"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-medium rounded-xl hover:from-teal-600 hover:to-emerald-600 transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] text-white font-medium rounded-xl hover:from-[#7A3F33] hover:to-[#234539] transition-all"
               >
                 Donate Points
               </Link>
@@ -587,7 +587,7 @@ export default function WellnessProgressPage() {
         <div className="mt-8 text-center">
           <Link
             href="/wellness"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl transition-colors shadow-lg"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#8B4A3C] hover:bg-[#7A3F33] text-white font-semibold rounded-xl transition-colors shadow-lg"
           >
             <Icons.Heart />
             Continue Wellness Journey
