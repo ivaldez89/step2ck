@@ -59,7 +59,7 @@ function WellnessPageContent() {
         <Header />
         <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 64px)' }}>
           <div className="text-center">
-            <div className="w-12 h-12 border-4 border-[#8B4A3C] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <div className="w-12 h-12 border-4 border-[#C4A77D] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-slate-600 dark:text-slate-400">Loading your wellness journey...</p>
           </div>
         </div>
@@ -74,24 +74,24 @@ function WellnessPageContent() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <section className="mb-8 animate-fade-in-up">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#8B4A3C] via-[#5D6B5E] to-[#2D5A4A] p-8 md:p-10 shadow-2xl">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#C4A77D] via-[#A89070] to-[#8B7355] p-8 md:p-10 shadow-2xl">
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
               <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
-              <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-[#D4C4B0]/20 rounded-full blur-2xl" />
+              <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-white/20 rounded-full blur-2xl" />
             </div>
 
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
               {/* Left side - Welcome & Stats */}
               <div className="text-center md:text-left">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur rounded-full text-white/90 text-sm font-medium mb-4">
-                  <span className="w-2 h-2 bg-[#D4C4B0] rounded-full animate-pulse" />
+                  <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
                   <span>Your wellness village awaits</span>
                 </div>
 
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
-                  Welcome to <span className="text-[#D4C4B0]">TribeWellz</span>
+                  Welcome to <span className="text-white/90">TribeWellz</span>
                 </h1>
 
                 <p className="text-white/80 text-lg max-w-md mb-6">
@@ -158,7 +158,7 @@ function WellnessPageContent() {
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-[#C4A77D] to-[#A89070] text-white shadow-lg'
                     : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
                 }`}
               >
@@ -207,9 +207,9 @@ function WellnessPageContent() {
                         {challenge.completed ? <Icons.Check /> : <span className="text-lg">{WELLNESS_DOMAINS[challenge.domain].icon}</span>}
                       </div>
                       <div className="text-right">
-                        <span className="text-xs text-[#8B4A3C] dark:text-[#D4A574] font-medium">+{challenge.xpReward} XP</span>
+                        <span className="text-xs text-[#A89070] dark:text-[#C4A77D] font-medium">+{challenge.xpReward} XP</span>
                         <br />
-                        <span className="text-xs text-[#2D5A4A] dark:text-[#6B9080]">+{challenge.villagePointsReward} VP</span>
+                        <span className="text-xs text-[#8B7355] dark:text-[#B89B78]">+{challenge.villagePointsReward} VP</span>
                       </div>
                     </div>
                     <h3 className={`font-semibold mb-1 ${challenge.completed ? 'text-emerald-700 dark:text-emerald-300 line-through' : 'text-slate-900 dark:text-white'}`}>
@@ -219,7 +219,7 @@ function WellnessPageContent() {
                     {!challenge.completed && (
                       <button
                         onClick={() => completeChallenge(challenge.id)}
-                        className="w-full py-2 bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] hover:from-[#7A3F33] hover:to-[#234539] text-white text-sm font-medium rounded-lg transition-all"
+                        className="w-full py-2 bg-gradient-to-r from-[#C4A77D] to-[#A89070] hover:from-[#B89B78] hover:to-[#9A8565] text-white text-sm font-medium rounded-lg transition-all"
                       >
                         Mark Complete
                       </button>
@@ -249,8 +249,8 @@ function WellnessPageContent() {
                       key={key}
                       className={`group relative p-5 rounded-2xl border transition-all duration-300 ${
                         isActive
-                          ? 'bg-gradient-to-br from-[#F5F0E8] to-[#E8F0ED] dark:from-[#8B4A3C]/20 dark:to-[#2D5A4A]/20 border-[#8B4A3C]/30 dark:border-[#8B4A3C]/50'
-                          : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:shadow-xl hover:border-[#8B4A3C]/40'
+                          ? 'bg-gradient-to-br from-[#F5F0E8] to-[#E8F0ED] dark:from-[#C4A77D]/20 dark:to-[#A89070]/20 border-[#C4A77D]/30 dark:border-[#C4A77D]/50'
+                          : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:shadow-xl hover:border-[#C4A77D]/40'
                       }`}
                     >
                       <div className="flex items-start gap-4">
@@ -264,12 +264,12 @@ function WellnessPageContent() {
                           {isActive ? (
                             <div className="space-y-2">
                               <div className="flex items-center justify-between text-xs">
-                                <span className="text-[#8B4A3C] dark:text-[#D4A574] font-medium">Level {activeJourney.level}</span>
+                                <span className="text-[#C4A77D] dark:text-[#D4A574] font-medium">Level {activeJourney.level}</span>
                                 <span className="text-slate-500">{activeJourney.xp}/{activeJourney.xpToNextLevel} XP</span>
                               </div>
                               <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                                 <div
-                                  className="h-full bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] rounded-full transition-all"
+                                  className="h-full bg-gradient-to-r from-[#C4A77D] to-[#A89070] rounded-full transition-all"
                                   style={{ width: `${(activeJourney.xp / activeJourney.xpToNextLevel) * 100}%` }}
                                 />
                               </div>
@@ -280,7 +280,7 @@ function WellnessPageContent() {
                           ) : (
                             <button
                               onClick={() => startJourney(key as WellnessDomain)}
-                              className="w-full py-2 bg-slate-100 dark:bg-slate-700 hover:bg-[#F5F0E8] dark:hover:bg-[#8B4A3C]/20 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg transition-all"
+                              className="w-full py-2 bg-slate-100 dark:bg-slate-700 hover:bg-[#F5F0E8] dark:hover:bg-[#C4A77D]/20 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg transition-all"
                             >
                               Start Journey
                             </button>
@@ -425,37 +425,37 @@ function WellnessPageContent() {
             {userVillages.length > 0 && (
               <section className="mb-8">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                  <span className="w-3 h-3 bg-[#8B4A3C] rounded-full" />
+                  <span className="w-3 h-3 bg-[#C4A77D] rounded-full" />
                   My Villages
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4">
                   {userVillages.map((village) => (
                     <div
                       key={village.id}
-                      className="p-5 bg-gradient-to-br from-[#F5F0E8] to-[#E8F0ED] dark:from-[#8B4A3C]/20 dark:to-[#2D5A4A]/20 rounded-2xl border border-[#8B4A3C]/30 dark:border-[#8B4A3C]/50"
+                      className="p-5 bg-gradient-to-br from-[#F5F0E8] to-[#E8F0ED] dark:from-[#C4A77D]/20 dark:to-[#A89070]/20 rounded-2xl border border-[#C4A77D]/30 dark:border-[#C4A77D]/50"
                     >
                       <div className="flex items-start gap-4">
-                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#8B4A3C] to-[#2D5A4A] flex items-center justify-center text-2xl">
+                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#C4A77D] to-[#A89070] flex items-center justify-center text-2xl">
                           {village.icon}
                         </div>
                         <div className="flex-1">
                           <h3 className="font-semibold text-slate-900 dark:text-white">{village.name}</h3>
                           <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">{village.description}</p>
                           <div className="flex items-center gap-4 text-xs">
-                            <span className="text-[#8B4A3C] dark:text-[#D4A574]">{village.memberCount} members</span>
-                            <span className="text-[#2D5A4A] dark:text-[#6B9080]">${village.totalDonated} raised</span>
+                            <span className="text-[#C4A77D] dark:text-[#D4A574]">{village.memberCount} members</span>
+                            <span className="text-[#A89070] dark:text-[#B89B78]">${village.totalDonated} raised</span>
                           </div>
                         </div>
                       </div>
                       {/* Weekly Progress */}
-                      <div className="mt-4 pt-4 border-t border-[#8B4A3C]/30 dark:border-[#8B4A3C]/50">
+                      <div className="mt-4 pt-4 border-t border-[#C4A77D]/30 dark:border-[#C4A77D]/50">
                         <div className="flex items-center justify-between text-xs mb-2">
                           <span className="text-slate-600 dark:text-slate-400">Weekly Goal</span>
-                          <span className="font-medium text-[#8B4A3C] dark:text-[#D4A574]">{village.weeklyProgress}/{village.weeklyGoal} VP</span>
+                          <span className="font-medium text-[#C4A77D] dark:text-[#D4A574]">{village.weeklyProgress}/{village.weeklyGoal} VP</span>
                         </div>
                         <div className="h-2 bg-white dark:bg-slate-800 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] rounded-full"
+                            className="h-full bg-gradient-to-r from-[#C4A77D] to-[#A89070] rounded-full"
                             style={{ width: `${Math.min((village.weeklyProgress / village.weeklyGoal) * 100, 100)}%` }}
                           />
                         </div>
@@ -475,7 +475,7 @@ function WellnessPageContent() {
                 {villages.filter(v => !profile?.villages.includes(v.id)).map((village) => (
                   <div
                     key={village.id}
-                    className="group p-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:shadow-xl hover:border-[#8B4A3C]/40 transition-all"
+                    className="group p-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:shadow-xl hover:border-[#C4A77D]/40 transition-all"
                   >
                     <div className="flex items-start gap-4">
                       <div className={`w-14 h-14 rounded-xl bg-gradient-to-br from-${village.color}-400 to-${village.color}-600 flex items-center justify-center text-2xl shadow-lg`}>
@@ -497,7 +497,7 @@ function WellnessPageContent() {
                         </div>
                         <button
                           onClick={() => joinVillage(village.id)}
-                          className="w-full py-2 bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] hover:from-[#7A3F33] hover:to-[#234539] text-white text-sm font-medium rounded-lg transition-all"
+                          className="w-full py-2 bg-gradient-to-r from-[#C4A77D] to-[#A89070] hover:from-[#B89B78] hover:to-[#9A8565] text-white text-sm font-medium rounded-lg transition-all"
                         >
                           Join Village
                         </button>
@@ -511,14 +511,14 @@ function WellnessPageContent() {
             {/* Create Village CTA */}
             <section className="mb-8">
               <div className="p-8 bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#8B4A3C] to-[#2D5A4A] flex items-center justify-center text-white">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#C4A77D] to-[#A89070] flex items-center justify-center text-white">
                   <Icons.Village />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Create Your Own Village</h3>
                 <p className="text-slate-400 mb-6 max-w-md mx-auto">
                   Start a wellness community around your rotation, specialty interest, or a cause you care about.
                 </p>
-                <button className="px-8 py-3 bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] hover:from-[#7A3F33] hover:to-[#234539] text-white font-medium rounded-xl transition-all">
+                <button className="px-8 py-3 bg-gradient-to-r from-[#C4A77D] to-[#A89070] hover:from-[#B89B78] hover:to-[#9A8565] text-white font-medium rounded-xl transition-all">
                   Create Village
                 </button>
               </div>
@@ -772,24 +772,24 @@ function WellnessPageContent() {
                     key={key}
                     className={`group p-5 rounded-2xl border transition-all cursor-pointer ${
                       profile?.preferredCause === key
-                        ? 'bg-gradient-to-br from-[#F5F0E8] to-[#E8F0ED] dark:from-[#8B4A3C]/20 dark:to-[#2D5A4A]/20 border-[#8B4A3C]/40 dark:border-[#8B4A3C]/60'
-                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:shadow-lg hover:border-[#8B4A3C]/40'
+                        ? 'bg-gradient-to-br from-[#F5F0E8] to-[#E8F0ED] dark:from-[#C4A77D]/20 dark:to-[#A89070]/20 border-[#C4A77D]/40 dark:border-[#C4A77D]/60'
+                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:shadow-lg hover:border-[#C4A77D]/40'
                     }`}
                     onClick={() => setSelectedCause(key as CharitableCause)}
                   >
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F5F0E8] to-[#E8F0ED] dark:from-[#8B4A3C]/30 dark:to-[#2D5A4A]/30 flex items-center justify-center text-2xl">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F5F0E8] to-[#E8F0ED] dark:from-[#C4A77D]/30 dark:to-[#A89070]/30 flex items-center justify-center text-2xl">
                         {cause.icon}
                       </div>
                       <div className="flex-1">
                         <h3 className="font-semibold text-slate-900 dark:text-white mb-1">{cause.title}</h3>
                         <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">{cause.description}</p>
-                        <span className="text-xs text-[#8B4A3C] dark:text-[#D4A574]">{cause.organization}</span>
+                        <span className="text-xs text-[#C4A77D] dark:text-[#D4A574]">{cause.organization}</span>
                       </div>
                     </div>
                     {profile?.preferredCause === key && (
-                      <div className="mt-3 pt-3 border-t border-[#8B4A3C]/30 dark:border-[#8B4A3C]/50">
-                        <span className="text-xs text-[#8B4A3C] dark:text-[#D4A574] font-medium">Your preferred cause</span>
+                      <div className="mt-3 pt-3 border-t border-[#C4A77D]/30 dark:border-[#C4A77D]/50">
+                        <span className="text-xs text-[#C4A77D] dark:text-[#D4A574] font-medium">Your preferred cause</span>
                       </div>
                     )}
                   </div>
@@ -801,7 +801,7 @@ function WellnessPageContent() {
                 <button
                   onClick={() => setShowDonateModal(true)}
                   disabled={!profile?.villagePoints.available}
-                  className="px-8 py-4 bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] hover:from-[#7A3F33] hover:to-[#234539] disabled:from-slate-400 disabled:to-slate-500 text-white font-bold rounded-xl shadow-lg shadow-[#8B4A3C]/25 transition-all"
+                  className="px-8 py-4 bg-gradient-to-r from-[#C4A77D] to-[#A89070] hover:from-[#B89B78] hover:to-[#9A8565] disabled:from-slate-400 disabled:to-slate-500 text-white font-bold rounded-xl shadow-lg shadow-[#C4A77D]/25 transition-all"
                 >
                   Donate Village Points
                 </button>
@@ -854,7 +854,7 @@ function WellnessPageContent() {
                     onClick={() => setMoodData(prev => ({ ...prev, mood: level as 1|2|3|4|5 }))}
                     className={`w-12 h-12 rounded-xl text-lg font-bold transition-all ${
                       moodData.mood === level
-                        ? 'bg-[#8B4A3C] text-white scale-110 ring-2 ring-[#8B4A3C]'
+                        ? 'bg-[#C4A77D] text-white scale-110 ring-2 ring-[#C4A77D]'
                         : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:scale-105'
                     }`}
                   >
@@ -875,7 +875,7 @@ function WellnessPageContent() {
                     onClick={() => setMoodData(prev => ({ ...prev, energy: level as 1|2|3|4|5 }))}
                     className={`w-12 h-12 rounded-xl text-lg font-bold transition-all ${
                       moodData.energy === level
-                        ? 'bg-[#5D6B5E] text-white scale-110 ring-2 ring-[#5D6B5E]'
+                        ? 'bg-[#A89070] text-white scale-110 ring-2 ring-[#A89070]'
                         : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:scale-105'
                     }`}
                   >
@@ -896,7 +896,7 @@ function WellnessPageContent() {
                     onClick={() => setMoodData(prev => ({ ...prev, stress: level as 1|2|3|4|5 }))}
                     className={`w-12 h-12 rounded-xl text-lg font-bold transition-all ${
                       moodData.stress === level
-                        ? 'bg-[#2D5A4A] text-white scale-110 ring-2 ring-[#2D5A4A]'
+                        ? 'bg-[#8B7355] text-white scale-110 ring-2 ring-[#8B7355]'
                         : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:scale-105'
                     }`}
                   >
@@ -933,7 +933,7 @@ function WellnessPageContent() {
                   setShowMoodModal(false);
                   setMoodData({ mood: 3, energy: 3, stress: 3, notes: '' });
                 }}
-                className="flex-1 py-3 bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] text-white font-medium rounded-xl hover:from-[#7A3F33] hover:to-[#234539] transition-all"
+                className="flex-1 py-3 bg-gradient-to-r from-[#C4A77D] to-[#A89070] text-white font-medium rounded-xl hover:from-[#B89B78] hover:to-[#9A8565] transition-all"
               >
                 Log Check-In (+10 XP)
               </button>
@@ -962,7 +962,7 @@ function WellnessPageContent() {
                     disabled={(profile?.villagePoints.available || 0) < amount}
                     className={`py-3 rounded-xl font-medium transition-all ${
                       donateAmount === amount
-                        ? 'bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] text-white'
+                        ? 'bg-gradient-to-r from-[#C4A77D] to-[#A89070] text-white'
                         : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed'
                     }`}
                   >
@@ -1000,7 +1000,7 @@ function WellnessPageContent() {
                   setShowDonateModal(false);
                 }}
                 disabled={(profile?.villagePoints.available || 0) < donateAmount}
-                className="flex-1 py-3 bg-gradient-to-r from-[#8B4A3C] to-[#2D5A4A] text-white font-medium rounded-xl hover:from-[#7A3F33] hover:to-[#234539] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 py-3 bg-gradient-to-r from-[#C4A77D] to-[#A89070] text-white font-medium rounded-xl hover:from-[#B89B78] hover:to-[#9A8565] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Donate {donateAmount} Points
               </button>
@@ -1022,7 +1022,7 @@ export default function WellnessPage() {
         <Header />
         <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 64px)' }}>
           <div className="text-center">
-            <div className="w-12 h-12 border-4 border-[#8B4A3C] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <div className="w-12 h-12 border-4 border-[#C4A77D] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-slate-600 dark:text-slate-400">Loading your wellness journey...</p>
           </div>
         </div>
