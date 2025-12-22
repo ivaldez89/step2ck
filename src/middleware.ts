@@ -16,19 +16,22 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  // Check for legacy auth cookie (for backwards compatibility during migration)
+  const authCookie = request.cookies.get('tribewellmd-auth');
+  const isAuthenticated = user || authCookie?.value === 'authenticated';
+
+  // If user is authenticated and on the landing page, redirect to /home
+  if (isAuthenticated && pathname === '/') {
+    return NextResponse.redirect(new URL('/home', request.url));
+  }
+
   // Check if current path is a public route (exact match)
   if (publicRoutes.includes(pathname)) {
     return response;
   }
 
-  // Check for Supabase authenticated user
-  if (user) {
-    return response;
-  }
-
-  // Check for legacy auth cookie (for backwards compatibility during migration)
-  const authCookie = request.cookies.get('tribewellmd-auth');
-  if (authCookie?.value === 'authenticated') {
+  // Check for authenticated user
+  if (isAuthenticated) {
     return response;
   }
 

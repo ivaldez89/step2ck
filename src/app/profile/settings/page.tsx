@@ -1,134 +1,217 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Header } from '@/components/layout/Header';
-import Link from 'next/link';
+import {
+  getUserProfile,
+  saveUserProfile,
+  createDefaultProfile,
+  getUserInitials,
+  MEDICAL_SPECIALTIES,
+  ACADEMIC_YEARS,
+  type UserProfile
+} from '@/lib/storage/profileStorage';
+import { SchoolSelector } from '@/components/profile/SchoolSelector';
+import type { SchoolType } from '@/lib/data/schools';
+import {
+  getConnectedUsers,
+  getPendingRequestUsers,
+  getConnectionCount,
+  getPendingRequestCount,
+  getConnections,
+  acceptConnectionRequest,
+  removeConnection,
+  sendConnectionRequest,
+  isConnectedTo,
+  hasPendingRequestWith,
+  getInitials,
+  DEMO_USERS,
+  type DemoUser,
+  type Connection
+} from '@/lib/storage/chatStorage';
+import {
+  getUserTribes,
+  getPrimaryTribe,
+  setPrimaryTribe,
+  MAX_TRIBES_PER_USER,
+} from '@/lib/storage/tribeStorage';
+import type { Tribe } from '@/types/tribes';
 
-// Settings types
-interface AppSettings {
-  // Notifications
-  emailNotifications: boolean;
-  studyReminders: boolean;
-  tribeActivity: boolean;
-  weeklyDigest: boolean;
-
-  // Study Preferences
-  dailyGoal: number; // cards per day
-  reviewTime: string; // preferred time
-  soundEffects: boolean;
-  autoPlayAudio: boolean;
-  showTimer: boolean;
-
-  // Appearance
-  theme: 'light' | 'dark' | 'system';
-  compactMode: boolean;
-  animationsEnabled: boolean;
-
-  // Privacy
-  profileVisibility: 'public' | 'connections' | 'private';
-  showOnlineStatus: boolean;
-  showStudyActivity: boolean;
-  allowConnectionRequests: boolean;
-
-  // Focus Mode
-  focusModeEnabled: boolean;
-  focusBlockSocial: boolean;
-  focusBlockNotifications: boolean;
-
-  // Accessibility
-  highContrast: boolean;
-  reducedMotion: boolean;
-  largeText: boolean;
-}
-
-const DEFAULT_SETTINGS: AppSettings = {
-  emailNotifications: true,
-  studyReminders: true,
-  tribeActivity: true,
-  weeklyDigest: true,
-  dailyGoal: 50,
-  reviewTime: '09:00',
-  soundEffects: true,
-  autoPlayAudio: false,
-  showTimer: true,
-  theme: 'system',
-  compactMode: false,
-  animationsEnabled: true,
-  profileVisibility: 'public',
-  showOnlineStatus: true,
-  showStudyActivity: true,
-  allowConnectionRequests: true,
-  focusModeEnabled: false,
-  focusBlockSocial: true,
-  focusBlockNotifications: true,
-  highContrast: false,
-  reducedMotion: false,
-  largeText: false,
-};
-
-export default function SettingsPage() {
-  const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
+export default function ProfilePage() {
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
-  const [activeSection, setActiveSection] = useState('notifications');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load settings on mount
+  // Connections state
+  const [connections, setConnections] = useState<DemoUser[]>([]);
+  const [pendingRequests, setPendingRequests] = useState<DemoUser[]>([]);
+  const [connectionCount, setConnectionCount] = useState(0);
+  const [pendingCount, setPendingCount] = useState(0);
+  const [showAllConnections, setShowAllConnections] = useState(false);
+
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [searchResults, setSearchResults] = useState<DemoUser[]>([]);
+
+  // Tribes state
+  const [userTribes, setUserTribes] = useState<Tribe[]>([]);
+  const [primaryTribeId, setPrimaryTribeId] = useState<string | null>(null);
+
+  // Load profile on mount
   useEffect(() => {
-    const saved = localStorage.getItem('tribewellmd_settings');
-    if (saved) {
-      setSettings({ ...DEFAULT_SETTINGS, ...JSON.parse(saved) });
+    const loadedProfile = getUserProfile();
+    if (loadedProfile) {
+      setProfile(loadedProfile);
+    } else {
+      // Create default profile for new users
+      const newProfile = createDefaultProfile();
+      setProfile(newProfile);
+      setIsEditing(true); // Start in edit mode for new users
     }
+
+    // Load connections
+    setConnections(getConnectedUsers());
+    setPendingRequests(getPendingRequestUsers());
+    setConnectionCount(getConnectionCount());
+    setPendingCount(getPendingRequestCount());
+
+    // Load tribes
+    setUserTribes(getUserTribes());
+    const primary = getPrimaryTribe();
+    setPrimaryTribeId(primary?.id || null);
   }, []);
 
+  // Handle accepting a connection request
+  const handleAcceptRequest = (userId: string) => {
+    const allConnections = getConnections();
+    const request = allConnections.find(
+      c => c.status === 'pending' && c.userId === userId
+    );
+    if (request) {
+      acceptConnectionRequest(request.id);
+      // Refresh state
+      setConnections(getConnectedUsers());
+      setPendingRequests(getPendingRequestUsers());
+      setConnectionCount(getConnectionCount());
+      setPendingCount(getPendingRequestCount());
+    }
+  };
+
+  // Handle declining a connection request
+  const handleDeclineRequest = (userId: string) => {
+    const allConnections = getConnections();
+    const request = allConnections.find(
+      c => c.status === 'pending' && c.userId === userId
+    );
+    if (request) {
+      removeConnection(request.id);
+      setPendingRequests(getPendingRequestUsers());
+      setPendingCount(getPendingRequestCount());
+    }
+  };
+
+  // Handle search
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim().length > 0) {
+      const results = DEMO_USERS.filter(user => {
+        const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+        const searchLower = query.toLowerCase();
+        return (
+          fullName.includes(searchLower) ||
+          user.school?.toLowerCase().includes(searchLower) ||
+          user.specialty?.toLowerCase().includes(searchLower) ||
+          user.currentYear?.toLowerCase().includes(searchLower)
+        );
+      });
+      setSearchResults(results);
+      setShowSearchResults(true);
+    } else {
+      setSearchResults([]);
+      setShowSearchResults(false);
+    }
+  };
+
+  // Handle sending a connection request
+  const handleSendRequest = (userId: string) => {
+    sendConnectionRequest(userId);
+    // Refresh search results to update button state
+    handleSearch(searchQuery);
+  };
+
+  // Handle setting primary tribe
+  const handleSetPrimaryTribe = (tribeId: string) => {
+    setPrimaryTribe('current-user', tribeId);
+    setPrimaryTribeId(tribeId);
+  };
+
+  // Get connection status for a user
+  const getConnectionStatus = (userId: string): 'connected' | 'pending-sent' | 'pending-received' | 'none' => {
+    if (isConnectedTo(userId)) return 'connected';
+    const pending = hasPendingRequestWith(userId);
+    if (pending === 'sent') return 'pending-sent';
+    if (pending === 'received') return 'pending-received';
+    return 'none';
+  };
+
   const handleSave = () => {
+    if (!profile) return;
+
     setIsSaving(true);
-    localStorage.setItem('tribewellmd_settings', JSON.stringify(settings));
+    saveUserProfile(profile);
 
     setTimeout(() => {
       setIsSaving(false);
-      setSaveMessage('Settings saved!');
+      setIsEditing(false);
+      setSaveMessage('Profile saved successfully!');
       setTimeout(() => setSaveMessage(null), 3000);
     }, 500);
   };
 
-  const updateSetting = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !profile) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64 = event.target?.result as string;
+      setProfile({ ...profile, avatar: base64 });
+    };
+    reader.readAsDataURL(file);
   };
 
-  const Toggle = ({ checked, onChange, disabled = false }: { checked: boolean; onChange: (v: boolean) => void; disabled?: boolean }) => (
-    <button
-      onClick={() => !disabled && onChange(!checked)}
-      disabled={disabled}
-      className={`
-        relative w-12 h-7 rounded-full transition-colors duration-200
-        ${checked ? 'bg-teal-500' : 'bg-slate-300 dark:bg-slate-600'}
-        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-      `}
-    >
-      <span
-        className={`
-          absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200
-          ${checked ? 'translate-x-6' : 'translate-x-1'}
-        `}
-      />
-    </button>
-  );
+  const handleSpecialtyToggle = (specialty: string) => {
+    if (!profile) return;
 
-  const sections = [
-    { id: 'notifications', label: 'Notifications', icon: '🔔' },
-    { id: 'study', label: 'Study Preferences', icon: '📚' },
-    { id: 'appearance', label: 'Appearance', icon: '🎨' },
-    { id: 'privacy', label: 'Privacy & Security', icon: '🔒' },
-    { id: 'focus', label: 'Focus Mode', icon: '🎯' },
-    { id: 'accessibility', label: 'Accessibility', icon: '♿' },
-    { id: 'data', label: 'Data & Storage', icon: '💾' },
-  ];
+    const current = profile.interestedSpecialties || [];
+    const updated = current.includes(specialty)
+      ? current.filter(s => s !== specialty)
+      : [...current, specialty].slice(0, 5); // Max 5 specialties
+
+    setProfile({ ...profile, interestedSpecialties: updated });
+  };
+
+  const initials = getUserInitials();
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+        <Header />
+        <div className="flex items-center justify-center h-[calc(100vh-64px)]">
+          <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <Header />
 
-      {/* Success Toast */}
+      {/* Success Message Toast */}
       {saveMessage && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center gap-2 px-4 py-3 bg-emerald-500 text-white rounded-xl shadow-lg">
@@ -140,417 +223,748 @@ export default function SettingsPage() {
         </div>
       )}
 
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/profile"
-              className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-            >
-              <svg className="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+      <main className="max-w-4xl mx-auto px-4 py-8">
+        {/* Profile Header Card */}
+        <div className="relative bg-white dark:bg-slate-800 rounded-3xl shadow-xl overflow-hidden mb-8">
+          {/* Gradient Banner */}
+          <div className="h-32 md:h-40 bg-gradient-to-r from-teal-500 via-cyan-500 to-indigo-500 relative">
+            {/* Decorative pattern */}
+            <div className="absolute inset-0 opacity-20">
+              <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <defs>
+                  <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                    <circle cx="1" cy="1" r="1" fill="white" />
+                  </pattern>
+                </defs>
+                <rect width="100" height="100" fill="url(#grid)" />
               </svg>
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Settings</h1>
-              <p className="text-slate-500 dark:text-slate-400">Customize your TribeWellMD experience</p>
             </div>
           </div>
-          <button
-            onClick={handleSave}
-            disabled={isSaving}
-            className="px-6 py-2.5 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold rounded-xl shadow-lg shadow-teal-500/25 transition-all flex items-center gap-2"
-          >
-            {isSaving ? (
-              <>
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Saving...
-              </>
-            ) : (
-              <>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Save Changes
-              </>
-            )}
-          </button>
+
+          {/* Avatar & Name Section */}
+          <div className="px-6 md:px-8 pb-6">
+            <div className="flex flex-col md:flex-row md:items-end gap-4 -mt-16 md:-mt-12">
+              {/* Avatar */}
+              <div className="relative">
+                <div
+                  onClick={() => isEditing && fileInputRef.current?.click()}
+                  className={`
+                    w-28 h-28 md:w-32 md:h-32 rounded-2xl overflow-hidden
+                    border-4 border-white dark:border-slate-800 shadow-xl
+                    ${isEditing ? 'cursor-pointer group' : ''}
+                  `}
+                >
+                  {profile.avatar ? (
+                    <img
+                      src={profile.avatar}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-teal-400 via-cyan-500 to-indigo-500 flex items-center justify-center text-white text-4xl font-bold">
+                      {initials}
+                    </div>
+                  )}
+
+                  {/* Edit overlay */}
+                  {isEditing && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarUpload}
+                  className="hidden"
+                />
+
+                {/* Online indicator */}
+                <span className="absolute bottom-2 right-2 w-5 h-5 bg-emerald-500 border-3 border-white dark:border-slate-800 rounded-full" />
+              </div>
+
+              {/* Name & Info */}
+              <div className="flex-1 pt-4 md:pt-0 md:pb-2">
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
+                  {profile.firstName && profile.lastName
+                    ? `${profile.firstName} ${profile.lastName}`
+                    : 'Set Up Your Profile'}
+                </h1>
+                {profile.currentYear && (
+                  <p className="text-slate-500 dark:text-slate-400 mt-1">
+                    {profile.currentYear} {profile.school ? `at ${profile.school}` : ''}
+                  </p>
+                )}
+                {profile.bio && !isEditing && (
+                  <p className="text-slate-600 dark:text-slate-300 mt-2 max-w-lg">{profile.bio}</p>
+                )}
+              </div>
+
+              {/* Edit/Save Button */}
+              <div className="md:pb-2">
+                {isEditing ? (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setProfile(getUserProfile() || createDefaultProfile());
+                        setIsEditing(false);
+                      }}
+                      className="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      className="px-6 py-2 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold rounded-xl shadow-lg shadow-teal-500/25 transition-all flex items-center gap-2"
+                    >
+                      {isSaving ? (
+                        <>
+                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          Save Profile
+                        </>
+                      )}
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="px-6 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium rounded-xl transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    Edit Profile
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="grid lg:grid-cols-4 gap-6">
-          {/* Sidebar Navigation */}
-          <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 sticky top-24">
-              <nav className="space-y-1">
-                {sections.map(section => (
-                  <button
-                    key={section.id}
-                    onClick={() => setActiveSection(section.id)}
-                    className={`
-                      w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all
-                      ${activeSection === section.id
-                        ? 'bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 text-teal-700 dark:text-teal-300 font-medium'
-                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50'
-                      }
-                    `}
+        {/* Profile Content */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Left Column - Main Info */}
+          <div className="md:col-span-2 space-y-6">
+            {/* Basic Information */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                Basic Information
+              </h2>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    value={profile.firstName}
+                    onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}
+                    disabled={!isEditing}
+                    placeholder="Enter first name"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    value={profile.lastName}
+                    onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
+                    disabled={!isEditing}
+                    placeholder="Enter last name"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={profile.email}
+                    onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                    disabled={!isEditing}
+                    placeholder="your.email@school.edu"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Bio
+                  </label>
+                  <textarea
+                    value={profile.bio || ''}
+                    onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+                    disabled={!isEditing}
+                    placeholder="Tell others about yourself..."
+                    rows={3}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed transition-all resize-none"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Academic Information */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                  </svg>
+                </div>
+                Academic Information
+              </h2>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Current Year
+                  </label>
+                  <select
+                    value={profile.currentYear || ''}
+                    onChange={(e) => setProfile({ ...profile, currentYear: e.target.value as UserProfile['currentYear'] })}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                   >
-                    <span className="text-lg">{section.icon}</span>
-                    <span className="text-sm">{section.label}</span>
-                  </button>
-                ))}
-              </nav>
+                    <option value="">Select year...</option>
+                    {ACADEMIC_YEARS.map(year => (
+                      <option key={year.value} value={year.value}>{year.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Graduation Year
+                  </label>
+                  <input
+                    type="number"
+                    value={profile.graduationYear || ''}
+                    onChange={(e) => setProfile({ ...profile, graduationYear: parseInt(e.target.value) || undefined })}
+                    disabled={!isEditing}
+                    placeholder="2027"
+                    min={2020}
+                    max={2040}
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    School / Institution
+                  </label>
+                  <SchoolSelector
+                    value={profile.school || ''}
+                    schoolId={profile.schoolId}
+                    schoolType={profile.schoolType}
+                    email={profile.email}
+                    disabled={!isEditing}
+                    onChange={(school) => setProfile({
+                      ...profile,
+                      school: school.name,
+                      schoolId: school.id,
+                      schoolType: school.type,
+                    })}
+                  />
+                  <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                    Use your .edu email to auto-verify your school, or search from our database
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Interested Specialties */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </div>
+                Interested Specialties
+              </h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+                Select up to 5 specialties you're interested in
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {MEDICAL_SPECIALTIES.map(specialty => {
+                  const isSelected = profile.interestedSpecialties?.includes(specialty);
+                  return (
+                    <button
+                      key={specialty}
+                      onClick={() => isEditing && handleSpecialtyToggle(specialty)}
+                      disabled={!isEditing}
+                      className={`
+                        px-4 py-2 rounded-full text-sm font-medium transition-all duration-200
+                        ${isSelected
+                          ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-md'
+                          : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                        }
+                        ${!isEditing ? 'cursor-default opacity-80' : 'cursor-pointer'}
+                      `}
+                    >
+                      {specialty}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
-          {/* Settings Content */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* Notifications */}
-            {activeSection === 'notifications' && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                  <span className="text-xl">🔔</span>
-                  Notifications
+          {/* Right Column - Stats & Social */}
+          <div className="space-y-6">
+            {/* Connections Card */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-cyan-600 dark:text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                  Connections
                 </h2>
-
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Email Notifications</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Receive updates via email</p>
-                    </div>
-                    <Toggle checked={settings.emailNotifications} onChange={(v) => updateSetting('emailNotifications', v)} />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Study Reminders</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Daily reminders to review your cards</p>
-                    </div>
-                    <Toggle checked={settings.studyReminders} onChange={(v) => updateSetting('studyReminders', v)} />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Tribe Activity</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Updates from your tribes and members</p>
-                    </div>
-                    <Toggle checked={settings.tribeActivity} onChange={(v) => updateSetting('tribeActivity', v)} />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Weekly Digest</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Summary of your progress and tribe impact</p>
-                    </div>
-                    <Toggle checked={settings.weeklyDigest} onChange={(v) => updateSetting('weeklyDigest', v)} />
-                  </div>
-                </div>
+                <span className="text-sm font-semibold text-cyan-600 dark:text-cyan-400">
+                  {connectionCount}
+                </span>
               </div>
-            )}
 
-            {/* Study Preferences */}
-            {activeSection === 'study' && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                  <span className="text-xl">📚</span>
-                  Study Preferences
-                </h2>
+              {/* Search Bar */}
+              <div className="relative mb-4">
+                <div className="relative">
+                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => handleSearch(e.target.value)}
+                    placeholder="Find students, residents, mentors..."
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => { setSearchQuery(''); setShowSearchResults(false); }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 flex items-center justify-center transition-colors"
+                    >
+                      <svg className="w-3 h-3 text-slate-500 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
 
-                <div className="space-y-6">
-                  <div>
-                    <label className="block font-medium text-slate-900 dark:text-white mb-2">Daily Card Goal</label>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">How many cards would you like to review per day?</p>
-                    <div className="flex items-center gap-4">
-                      <input
-                        type="range"
-                        min="10"
-                        max="200"
-                        step="10"
-                        value={settings.dailyGoal}
-                        onChange={(e) => updateSetting('dailyGoal', parseInt(e.target.value))}
-                        className="flex-1 accent-teal-500"
-                      />
-                      <span className="w-16 text-center font-bold text-teal-600 dark:text-teal-400 text-lg">
-                        {settings.dailyGoal}
+                {/* Search Results */}
+                {showSearchResults && searchResults.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 z-20 max-h-80 overflow-y-auto">
+                    <div className="p-2">
+                      <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide px-2">
+                        {searchResults.length} {searchResults.length === 1 ? 'Result' : 'Results'}
                       </span>
                     </div>
-                  </div>
-
-                  <div>
-                    <label className="block font-medium text-slate-900 dark:text-white mb-2">Preferred Review Time</label>
-                    <input
-                      type="time"
-                      value={settings.reviewTime}
-                      onChange={(e) => updateSetting('reviewTime', e.target.value)}
-                      className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Sound Effects</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Play sounds for correct/incorrect answers</p>
+                    <div className="pb-2">
+                      {searchResults.map(user => {
+                        const status = getConnectionStatus(user.id);
+                        return (
+                          <div
+                            key={user.id}
+                            className="flex items-center gap-3 px-3 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+                          >
+                            <div className="relative flex-shrink-0">
+                              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 via-cyan-500 to-indigo-500 flex items-center justify-center text-white font-bold text-sm">
+                                {getInitials(user.firstName, user.lastName)}
+                              </div>
+                              {user.isOnline && (
+                                <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white dark:border-slate-800 rounded-full" />
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-slate-900 dark:text-white text-sm truncate">
+                                {user.firstName} {user.lastName}
+                              </p>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                                {user.currentYear} • {user.school}
+                              </p>
+                              {user.specialty && (
+                                <p className="text-xs text-cyan-600 dark:text-cyan-400 truncate">
+                                  {user.specialty}
+                                </p>
+                              )}
+                            </div>
+                            <div className="flex-shrink-0">
+                              {status === 'connected' ? (
+                                <span className="px-2.5 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-medium rounded-full">
+                                  Connected
+                                </span>
+                              ) : status === 'pending-sent' ? (
+                                <span className="px-2.5 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-medium rounded-full">
+                                  Pending
+                                </span>
+                              ) : status === 'pending-received' ? (
+                                <button
+                                  onClick={() => handleAcceptRequest(user.id)}
+                                  className="px-3 py-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-medium rounded-full transition-colors"
+                                >
+                                  Accept
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => handleSendRequest(user.id)}
+                                  className="px-3 py-1 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white text-xs font-medium rounded-full shadow-sm transition-all"
+                                >
+                                  Connect
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                    <Toggle checked={settings.soundEffects} onChange={(v) => updateSetting('soundEffects', v)} />
                   </div>
+                )}
 
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Auto-play Audio</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Automatically read cards aloud</p>
-                    </div>
-                    <Toggle checked={settings.autoPlayAudio} onChange={(v) => updateSetting('autoPlayAudio', v)} />
+                {showSearchResults && searchQuery && searchResults.length === 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 z-20 p-6 text-center">
+                    <svg className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">No users found matching "{searchQuery}"</p>
                   </div>
+                )}
+              </div>
 
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Show Timer</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Display time spent on each card</p>
-                    </div>
-                    <Toggle checked={settings.showTimer} onChange={(v) => updateSetting('showTimer', v)} />
+              {/* Pending Requests */}
+              {pendingRequests.length > 0 && (
+                <div className="mb-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                      Pending Requests
+                    </span>
+                    <span className="px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold rounded-full">
+                      {pendingCount}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {pendingRequests.map(user => (
+                      <div
+                        key={user.id}
+                        className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border border-amber-200 dark:border-amber-800"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 via-cyan-500 to-indigo-500 flex items-center justify-center text-white font-bold text-sm">
+                          {getInitials(user.firstName, user.lastName)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-slate-900 dark:text-white text-sm truncate">
+                            {user.firstName} {user.lastName}
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                            {user.currentYear} • {user.school}
+                          </p>
+                        </div>
+                        <div className="flex gap-1">
+                          <button
+                            onClick={() => handleAcceptRequest(user.id)}
+                            className="w-8 h-8 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center transition-colors"
+                            title="Accept"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDeclineRequest(user.id)}
+                            className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-red-100 dark:hover:bg-red-900/30 text-slate-500 hover:text-red-500 flex items-center justify-center transition-colors"
+                            title="Decline"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Appearance */}
-            {activeSection === 'appearance' && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                  <span className="text-xl">🎨</span>
-                  Appearance
-                </h2>
-
-                <div className="space-y-6">
-                  <div>
-                    <label className="block font-medium text-slate-900 dark:text-white mb-3">Theme</label>
-                    <div className="grid grid-cols-3 gap-3">
-                      {(['light', 'dark', 'system'] as const).map(theme => (
-                        <button
-                          key={theme}
-                          onClick={() => updateSetting('theme', theme)}
-                          className={`
-                            p-4 rounded-xl border-2 transition-all text-center
-                            ${settings.theme === theme
-                              ? 'border-teal-500 bg-teal-50 dark:bg-teal-900/30'
-                              : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
-                            }
-                          `}
-                        >
-                          <span className="text-2xl mb-2 block">
-                            {theme === 'light' ? '☀️' : theme === 'dark' ? '🌙' : '💻'}
-                          </span>
-                          <span className="text-sm font-medium text-slate-700 dark:text-slate-300 capitalize">
-                            {theme}
-                          </span>
+              {/* Connected Users */}
+              {connections.length > 0 ? (
+                <div>
+                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3 block">
+                    Your Tribe
+                  </span>
+                  <div className="space-y-2">
+                    {(showAllConnections ? connections : connections.slice(0, 3)).map(user => (
+                      <div
+                        key={user.id}
+                        className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+                      >
+                        <div className="relative">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 via-cyan-500 to-indigo-500 flex items-center justify-center text-white font-bold text-sm">
+                            {getInitials(user.firstName, user.lastName)}
+                          </div>
+                          {user.isOnline && (
+                            <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white dark:border-slate-700 rounded-full" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-slate-900 dark:text-white text-sm truncate">
+                            {user.firstName} {user.lastName}
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                            {user.specialty}
+                          </p>
+                        </div>
+                        <button className="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/30 hover:bg-teal-200 dark:hover:bg-teal-900/50 text-teal-600 dark:text-teal-400 flex items-center justify-center transition-colors">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                          </svg>
                         </button>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Compact Mode</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Reduce spacing for more content</p>
-                    </div>
-                    <Toggle checked={settings.compactMode} onChange={(v) => updateSetting('compactMode', v)} />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Animations</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Enable smooth transitions and effects</p>
-                    </div>
-                    <Toggle checked={settings.animationsEnabled} onChange={(v) => updateSetting('animationsEnabled', v)} />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Privacy */}
-            {activeSection === 'privacy' && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                  <span className="text-xl">🔒</span>
-                  Privacy & Security
-                </h2>
-
-                <div className="space-y-6">
-                  <div>
-                    <label className="block font-medium text-slate-900 dark:text-white mb-2">Profile Visibility</label>
-                    <select
-                      value={settings.profileVisibility}
-                      onChange={(e) => updateSetting('profileVisibility', e.target.value as AppSettings['profileVisibility'])}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+                  {connections.length > 3 && (
+                    <button
+                      onClick={() => setShowAllConnections(!showAllConnections)}
+                      className="w-full mt-3 py-2 text-sm font-medium text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
                     >
-                      <option value="public">Public - Anyone can see your profile</option>
-                      <option value="connections">Connections Only</option>
-                      <option value="private">Private - Only you can see</option>
-                    </select>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Show Online Status</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Let others see when you're active</p>
-                    </div>
-                    <Toggle checked={settings.showOnlineStatus} onChange={(v) => updateSetting('showOnlineStatus', v)} />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Show Study Activity</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Share your study stats with tribe members</p>
-                    </div>
-                    <Toggle checked={settings.showStudyActivity} onChange={(v) => updateSetting('showStudyActivity', v)} />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Allow Connection Requests</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Let others send you connection requests</p>
-                    </div>
-                    <Toggle checked={settings.allowConnectionRequests} onChange={(v) => updateSetting('allowConnectionRequests', v)} />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Focus Mode */}
-            {activeSection === 'focus' && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                  <span className="text-xl">🎯</span>
-                  Focus Mode
-                </h2>
-
-                <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl mb-6">
-                  <p className="text-sm text-amber-800 dark:text-amber-200">
-                    Focus Mode helps you study without distractions. When enabled, notifications will be silenced and social features will be hidden.
-                  </p>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Enable Focus Mode</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Activate distraction-free studying</p>
-                    </div>
-                    <Toggle checked={settings.focusModeEnabled} onChange={(v) => updateSetting('focusModeEnabled', v)} />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Block Social Features</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Hide chat and tribe activity</p>
-                    </div>
-                    <Toggle
-                      checked={settings.focusBlockSocial}
-                      onChange={(v) => updateSetting('focusBlockSocial', v)}
-                      disabled={!settings.focusModeEnabled}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Block Notifications</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Silence all notifications during focus</p>
-                    </div>
-                    <Toggle
-                      checked={settings.focusBlockNotifications}
-                      onChange={(v) => updateSetting('focusBlockNotifications', v)}
-                      disabled={!settings.focusModeEnabled}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Accessibility */}
-            {activeSection === 'accessibility' && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                  <span className="text-xl">♿</span>
-                  Accessibility
-                </h2>
-
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">High Contrast</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Increase color contrast for better visibility</p>
-                    </div>
-                    <Toggle checked={settings.highContrast} onChange={(v) => updateSetting('highContrast', v)} />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Reduced Motion</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Minimize animations and transitions</p>
-                    </div>
-                    <Toggle checked={settings.reducedMotion} onChange={(v) => updateSetting('reducedMotion', v)} />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-slate-900 dark:text-white">Large Text</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Increase text size throughout the app</p>
-                    </div>
-                    <Toggle checked={settings.largeText} onChange={(v) => updateSetting('largeText', v)} />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Data & Storage */}
-            {activeSection === 'data' && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                  <span className="text-xl">💾</span>
-                  Data & Storage
-                </h2>
-
-                <div className="space-y-6">
-                  <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Local Storage Used</span>
-                      <span className="text-sm text-teal-600 dark:text-teal-400 font-medium">2.3 MB</span>
-                    </div>
-                    <div className="w-full h-2 bg-slate-200 dark:bg-slate-600 rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full" style={{ width: '23%' }} />
-                    </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Flashcards, progress, and preferences</p>
-                  </div>
-
-                  <div>
-                    <h3 className="font-medium text-slate-900 dark:text-white mb-3">Export Your Data</h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
-                      Download all your flashcards, progress, and study history
-                    </p>
-                    <button className="px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-colors flex items-center gap-2">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
-                      Export Data
+                      {showAllConnections ? 'Show Less' : `View All ${connectionCount} Connections`}
                     </button>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-4">
+                  <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
                   </div>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">No connections yet</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Start building your tribe!</p>
+                </div>
+              )}
+            </div>
 
-                  <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
-                    <h3 className="font-medium text-red-600 dark:text-red-400 mb-3">Danger Zone</h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
-                      Clear all local data including flashcards, progress, and settings
-                    </p>
-                    <button className="px-4 py-2 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl transition-colors flex items-center gap-2">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                      Clear All Data
-                    </button>
+            {/* My Tribes Card */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-teal-600 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
                   </div>
+                  My Tribes
+                </h2>
+                <span className="text-sm text-slate-500 dark:text-slate-400">
+                  {userTribes.length}/{MAX_TRIBES_PER_USER}
+                </span>
+              </div>
+
+              {userTribes.length > 0 ? (
+                <div className="space-y-2">
+                  {userTribes.map(tribe => (
+                    <a
+                      key={tribe.id}
+                      href={`/tribes/${tribe.id}`}
+                      className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                    >
+                      <div className={`w-10 h-10 rounded-xl bg-gradient-to-r ${tribe.color} flex items-center justify-center text-lg`}>
+                        {tribe.icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-slate-900 dark:text-white text-sm truncate">
+                            {tribe.name}
+                          </p>
+                          {primaryTribeId === tribe.id && (
+                            <span className="px-1.5 py-0.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 text-xs font-medium rounded">
+                              Primary
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                          {tribe.memberCount} members • {tribe.weeklyPoints > 0 ? `+${tribe.weeklyPoints} pts this week` : '0 pts this week'}
+                        </p>
+                      </div>
+                      {primaryTribeId !== tribe.id && (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleSetPrimaryTribe(tribe.id);
+                          }}
+                          className="px-2 py-1 text-xs text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/30 rounded-lg transition-colors"
+                          title="Set as primary tribe"
+                        >
+                          Set Primary
+                        </button>
+                      )}
+                    </a>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-4">
+                  <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">No tribes yet</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">Join a tribe to collaborate with others!</p>
+                </div>
+              )}
+
+              <a
+                href="/tribes"
+                className="flex items-center justify-center gap-2 w-full mt-4 py-2.5 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-medium rounded-xl transition-all text-sm"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Find Tribes
+              </a>
+            </div>
+
+            {/* Quick Stats Card */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                </div>
+                Study Stats
+              </h2>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 rounded-xl">
+                  <span className="text-slate-600 dark:text-slate-300">Cards Studied</span>
+                  <span className="text-xl font-bold text-teal-600 dark:text-teal-400">0</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl">
+                  <span className="text-slate-600 dark:text-slate-300">Cases Completed</span>
+                  <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">0</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl">
+                  <span className="text-slate-600 dark:text-slate-300">Day Streak</span>
+                  <span className="text-xl font-bold text-amber-600 dark:text-amber-400">0</span>
                 </div>
               </div>
-            )}
+            </div>
+
+            {/* Social Links Card */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  </svg>
+                </div>
+                Social Links
+              </h2>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    LinkedIn
+                  </label>
+                  <input
+                    type="url"
+                    value={profile.linkedIn || ''}
+                    onChange={(e) => setProfile({ ...profile, linkedIn: e.target.value })}
+                    disabled={!isEditing}
+                    placeholder="linkedin.com/in/username"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Twitter/X
+                  </label>
+                  <input
+                    type="text"
+                    value={profile.twitter || ''}
+                    onChange={(e) => setProfile({ ...profile, twitter: e.target.value })}
+                    disabled={!isEditing}
+                    placeholder="@username"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Privacy Settings Card */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-slate-600 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                Privacy
+              </h2>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Profile Visibility
+                  </label>
+                  <select
+                    value={profile.profileVisibility}
+                    onChange={(e) => setProfile({ ...profile, profileVisibility: e.target.value as UserProfile['profileVisibility'] })}
+                    disabled={!isEditing}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                  >
+                    <option value="public">Public</option>
+                    <option value="connections">Connections Only</option>
+                    <option value="private">Private</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
+                  <span className="text-sm text-slate-600 dark:text-slate-300">Show Study Stats</span>
+                  <button
+                    onClick={() => isEditing && setProfile({ ...profile, showStudyStats: !profile.showStudyStats })}
+                    disabled={!isEditing}
+                    className={`
+                      relative w-12 h-7 rounded-full transition-colors duration-200
+                      ${profile.showStudyStats ? 'bg-teal-500' : 'bg-slate-300 dark:bg-slate-600'}
+                      ${!isEditing ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}
+                    `}
+                  >
+                    <span
+                      className={`
+                        absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200
+                        ${profile.showStudyStats ? 'translate-x-6' : 'translate-x-1'}
+                      `}
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>

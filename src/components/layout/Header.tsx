@@ -139,13 +139,15 @@ const toolsDropdownItems: DropdownItem[] = [
 ];
 
 const wellnessDropdownItems: DropdownItem[] = [
+  { label: 'Wellness Hub', href: '/wellness', description: 'Your wellness center' },
   { label: 'My Journey', href: '/wellness?tab=journey', description: 'Daily challenges & wellness journeys' },
   { label: 'Social Skills', href: '/wellness?tab=skills', description: 'Build interpersonal skills' },
   { label: 'Village Points', href: '/wellness?tab=impact', description: 'Donate points to causes' },
 ];
 
 const communityDropdownItems: DropdownItem[] = [
-  { label: 'Tribes', href: '/tribes', description: 'Join study communities' },
+  { label: 'My Tribes', href: '/tribes', description: 'Your study communities' },
+  { label: 'Community Hub', href: '/community', description: 'Connect with peers' },
   { label: 'PreMed', href: '/premed', description: 'Resources for pre-med students' },
   { label: 'How It Works', href: '/impact', description: 'Village Points & charitable giving' },
   { label: 'Find Charities', href: '/impact/local', description: 'Discover local nonprofits' },
@@ -172,8 +174,8 @@ export function Header({ stats }: HeaderProps) {
     <header className="sticky top-0 z-50 bg-gradient-to-r from-teal-50 via-cyan-50 to-emerald-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 backdrop-blur-md border-b border-teal-100 dark:border-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo - always clickable to go home */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink-0">
+          {/* Logo - goes to appropriate home based on auth status */}
+          <Link href={isAuthenticated ? "/home" : "/"} className="flex items-center gap-2 sm:gap-3 group flex-shrink-0">
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl shadow-lg shadow-teal-500/25 group-hover:shadow-teal-500/40 transition-shadow overflow-hidden">
               <img src="/logo.jpeg" alt="TribeWellMD" className="w-full h-full object-cover" />
             </div>
@@ -186,16 +188,17 @@ export function Header({ stats }: HeaderProps) {
 
           {/* Navigation - different for logged in vs logged out */}
           <nav className="hidden md:flex items-center gap-1">
-            <NavLink href="/">Home</NavLink>
             {isAuthenticated ? (
               <>
+                <NavLink href="/home">Home</NavLink>
                 <NavDropdown label="Study" href="/study/progress" items={studyDropdownItems} />
                 <NavDropdown label="Tools" href="/tasks" items={toolsDropdownItems} />
-                <NavDropdown label="Wellness" href="/wellness/progress" items={wellnessDropdownItems} />
+                <NavDropdown label="Wellness" href="/wellness" items={wellnessDropdownItems} />
                 <NavDropdown label="Community" href="/community" items={communityDropdownItems} />
               </>
             ) : (
               <>
+                <NavLink href="/">Home</NavLink>
                 <NavLink href="/about">About</NavLink>
                 <NavLink href="/investors">For Investors</NavLink>
                 <NavLink href="/partners">For Partners</NavLink>
@@ -284,16 +287,17 @@ export function Header({ stats }: HeaderProps) {
           <div className="max-w-7xl mx-auto px-4 py-4 space-y-2">
             {isAuthenticated ? (
               <>
-                <MobileNavLink href="/" onClick={() => setMobileMenuOpen(false)}>Home</MobileNavLink>
+                <MobileNavLink href="/home" onClick={() => setMobileMenuOpen(false)}>Home</MobileNavLink>
+                <MobileNavLink href="/profile" onClick={() => setMobileMenuOpen(false)}>My Profile</MobileNavLink>
 
                 {/* Study Section */}
-                <div className="pt-2">
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                   <p className="px-4 py-1 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Study</p>
-                  <MobileNavLink href="/study/progress" onClick={() => setMobileMenuOpen(false)}>Study Progress</MobileNavLink>
                   <MobileNavLink href="/study" onClick={() => setMobileMenuOpen(false)}>Flashcards</MobileNavLink>
                   <MobileNavLink href="/cases" onClick={() => setMobileMenuOpen(false)}>Clinical Cases</MobileNavLink>
                   <MobileNavLink href="/generate" onClick={() => setMobileMenuOpen(false)}>AI Generator</MobileNavLink>
                   <MobileNavLink href="/library" onClick={() => setMobileMenuOpen(false)}>Card Library</MobileNavLink>
+                  <MobileNavLink href="/study/progress" onClick={() => setMobileMenuOpen(false)}>Study Progress</MobileNavLink>
                 </div>
 
                 {/* Tools Section */}
@@ -307,7 +311,7 @@ export function Header({ stats }: HeaderProps) {
                 {/* Wellness Section */}
                 <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                   <p className="px-4 py-1 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Wellness</p>
-                  <MobileNavLink href="/wellness/progress" onClick={() => setMobileMenuOpen(false)}>Wellness Progress</MobileNavLink>
+                  <MobileNavLink href="/wellness" onClick={() => setMobileMenuOpen(false)}>Wellness Hub</MobileNavLink>
                   <MobileNavLink href="/wellness?tab=journey" onClick={() => setMobileMenuOpen(false)}>My Journey</MobileNavLink>
                   <MobileNavLink href="/wellness?tab=skills" onClick={() => setMobileMenuOpen(false)}>Social Skills</MobileNavLink>
                 </div>
@@ -315,8 +319,8 @@ export function Header({ stats }: HeaderProps) {
                 {/* Community Section */}
                 <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                   <p className="px-4 py-1 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Community</p>
+                  <MobileNavLink href="/tribes" onClick={() => setMobileMenuOpen(false)}>My Tribes</MobileNavLink>
                   <MobileNavLink href="/community" onClick={() => setMobileMenuOpen(false)}>Community Hub</MobileNavLink>
-                  <MobileNavLink href="/tribes" onClick={() => setMobileMenuOpen(false)}>Tribes</MobileNavLink>
                   <MobileNavLink href="/impact" onClick={() => setMobileMenuOpen(false)}>How It Works</MobileNavLink>
                   <MobileNavLink href="/impact/local" onClick={() => setMobileMenuOpen(false)}>Find Charities</MobileNavLink>
                 </div>
