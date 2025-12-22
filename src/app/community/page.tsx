@@ -5,410 +5,619 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Icons } from '@/components/ui/Icons';
 import Link from 'next/link';
+import { useTribes } from '@/hooks/useTribes';
+import { useWellness } from '@/hooks/useWellness';
 
 export default function CommunityPage() {
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const { userTribes, primaryTribe, allTribes } = useTribes();
+  const { getStats } = useWellness();
+  const stats = getStats();
 
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
+  const [activeTab, setActiveTab] = useState<'overview' | 'tribes' | 'impact' | 'connect'>('overview');
 
-    setLoading(true);
-    setError('');
-
-    try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'community-page' }),
-      });
-
-      if (response.ok) {
-        setSubscribed(true);
-        setEmail('');
-      } else {
-        setError('Something went wrong. Please try again.');
-      }
-    } catch {
-      setError('Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Calculate community stats
+  const totalTribeMembers = userTribes.reduce((sum, t) => sum + (t.memberCount || 0), 0);
+  const totalTribePoints = userTribes.reduce((sum, t) => sum + (t.totalPoints || 0), 0);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-amber-50/30 dark:from-slate-900 dark:to-amber-950/20">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Hero Section */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Hero Banner */}
         <section className="mb-8 animate-fade-in-up">
-          <div className="relative rounded-3xl bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 p-8 md:p-10 shadow-2xl">
-            {/* Animated background elements - contained */}
-            <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 p-8 md:p-10 shadow-2xl">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
               <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
               <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-orange-300/20 rounded-full blur-2xl" />
             </div>
 
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="text-center md:text-left">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur rounded-full text-white/90 text-sm font-medium mb-4">
-                  <span className="w-2 h-2 bg-orange-300 rounded-full animate-pulse" />
-                  <span>Coming Soon</span>
-                </div>
-
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
-                  Find Your <span className="text-orange-200">Tribe</span>
-                </h1>
-
-                <p className="text-white/80 text-lg max-w-xl mb-6">
-                  Medicine is hard. You don't have to do it alone. Connect with mentors, peers, and a community that understands your journey.
-                </p>
-
-                {/* Stats row */}
-                <div className="flex items-center gap-4 md:gap-6">
-                  <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
-                    <p className="text-2xl md:text-3xl font-bold text-white">6</p>
-                    <p className="text-white/60 text-xs">Features</p>
-                  </div>
-                  <div className="w-px h-10 bg-white/20" />
-                  <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
-                    <p className="text-2xl md:text-3xl font-bold text-white">4</p>
-                    <p className="text-white/60 text-xs">Resources</p>
-                  </div>
-                  <div className="w-px h-10 bg-white/20" />
-                  <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
-                    <p className="text-2xl md:text-3xl font-bold text-white">24/7</p>
-                    <p className="text-white/60 text-xs">Support</p>
-                  </div>
-                </div>
+            <div className="relative z-10">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur rounded-full text-white/90 text-sm font-medium mb-4">
+                <span className="w-2 h-2 bg-orange-300 rounded-full animate-pulse" />
+                <span>Your Community</span>
               </div>
 
-              {/* Email Signup Card */}
-              <div className="p-6 bg-white rounded-2xl shadow-2xl w-full max-w-sm">
-                <h3 className="text-slate-900 font-bold text-lg mb-4 text-center">Get Early Access</h3>
-                {subscribed ? (
-                  <div className="text-center py-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <p className="text-green-700 font-medium">You're on the list!</p>
-                    <p className="text-slate-500 text-sm mt-1">We'll notify you when we launch.</p>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
+                Community <span className="text-orange-200">Hub</span>
+              </h1>
+
+              <p className="text-white/80 text-lg max-w-2xl mb-6">
+                Connect with your tribes, track your collective impact, and grow together.
+              </p>
+
+              {/* Quick stats row */}
+              <div className="flex items-center gap-4 md:gap-6 flex-wrap">
+                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold text-white">{userTribes.length}</p>
+                  <p className="text-white/60 text-xs">My Tribes</p>
+                </div>
+                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold text-white">{totalTribeMembers}</p>
+                  <p className="text-white/60 text-xs">Tribe Members</p>
+                </div>
+                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold text-white">{totalTribePoints.toLocaleString()}</p>
+                  <p className="text-white/60 text-xs">Collective Points</p>
+                </div>
+                <div className="text-center px-4 py-2 bg-white/10 backdrop-blur rounded-xl">
+                  <p className="text-2xl md:text-3xl font-bold text-white">${((stats?.donated || 0) / 1000).toFixed(0)}</p>
+                  <p className="text-white/60 text-xs">Donated</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Tab Navigation */}
+        <div className="flex gap-2 mb-6 border-b border-slate-200 dark:border-slate-700 overflow-x-auto animate-fade-in-up animation-delay-100">
+          {[
+            { id: 'overview', label: 'Overview', icon: <Icons.Chart /> },
+            { id: 'tribes', label: 'My Tribes', icon: <Icons.Village /> },
+            { id: 'impact', label: 'Collective Impact', icon: <Icons.HeartHand /> },
+            { id: 'connect', label: 'Connect', icon: <Icons.Users /> },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as typeof activeTab)}
+              className={`flex items-center gap-2 px-4 py-3 font-medium text-sm transition-colors border-b-2 -mb-px whitespace-nowrap ${
+                activeTab === tab.id
+                  ? 'text-amber-600 dark:text-amber-400 border-amber-600 dark:border-amber-400'
+                  : 'text-slate-600 dark:text-slate-400 border-transparent hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <span className="w-5 h-5">{tab.icon}</span>
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Overview Tab */}
+        {activeTab === 'overview' && (
+          <div className="space-y-6">
+            {/* Quick Actions Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Tribes Card */}
+              <Link
+                href="/tribes"
+                className="group bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-5 text-white hover:scale-[1.02] transition-all"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Icons.Village />
                   </div>
-                ) : (
-                  <form onSubmit={handleSubscribe} className="space-y-3">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      required
-                      disabled={loading}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:opacity-50"
-                    />
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-xl shadow-lg shadow-orange-500/25 transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                  <span className="text-white/80 text-sm font-medium">Study Tribes</span>
+                </div>
+                <p className="text-3xl font-bold">{userTribes.length}</p>
+                <p className="text-white/60 text-sm mt-1">tribes joined</p>
+                <div className="mt-3 flex items-center gap-1 text-white/80 text-sm group-hover:text-white transition-colors">
+                  <span>View All</span>
+                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </Link>
+
+              {/* Impact Card */}
+              <Link
+                href="/impact"
+                className="group bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-5 text-white hover:scale-[1.02] transition-all"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Icons.HeartHand />
+                  </div>
+                  <span className="text-white/80 text-sm font-medium">How It Works</span>
+                </div>
+                <p className="text-3xl font-bold">${((stats?.donated || 0) / 1000).toFixed(2)}</p>
+                <p className="text-white/60 text-sm mt-1">to charity</p>
+                <div className="mt-3 flex items-center gap-1 text-white/80 text-sm group-hover:text-white transition-colors">
+                  <span>Learn More</span>
+                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </Link>
+
+              {/* Find Charities Card */}
+              <Link
+                href="/impact/local"
+                className="group bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl p-5 text-white hover:scale-[1.02] transition-all"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Icons.Location />
+                  </div>
+                  <span className="text-white/80 text-sm font-medium">Find Charities</span>
+                </div>
+                <p className="text-2xl font-bold">Local</p>
+                <p className="text-white/60 text-sm mt-1">verified nonprofits</p>
+                <div className="mt-3 flex items-center gap-1 text-white/80 text-sm group-hover:text-white transition-colors">
+                  <span>Explore</span>
+                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </Link>
+
+              {/* PreMed Card */}
+              <Link
+                href="/premed"
+                className="group bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-5 text-white hover:scale-[1.02] transition-all"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                    <Icons.GraduationCap />
+                  </div>
+                  <span className="text-white/80 text-sm font-medium">PreMed</span>
+                </div>
+                <p className="text-2xl font-bold">Resources</p>
+                <p className="text-white/60 text-sm mt-1">for future doctors</p>
+                <div className="mt-3 flex items-center gap-1 text-white/80 text-sm group-hover:text-white transition-colors">
+                  <span>View</span>
+                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </Link>
+            </div>
+
+            {/* My Tribes Preview */}
+            {userTribes.length > 0 ? (
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white">My Tribes</h3>
+                  <Link
+                    href="/tribes"
+                    className="text-sm text-amber-600 dark:text-amber-400 hover:underline"
+                  >
+                    View All
+                  </Link>
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {userTribes.slice(0, 3).map((tribe) => (
+                    <Link
+                      key={tribe.id}
+                      href={`/tribes/${tribe.id}`}
+                      className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                     >
-                      {loading ? 'Saving...' : 'Notify Me'}
-                    </button>
-                    {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-                  </form>
-                )}
-                <p className="text-slate-500 text-xs text-center mt-3">No spam, ever.</p>
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-lg"
+                          style={{ background: `linear-gradient(135deg, ${tribe.color}, ${tribe.color}dd)` }}
+                        >
+                          {tribe.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-slate-900 dark:text-white truncate">{tribe.name}</p>
+                          <p className="text-xs text-slate-500">{tribe.memberCount} members</p>
+                        </div>
+                        {primaryTribe?.id === tribe.id && (
+                          <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 text-xs rounded-full">
+                            Primary
+                          </span>
+                        )}
+                      </div>
+                      {tribe.currentGoal && (
+                        <div className="mt-3">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="text-slate-500 truncate">{tribe.currentGoal.title}</span>
+                            <span className="text-amber-600 dark:text-amber-400 font-medium">
+                              {Math.round((tribe.currentGoal.currentPoints / tribe.currentGoal.targetPoints) * 100)}%
+                            </span>
+                          </div>
+                          <div className="h-1.5 bg-slate-200 dark:bg-slate-600 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
+                              style={{ width: `${Math.min((tribe.currentGoal.currentPoints / tribe.currentGoal.targetPoints) * 100, 100)}%` }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
-          </div>
-        </section>
+            ) : (
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                  <Icons.Village />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Join Your First Tribe</h3>
+                <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md mx-auto">
+                  Tribes are communities with shared goals. Study together, support each other, and make a collective impact.
+                </p>
+                <Link
+                  href="/tribes"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all"
+                >
+                  Explore Tribes
+                </Link>
+              </div>
+            )}
 
-        {/* Main 4-Box Navigation Grid - Matching Study page style */}
-        <section className="mb-8 animate-fade-in-up animation-delay-100">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Connect & Support</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Box 1: Mentorship Matching */}
-            <div className="group relative p-6 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden cursor-pointer">
-              <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-              </div>
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-white">
-                    <Icons.Target />
-                  </div>
-                  <span className="px-3 py-1 bg-white/20 text-white/90 text-xs font-medium rounded-full">
-                    Coming Soon
-                  </span>
+            {/* Community Stats */}
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Why Community Matters</h3>
+              <div className="grid sm:grid-cols-3 gap-4">
+                <div className="p-4 bg-white/5 rounded-xl text-center">
+                  <p className="text-3xl font-bold text-amber-400 mb-1">27%</p>
+                  <p className="text-slate-400 text-sm">of medical students experience depression</p>
                 </div>
-                <h3 className="font-bold text-xl mb-1">Mentorship</h3>
-                <p className="text-white/70 text-sm mb-3">Find your guide</p>
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold">0</span>
-                  <span className="text-white/60 text-sm">mentors</span>
+                <div className="p-4 bg-white/5 rounded-xl text-center">
+                  <p className="text-3xl font-bold text-amber-400 mb-1">50%</p>
+                  <p className="text-slate-400 text-sm">feel they lack adequate mentorship</p>
+                </div>
+                <div className="p-4 bg-white/5 rounded-xl text-center">
+                  <p className="text-3xl font-bold text-amber-400 mb-1">1 in 3</p>
+                  <p className="text-slate-400 text-sm">residents report burnout symptoms</p>
                 </div>
               </div>
-              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </div>
-            </div>
-
-            {/* Box 2: Day-in-the-Life */}
-            <div className="group relative p-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden cursor-pointer">
-              <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-              </div>
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-white">
-                    <Icons.Camera />
-                  </div>
-                  <span className="px-3 py-1 bg-white/20 text-white/90 text-xs font-medium rounded-full">
-                    Coming Soon
-                  </span>
-                </div>
-                <h3 className="font-bold text-xl mb-1">Day-in-the-Life</h3>
-                <p className="text-white/70 text-sm mb-3">Real residency stories</p>
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold">0</span>
-                  <span className="text-white/60 text-sm">posts</span>
-                </div>
-              </div>
-              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </div>
-            </div>
-
-            {/* Box 3: Study Groups - Active! */}
-            <Link
-              href="/tribes"
-              className="group relative p-6 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
-            >
-              <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-              </div>
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-white">
-                    <Icons.Book />
-                  </div>
-                  <span className="px-3 py-1 bg-emerald-400/40 text-white text-xs font-medium rounded-full">
-                    Active
-                  </span>
-                </div>
-                <h3 className="font-bold text-xl mb-1">Study Groups</h3>
-                <p className="text-white/70 text-sm mb-3">Join your tribe</p>
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold">12</span>
-                  <span className="text-white/60 text-sm">tribes</span>
-                </div>
-              </div>
-              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </div>
-            </Link>
-
-            {/* Box 4: Anonymous Support */}
-            <Link
-              href="/wellness"
-              className="group relative p-6 bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
-            >
-              <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-              </div>
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-white">
-                    <Icons.Chat />
-                  </div>
-                  <span className="px-3 py-1 bg-white/20 text-white/90 text-xs font-medium rounded-full">
-                    Coming Soon
-                  </span>
-                </div>
-                <h3 className="font-bold text-xl mb-1">Support</h3>
-                <p className="text-white/70 text-sm mb-3">Anonymous help</p>
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold">0</span>
-                  <span className="text-white/60 text-sm">threads</span>
-                </div>
-              </div>
-              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </div>
-            </Link>
-          </div>
-        </section>
-
-        {/* Secondary Actions Row - Like Study page */}
-        <section className="mb-8 animate-fade-in-up animation-delay-200">
-          <div className="grid grid-cols-2 gap-4">
-            {/* Resources Hub */}
-            <Link
-              href="/wellness"
-              className="group flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-violet-300 dark:hover:border-violet-600 hover:shadow-lg transition-all"
-            >
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">Wellness Hub</h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Resources & self-care</p>
-              </div>
-              <svg className="w-5 h-5 text-slate-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </Link>
-
-            {/* Events Calendar */}
-            <div className="group flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-600 hover:shadow-lg transition-all cursor-pointer">
-              <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 group-hover:bg-teal-500 flex items-center justify-center transition-colors">
-                <svg className="w-6 h-6 text-slate-600 dark:text-slate-400 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors flex items-center gap-2">
-                  Events
-                  <span className="px-1.5 py-0.5 text-xs bg-slate-100 dark:bg-slate-700 text-slate-500 rounded-full">Soon</span>
-                </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Workshops & meetups</p>
-              </div>
-              <svg className="w-5 h-5 text-slate-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </div>
-          </div>
-        </section>
-
-        {/* Why Community Matters - Stats Section */}
-        <section className="mb-8 animate-fade-in-up animation-delay-300">
-          <div className="p-8 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl text-white">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-2xl font-bold mb-6">Why This Matters</h2>
-              <div className="grid grid-cols-3 gap-4 md:gap-8 mb-6">
-                <div className="p-4 bg-white/5 rounded-xl">
-                  <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-1">27%</div>
-                  <p className="text-slate-400 text-xs md:text-sm">of medical students experience depression</p>
-                </div>
-                <div className="p-4 bg-white/5 rounded-xl">
-                  <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-1">50%</div>
-                  <p className="text-slate-400 text-xs md:text-sm">feel they lack adequate mentorship</p>
-                </div>
-                <div className="p-4 bg-white/5 rounded-xl">
-                  <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-1">1 in 3</div>
-                  <p className="text-slate-400 text-xs md:text-sm">residents report burnout symptoms</p>
-                </div>
-              </div>
-              <p className="text-slate-400">
-                Medical training can be isolating. TribeWellMD is building the community that should have always existed.
+              <p className="text-slate-400 text-sm text-center mt-4">
+                You don't have to do this alone. TribeWellMD is building the community that should have always existed.
               </p>
             </div>
           </div>
-        </section>
+        )}
 
-        {/* Quick Stats Bar - 4 columns like Study page */}
-        <section className="mb-8 animate-fade-in-up animation-delay-400">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 dark:text-teal-400">
-                  <Icons.Target />
+        {/* Tribes Tab */}
+        {activeTab === 'tribes' && (
+          <div className="space-y-6">
+            {userTribes.length > 0 ? (
+              <>
+                {/* Tribe Stats */}
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
+                    <p className="text-3xl font-bold text-amber-600 dark:text-amber-400">{userTribes.length}</p>
+                    <p className="text-slate-600 dark:text-slate-400">Tribes Joined</p>
+                  </div>
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
+                    <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{totalTribeMembers}</p>
+                    <p className="text-slate-600 dark:text-slate-400">Total Members</p>
+                  </div>
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
+                    <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{totalTribePoints.toLocaleString()}</p>
+                    <p className="text-slate-600 dark:text-slate-400">Collective Points</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">0</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Mentors</p>
+
+                {/* All User Tribes */}
+                <div className="grid md:grid-cols-2 gap-4">
+                  {userTribes.map((tribe) => (
+                    <Link
+                      key={tribe.id}
+                      href={`/tribes/${tribe.id}`}
+                      className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 hover:shadow-lg transition-all"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div
+                          className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg flex-shrink-0"
+                          style={{ background: `linear-gradient(135deg, ${tribe.color}, ${tribe.color}dd)` }}
+                        >
+                          {tribe.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-semibold text-slate-900 dark:text-white truncate">{tribe.name}</h3>
+                            {primaryTribe?.id === tribe.id && (
+                              <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 text-xs rounded-full flex-shrink-0">
+                                Primary
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-slate-600 dark:text-slate-400 mb-3 line-clamp-2">{tribe.description}</p>
+                          <div className="flex items-center gap-4 text-xs text-slate-500">
+                            <span>{tribe.memberCount} members</span>
+                            <span>{tribe.totalPoints?.toLocaleString() || 0} points</span>
+                          </div>
+                          {tribe.currentGoal && (
+                            <div className="mt-3">
+                              <div className="flex items-center justify-between text-xs mb-1">
+                                <span className="text-slate-600 dark:text-slate-400">{tribe.currentGoal.title}</span>
+                                <span className="font-medium text-amber-600 dark:text-amber-400">
+                                  {Math.round((tribe.currentGoal.currentPoints / tribe.currentGoal.targetPoints) * 100)}%
+                                </span>
+                              </div>
+                              <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div
+                                  className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
+                                  style={{ width: `${Math.min((tribe.currentGoal.currentPoints / tribe.currentGoal.targetPoints) * 100, 100)}%` }}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
+
+                {/* Explore More */}
+                <div className="p-6 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl border border-amber-200 dark:border-amber-800">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-semibold text-slate-900 dark:text-white">Looking for more tribes?</h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">Discover communities that match your interests</p>
+                    </div>
+                    <Link
+                      href="/tribes"
+                      className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all"
+                    >
+                      Explore All Tribes
+                    </Link>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-12 text-center">
+                <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                  <Icons.Village />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Tribes Yet</h3>
+                <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md mx-auto">
+                  Join tribes to connect with peers, study together, and make a collective impact on causes you care about.
+                </p>
+                <Link
+                  href="/tribes"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all"
+                >
+                  Explore Tribes
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Impact Tab */}
+        {activeTab === 'impact' && (
+          <div className="space-y-6">
+            {/* Impact Stats */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-gradient-to-br from-teal-500 to-emerald-600 rounded-2xl p-6 text-white">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+                    <Icons.Heart />
+                  </div>
+                  <div>
+                    <p className="text-white/80 text-sm">Total Village Points</p>
+                    <p className="text-3xl font-bold">{stats?.villagePoints?.toLocaleString() || 0}</p>
+                  </div>
+                </div>
+                <p className="text-white/60 text-sm">
+                  Worth ${((stats?.villagePoints || 0) / 1000).toFixed(2)} in charitable donations
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-6 text-white">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+                    <Icons.Gift />
+                  </div>
+                  <div>
+                    <p className="text-white/80 text-sm">Points Donated</p>
+                    <p className="text-3xl font-bold">{stats?.donated?.toLocaleString() || 0}</p>
+                  </div>
+                </div>
+                <p className="text-white/60 text-sm">
+                  You've contributed ${((stats?.donated || 0) / 1000).toFixed(2)} to verified charities!
+                </p>
               </div>
             </div>
 
-            <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-                  <Icons.Users />
+            {/* How It Works Link */}
+            <Link
+              href="/impact"
+              className="block bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 hover:shadow-lg transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white">
+                  <Icons.Lightbulb />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">12</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Active Tribes</p>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-slate-900 dark:text-white">How Village Points Work</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    Learn how your wellness activities convert to real charitable donations
+                  </p>
                 </div>
+                <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </div>
-            </div>
+            </Link>
 
-            <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                  <Icons.Camera />
+            {/* Find Local Charities */}
+            <Link
+              href="/impact/local"
+              className="block bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 rounded-2xl border border-teal-200 dark:border-teal-800 p-6 hover:shadow-lg transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white">
+                  <Icons.Location />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">0</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">DITL Posts</p>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-slate-900 dark:text-white">Find Local Charities</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    Discover verified nonprofits in your community where your points can make an impact
+                  </p>
                 </div>
+                <svg className="w-5 h-5 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </div>
-            </div>
+            </Link>
 
-            <div className="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-pink-100 dark:bg-pink-900/50 flex items-center justify-center text-pink-600 dark:text-pink-400">
-                  <Icons.Chat />
+            {/* Conversion Info */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+              <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Conversion Rate</h3>
+              <div className="grid sm:grid-cols-3 gap-4">
+                <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl text-center">
+                  <p className="text-xl font-bold text-teal-600 dark:text-teal-400">10 XP</p>
+                  <p className="text-xs text-slate-500">=</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">1 Village Point</p>
                 </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">0</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Support Threads</p>
+                <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl text-center">
+                  <p className="text-xl font-bold text-purple-600 dark:text-purple-400">1,000 VP</p>
+                  <p className="text-xs text-slate-500">=</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">$1.00 to charity</p>
+                </div>
+                <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl text-center">
+                  <p className="text-xl font-bold text-amber-600 dark:text-amber-400">100%</p>
+                  <p className="text-xs text-slate-500">=</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Transparent</p>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        )}
 
-        {/* Testimonials */}
-        <section className="mb-8 animate-fade-in-up animation-delay-500">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">What Trainees Are Saying</h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            {[
-              {
-                quote: "I wish I had something like this when I was applying. Finding a mentor in interventional cardiology was pure luck.",
-                author: "PGY-3, Internal Medicine",
-                iconColor: "bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400"
-              },
-              {
-                quote: "The anonymous support would have helped so much during my surgery rotation. I thought I was the only one struggling.",
-                author: "MS3, Midwest Medical School",
-                iconColor: "bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400"
-              },
-              {
-                quote: "Knowing what programs are actually like before rank day would be invaluable. The interview day experience isn't reality.",
-                author: "PGY-1, Emergency Medicine",
-                iconColor: "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400"
-              },
-            ].map((testimonial, index) => (
-              <div
-                key={index}
-                className="p-5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700"
-              >
-                <div className={`w-10 h-10 rounded-xl ${testimonial.iconColor} flex items-center justify-center mb-3`}>
-                  <Icons.Doctor />
+        {/* Connect Tab */}
+        {activeTab === 'connect' && (
+          <div className="space-y-6">
+            {/* Coming Soon Features */}
+            <div className="grid md:grid-cols-2 gap-4">
+              {/* Mentorship */}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white">
+                    <Icons.Target />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-slate-900 dark:text-white">Mentorship</h3>
+                      <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-500 text-xs rounded-full">Coming Soon</span>
+                    </div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Find your guide</p>
+                  </div>
                 </div>
-                <p className="text-slate-600 dark:text-slate-300 text-sm italic mb-3">"{testimonial.quote}"</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">- {testimonial.author}</p>
+                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  Connect with residents and attendings in your specialty interest. Get personalized advice from people who've walked your path.
+                </p>
               </div>
-            ))}
-          </div>
-        </section>
 
+              {/* Day in the Life */}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white">
+                    <Icons.Camera />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-slate-900 dark:text-white">Day-in-the-Life</h3>
+                      <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-500 text-xs rounded-full">Coming Soon</span>
+                    </div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Real residency stories</p>
+                  </div>
+                </div>
+                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  See what residency is really like through authentic daily posts from residents across specialties and programs.
+                </p>
+              </div>
+
+              {/* Anonymous Support */}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white">
+                    <Icons.Chat />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-slate-900 dark:text-white">Anonymous Support</h3>
+                      <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-500 text-xs rounded-full">Coming Soon</span>
+                    </div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Safe space to share</p>
+                  </div>
+                </div>
+                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  A judgment-free zone to share struggles, seek advice, and support fellow trainees through the challenging moments.
+                </p>
+              </div>
+
+              {/* Events */}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white">
+                    <Icons.Calendar />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-slate-900 dark:text-white">Events & Workshops</h3>
+                      <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-700 text-slate-500 text-xs rounded-full">Coming Soon</span>
+                    </div>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Learn together</p>
+                  </div>
+                </div>
+                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                  Virtual workshops, Q&A sessions with specialists, and community events to help you grow personally and professionally.
+                </p>
+              </div>
+            </div>
+
+            {/* Available Now */}
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-2xl border border-emerald-200 dark:border-emerald-800 p-6">
+              <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Available Now</h3>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <Link
+                  href="/tribes"
+                  className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl hover:shadow-lg transition-all"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white">
+                    <Icons.Village />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-slate-900 dark:text-white">Study Tribes</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Join {allTribes?.length || 12} active tribes</p>
+                  </div>
+                </Link>
+
+                <Link
+                  href="/wellness"
+                  className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl hover:shadow-lg transition-all"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white">
+                    <Icons.Heart />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-slate-900 dark:text-white">Wellness Center</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">Resources & self-care tools</p>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Quick Action */}
+        <div className="mt-8 text-center">
+          <Link
+            href="/tribes"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl transition-colors shadow-lg"
+          >
+            <Icons.Village />
+            Explore Tribes
+          </Link>
+        </div>
       </main>
 
       <Footer />

@@ -146,13 +146,23 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Resources */}
+          {/* Resources & Community */}
           <div>
             <h3 className="text-white font-semibold mb-4">Resources</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/wellness" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
+                <Link href="/wellness/progress" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
                   Wellness Center
+                </Link>
+              </li>
+              <li>
+                <Link href="/community" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
+                  Community Hub
+                </Link>
+              </li>
+              <li>
+                <Link href="/tribes" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
+                  Study Tribes
                 </Link>
               </li>
               <li>
@@ -161,13 +171,18 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/tribes" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
-                  Tribes & Community
+                <Link href="/impact/local" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
+                  Find Local Charities
                 </Link>
               </li>
               <li>
                 <Link href="/premed" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
                   PreMed Resources
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="text-slate-400 hover:text-teal-400 transition-colors text-sm">
+                  About TribeWellMD
                 </Link>
               </li>
             </ul>
@@ -189,24 +204,32 @@ export function Footer() {
                 <svg className="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <Link href="/support" className="text-slate-400 hover:text-teal-400 transition-colors">
+                <a href="mailto:support@tribewellmd.com?subject=Help%20Request" className="text-slate-400 hover:text-teal-400 transition-colors">
                   Help & Support
-                </Link>
+                </a>
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <svg className="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <Link href="/feedback" className="text-slate-400 hover:text-teal-400 transition-colors">
+                <a href="mailto:feedback@tribewellmd.com?subject=Feedback" className="text-slate-400 hover:text-teal-400 transition-colors">
                   Send Feedback
+                </a>
+              </li>
+              <li className="flex items-center gap-2 text-sm">
+                <svg className="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <Link href="/investors" className="text-slate-400 hover:text-teal-400 transition-colors">
+                  For Investors
                 </Link>
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <svg className="w-4 h-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                <Link href="/faq" className="text-slate-400 hover:text-teal-400 transition-colors">
-                  FAQ
+                <Link href="/partners" className="text-slate-400 hover:text-teal-400 transition-colors">
+                  For Partners
                 </Link>
               </li>
             </ul>
@@ -285,18 +308,12 @@ export function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-slate-500 text-sm">
-              {currentYear} TribeWellMD. All rights reserved. Made with love for medical students.
+              &copy; {currentYear} TribeWellMD. All rights reserved. Made with love for medical students.
             </p>
-            <div className="flex items-center gap-6">
-              <Link href="/privacy" className="text-slate-500 hover:text-slate-300 text-sm transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="text-slate-500 hover:text-slate-300 text-sm transition-colors">
-                Terms of Service
-              </Link>
-              <Link href="/accessibility" className="text-slate-500 hover:text-slate-300 text-sm transition-colors">
-                Accessibility
-              </Link>
+            <div className="flex items-center gap-6 text-sm text-slate-500">
+              <span className="cursor-default" title="Coming soon">Privacy</span>
+              <span className="cursor-default" title="Coming soon">Terms</span>
+              <span className="cursor-default" title="Coming soon">Accessibility</span>
             </div>
           </div>
         </div>
