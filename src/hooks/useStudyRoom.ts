@@ -82,6 +82,7 @@ export function useStudyRoom(options: UseStudyRoomOptions): UseStudyRoomReturn {
 
   // Local timer state for smooth countdown
   const [localTimerRemaining, setLocalTimerRemaining] = useState(TIMER_DURATIONS.focus);
+  const [localTimerRunning, setLocalTimerRunning] = useState(false);
 
   const channelRef = useRef<RealtimeChannel | null>(null);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -91,7 +92,7 @@ export function useStudyRoom(options: UseStudyRoomOptions): UseStudyRoomReturn {
   const isHost = session?.hostId === userId;
   const currentParticipant = participants.find((p) => p.userId === userId) || null;
   const timerMode = session?.timerMode || 'focus';
-  const timerIsRunning = session?.timerIsRunning || false;
+  const timerIsRunning = localTimerRunning || (session?.timerIsRunning || false);
   const pomodorosCompleted = session?.timerSessionsCompleted || 0;
   const timerDuration = session?.timerDuration || TIMER_DURATIONS.focus;
   const timerProgress =
@@ -127,6 +128,7 @@ export function useStudyRoom(options: UseStudyRoomOptions): UseStudyRoomReturn {
         setParticipants(participantsData);
         setMessages(messagesData);
         setLocalTimerRemaining(sessionData.timerRemaining);
+        setLocalTimerRunning(sessionData.timerIsRunning);
       } catch (e) {
         console.error('Error loading study room:', e);
         setError('Failed to load study room');
@@ -182,6 +184,7 @@ export function useStudyRoom(options: UseStudyRoomOptions): UseStudyRoomReturn {
       });
 
       setLocalTimerRemaining(timerPayload.remaining);
+      setLocalTimerRunning(timerPayload.isRunning);
     });
 
     // New messages (postgres_changes)
@@ -340,6 +343,9 @@ export function useStudyRoom(options: UseStudyRoomOptions): UseStudyRoomReturn {
   const startTimer = useCallback(async () => {
     if (!isHost || !sessionId) return;
 
+    // Update local state immediately for instant UI feedback
+    setLocalTimerRunning(true);
+
     const now = new Date().toISOString();
 
     await updateSessionTimer(sessionId, {
@@ -354,6 +360,9 @@ export function useStudyRoom(options: UseStudyRoomOptions): UseStudyRoomReturn {
 
   const pauseTimer = useCallback(async () => {
     if (!isHost || !sessionId) return;
+
+    // Update local state immediately
+    setLocalTimerRunning(false);
 
     await updateSessionTimer(sessionId, {
       timerIsRunning: false,
@@ -370,7 +379,11 @@ export function useStudyRoom(options: UseStudyRoomOptions): UseStudyRoomReturn {
   const resetTimer = useCallback(async () => {
     if (!isHost || !sessionId) return;
 
-    const duration = TIMER_DURATIONS[timerMode];
+    const duration = timerDuration || TIMER_DURATIONS[timerMode];
+
+    // Update local state immediately
+    setLocalTimerRunning(false);
+    setLocalTimerRemaining(duration);
 
     await updateSessionTimer(sessionId, {
       timerRemaining: duration,
