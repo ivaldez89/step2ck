@@ -1,6 +1,10 @@
 export { CalendarHub } from './CalendarHub';
+export { UnifiedCalendarHub } from './UnifiedCalendarHub';
 export { MonthView } from './MonthView';
 export { WeekView } from './WeekView';
 export { DayView } from './DayView';
 export { AgendaView } from './AgendaView';
 export { EventModal } from './EventModal';
+export { TaskSidebar } from './TaskSidebar';
+export { TaskModal } from './TaskModal';
+export { QuickTaskInput } from './QuickTaskInput';
