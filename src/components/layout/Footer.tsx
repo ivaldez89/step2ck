@@ -280,9 +280,9 @@ export function Footer() {
               &copy; {currentYear} TribeWellMD. All rights reserved. Made with love for medical students.
             </p>
             <div className="flex items-center gap-6 text-sm text-slate-500">
-              <span className="cursor-default" title="Coming soon">Privacy</span>
-              <span className="cursor-default" title="Coming soon">Terms</span>
-              <span className="cursor-default" title="Coming soon">Accessibility</span>
+              <Link href="/privacy" className="hover:text-slate-300 transition-colors">Privacy</Link>
+              <Link href="/terms" className="hover:text-slate-300 transition-colors">Terms</Link>
+              <Link href="/accessibility" className="hover:text-slate-300 transition-colors">Accessibility</Link>
             </div>
           </div>
         </div>
