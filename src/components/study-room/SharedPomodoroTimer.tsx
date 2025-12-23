@@ -17,6 +17,8 @@ interface SharedPomodoroTimerProps {
   onModeChange: (mode: TimerMode) => void;
   onDurationChange?: (mode: TimerMode, minutes: number) => void;
   formatTime: (seconds: number) => string;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 // Preset options for focus time (in minutes)
@@ -38,6 +40,8 @@ export function SharedPomodoroTimer({
   onModeChange,
   onDurationChange,
   formatTime,
+  collapsed = false,
+  onToggleCollapse,
 }: SharedPomodoroTimerProps) {
   const [showSettings, setShowSettings] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -130,8 +134,95 @@ export function SharedPomodoroTimer({
   const circumference = radius * 2 * Math.PI;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
+  // Collapsed view - minimal timer bar
+  if (collapsed) {
+    return (
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm px-4 py-3">
+        <div className="flex items-center justify-between gap-4">
+          {/* Timer Display */}
+          <div className="flex items-center gap-3">
+            <div
+              className={`w-3 h-3 rounded-full ${isRunning ? 'animate-pulse' : ''}`}
+              style={{ backgroundColor: colors.tab.replace('bg-', '').includes('rose') ? '#f43f5e' : colors.tab.includes('emerald') ? '#10b981' : '#3b82f6' }}
+            />
+            <span className={`text-2xl font-bold tabular-nums ${colors.text} dark:text-white`}>
+              {formatTime(remaining)}
+            </span>
+            <span className="text-sm text-slate-500 dark:text-slate-400">
+              {TIMER_MODE_LABELS[mode]}
+            </span>
+          </div>
+
+          {/* Controls */}
+          <div className="flex items-center gap-2">
+            {isHost && (
+              <>
+                {isRunning ? (
+                  <button
+                    onClick={onPause}
+                    className="p-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors"
+                    title="Pause"
+                  >
+                    <svg className="w-5 h-5 text-slate-600 dark:text-slate-300" fill="currentColor" viewBox="0 0 24 24">
+                      <rect x="6" y="4" width="4" height="16" rx="1" />
+                      <rect x="14" y="4" width="4" height="16" rx="1" />
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    onClick={onStart}
+                    className={`p-2 bg-gradient-to-r ${colors.bg} rounded-lg transition-colors`}
+                    title="Start"
+                  >
+                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </button>
+                )}
+              </>
+            )}
+
+            {/* Expand Button */}
+            {onToggleCollapse && (
+              <button
+                onClick={onToggleCollapse}
+                className="p-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors"
+                title="Expand Timer"
+              >
+                <svg className="w-5 h-5 text-slate-600 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Progress bar */}
+        <div className="mt-2 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div
+            className={`h-full transition-all duration-1000 ${colors.tab}`}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6 relative">
+      {/* Collapse Button */}
+      {onToggleCollapse && (
+        <button
+          onClick={onToggleCollapse}
+          className="absolute top-3 right-3 p-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors"
+          title="Collapse Timer"
+        >
+          <svg className="w-4 h-4 text-slate-600 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+          </svg>
+        </button>
+      )}
+
       {/* Mode Tabs */}
       <div className="flex justify-center gap-2 mb-6">
         {(['focus', 'shortBreak', 'longBreak'] as TimerMode[]).map((m) => (
