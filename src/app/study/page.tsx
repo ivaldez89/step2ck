@@ -582,8 +582,8 @@ export default function StudyPage() {
             <section className="mb-8 animate-fade-in-up">
               <div className={`relative rounded-3xl ${
                 stats.dueToday > 0
-                  ? 'bg-gradient-to-br from-tribe-sage-500 via-cyan-500 to-blue-600'
-                  : 'bg-gradient-to-br from-tribe-sage-500 via-teal-500 to-cyan-600'
+                  ? 'bg-gradient-to-br from-[#5B7B6D] via-[#6B8B7D] to-[#7FA08F]'
+                  : 'bg-gradient-to-br from-[#5B7B6D] via-[#6B8B7D] to-[#7FA08F]'
               } p-8 md:p-10 shadow-2xl`}>
                 {/* Animated background elements - contained with overflow-hidden */}
                 <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
@@ -658,7 +658,7 @@ export default function StudyPage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                           </svg>
                           Start Studying
-                          <span className="px-2.5 py-0.5 bg-tribe-sage-500 text-white text-sm rounded-full">
+                          <span className="px-2.5 py-0.5 bg-[#5B7B6D] text-white text-sm rounded-full">
                             {filteredDueCards.length}
                           </span>
                           <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -759,8 +759,8 @@ export default function StudyPage() {
                     <div
                       className={`group relative p-6 rounded-2xl shadow-lg transition-all duration-300 overflow-hidden ${
                         hasWeakTopics
-                          ? 'bg-gradient-to-br from-orange-500 to-red-600 shadow-orange-500/25'
-                          : 'bg-gradient-to-br from-tribe-sage-500 to-tribe-sage-600 shadow-tribe-sage-500/25'
+                          ? 'bg-gradient-to-br from-[#A89070] to-[#8B7355] shadow-[#8B7355]/25'
+                          : 'bg-gradient-to-br from-[#5B7B6D] to-[#4A6A5C] shadow-[#5B7B6D]/25'
                       } text-white`}
                     >
                       <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
@@ -801,7 +801,7 @@ export default function StudyPage() {
                 })()}
 
                 {/* Box 2: Browse Cards by Shelf / Topic */}
-                <div className="relative p-6 bg-gradient-to-br from-tribe-sage-500 to-cyan-600 rounded-2xl shadow-lg shadow-tribe-sage-500/25 text-white z-20">
+                <div className="relative p-6 bg-gradient-to-br from-[#5B7B6D] to-[#6B8B7D] rounded-2xl shadow-lg shadow-[#5B7B6D]/25 text-white z-20">
                   <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
                     <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
                   </div>
@@ -901,7 +901,7 @@ export default function StudyPage() {
                 {/* Box 3: Your Progress */}
                 <Link
                   href="/study/progress"
-                  className="group relative p-6 bg-gradient-to-br from-tribe-sage-500 to-tribe-sage-600 rounded-2xl shadow-lg shadow-tribe-sage-500/25 hover:shadow-tribe-sage-500/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
+                  className="group relative p-6 bg-gradient-to-br from-[#5B7B6D] to-[#4A6A5C] rounded-2xl shadow-lg shadow-[#5B7B6D]/25 hover:shadow-[#5B7B6D]/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
                 >
                   <div className="relative z-10">
                     <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center mb-4">
@@ -938,16 +938,18 @@ export default function StudyPage() {
             {/* Daily Challenge Section */}
             {cards.length > 0 && (
               <section className="mb-8 animate-fade-in-up animation-delay-200">
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 p-6 shadow-lg">
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#A89070] via-[#8B7355] to-[#7A6348] p-6 shadow-lg">
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute -top-20 -right-20 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
-                    <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-yellow-300/20 rounded-full blur-2xl" />
+                    <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-[#C4A77D]/20 rounded-full blur-2xl" />
                   </div>
 
                   <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-2xl">
-                        🎯
+                      <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center">
+                        <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                        </svg>
                       </div>
                       <div>
                         <div className="flex items-center gap-2 mb-1">
@@ -967,11 +969,11 @@ export default function StudyPage() {
                       disabled={filteredDueCards.length === 0}
                       className={`px-6 py-3 font-bold rounded-xl shadow-lg transition-all ${
                         filteredDueCards.length > 0
-                          ? 'bg-white hover:bg-amber-50 text-amber-600 hover:scale-105'
+                          ? 'bg-white hover:bg-[#F5F0E8] text-[#8B7355] hover:scale-105'
                           : 'bg-white/30 text-white/60 cursor-not-allowed'
                       }`}
                     >
-                      {filteredDueCards.length > 0 ? 'Start Challenge →' : 'No Cards Due'}
+                      {filteredDueCards.length > 0 ? 'Start Challenge' : 'No Cards Due'}
                     </button>
                   </div>
                 </div>
@@ -984,15 +986,15 @@ export default function StudyPage() {
                 {/* Rapid Review */}
                 <Link
                   href="/study/rapid-review"
-                  className="group flex flex-col items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-amber-300 dark:hover:border-amber-600 hover:shadow-lg transition-all text-center"
+                  className="group flex flex-col items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-[#A89070] dark:hover:border-[#C4A77D] hover:shadow-lg transition-all text-center"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#A89070] to-[#8B7355] flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">Rapid Review</h3>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-[#8B7355] dark:group-hover:text-[#C4A77D] transition-colors">Rapid Review</h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400">Audio TTS mode</p>
                   </div>
                 </Link>
@@ -1000,15 +1002,15 @@ export default function StudyPage() {
                 {/* AI Generate */}
                 <Link
                   href="/generate"
-                  className="group flex flex-col items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-violet-300 dark:hover:border-violet-600 hover:shadow-lg transition-all text-center"
+                  className="group flex flex-col items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-[#6B8B7D] dark:hover:border-[#7FA08F] hover:shadow-lg transition-all text-center"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#6B8B7D] to-[#5B7B6D] flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">AI Generate</h3>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-[#5B7B6D] dark:group-hover:text-[#7FA08F] transition-colors">AI Generate</h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400">From your notes</p>
                   </div>
                 </Link>
@@ -1016,15 +1018,15 @@ export default function StudyPage() {
                 {/* Import Cards */}
                 <Link
                   href="/import"
-                  className="group flex flex-col items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-teal-300 dark:hover:border-tribe-sage-600 hover:shadow-lg transition-all text-center"
+                  className="group flex flex-col items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-[#5B7B6D] dark:hover:border-[#7FA08F] hover:shadow-lg transition-all text-center"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-tribe-sage-500 to-cyan-500 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#5B7B6D] to-[#6B8B7D] flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-tribe-sage-600 dark:group-hover:text-tribe-sage-400 transition-colors">Import Cards</h3>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-[#5B7B6D] dark:group-hover:text-[#7FA08F] transition-colors">Import Cards</h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400">Anki or CSV</p>
                   </div>
                 </Link>
@@ -1032,15 +1034,15 @@ export default function StudyPage() {
                 {/* Card Library */}
                 <Link
                   href="/library"
-                  className="group flex flex-col items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-lg transition-all text-center"
+                  className="group flex flex-col items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-[#8B7355] dark:hover:border-[#A89070] hover:shadow-lg transition-all text-center"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#8B7355] to-[#6B5A48] flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Card Library</h3>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-[#8B7355] dark:group-hover:text-[#C4A77D] transition-colors">Card Library</h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400">Browse all cards</p>
                   </div>
                 </Link>

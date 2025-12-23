@@ -28,7 +28,7 @@ export const PARTNER_CHARITIES: Charity[] = [
     description: 'Reducing burnout in healthcare and safeguarding the well-being of healthcare professionals',
     mission: 'To reduce burnout in the health professional workforce and safeguard their well-being and job satisfaction.',
     focus: 'Physician Wellness',
-    icon: '💜',
+    icon: 'Heart',
     website: 'https://drlornabreen.org',
     ein: '85-3879498',
     verified: true,
@@ -47,7 +47,7 @@ export const PARTNER_CHARITIES: Charity[] = [
     description: 'Building better lives for Americans affected by mental illness',
     mission: 'To provide advocacy, education, support and public awareness so that all individuals and families affected by mental illness can build better lives.',
     focus: 'Mental Health',
-    icon: '💚',
+    icon: 'HeartHand',
     website: 'https://nami.org',
     ein: '43-1201653',
     verified: true,
@@ -66,7 +66,7 @@ export const PARTNER_CHARITIES: Charity[] = [
     description: 'Providing free healthcare to underserved communities',
     mission: 'To prevent pain and alleviate suffering by providing free quality healthcare to those in need.',
     focus: 'Healthcare Access',
-    icon: '🏥',
+    icon: 'Hospital',
     website: 'https://ramusa.org',
     ein: '58-1808756',
     verified: true,
@@ -85,7 +85,7 @@ export const PARTNER_CHARITIES: Charity[] = [
     description: 'Supporting underrepresented minority medical students',
     mission: 'To support current and future underrepresented minority medical students, address the needs of underserved communities, and increase the number of clinically excellent, culturally competent and socially conscious physicians.',
     focus: 'Medical Education',
-    icon: '🎓',
+    icon: 'GraduationCap',
     website: 'https://snma.org',
     ein: '52-1136586',
     verified: true,
@@ -104,7 +104,7 @@ export const PARTNER_CHARITIES: Charity[] = [
     description: 'Bringing modern medical care to the world\'s poorest communities',
     mission: 'To provide a preferential option for the poor in health care by working in partnership with impoverished communities.',
     focus: 'Global Health',
-    icon: '🌍',
+    icon: 'Globe',
     website: 'https://pih.org',
     ein: '04-3567502',
     verified: true,
@@ -133,42 +133,42 @@ export const getFeaturedCharities = (): Charity[] => {
   return PARTNER_CHARITIES.filter(c => c.featured);
 };
 
-// Charity categories with metadata
+// Charity categories with metadata - uses icon names from Icons.tsx
 export const CHARITY_CATEGORIES = {
   'physician-wellness': {
     id: 'physician-wellness',
     title: 'Physician Wellness',
     description: 'Supporting the mental health and wellbeing of healthcare workers',
-    icon: '💜',
-    color: 'from-purple-500 to-indigo-500'
+    icon: 'Heart',
+    color: 'from-[#8B7355] to-[#A89070]'
   },
   'mental-health': {
     id: 'mental-health',
     title: 'Mental Health',
     description: 'Improving mental health awareness, treatment, and support',
-    icon: '💚',
-    color: 'from-green-500 to-emerald-500'
+    icon: 'HeartHand',
+    color: 'from-[#5B7B6D] to-[#7FA08F]'
   },
   'healthcare-access': {
     id: 'healthcare-access',
     title: 'Healthcare Access',
     description: 'Providing medical care to underserved communities',
-    icon: '🏥',
-    color: 'from-blue-500 to-cyan-500'
+    icon: 'Hospital',
+    color: 'from-[#5B7B6D] to-[#6D8B7D]'
   },
   'medical-education': {
     id: 'medical-education',
     title: 'Medical Education',
     description: 'Supporting medical students and training programs',
-    icon: '🎓',
-    color: 'from-amber-500 to-orange-500'
+    icon: 'GraduationCap',
+    color: 'from-[#A89070] to-[#C4A77D]'
   },
   'global-health': {
     id: 'global-health',
     title: 'Global Health',
     description: 'Addressing health challenges worldwide',
-    icon: '🌍',
-    color: 'from-teal-500 to-cyan-500'
+    icon: 'Globe',
+    color: 'from-[#5B7B6D] to-[#6D9B8D]'
   }
 } as const;
 

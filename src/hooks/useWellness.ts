@@ -54,7 +54,7 @@ const createDefaultProfile = (): UserWellnessProfile => ({
   moodHistory: []
 });
 
-// Sample villages for the community
+// Sample villages for the community - uses icon names from Icons.tsx
 const createSampleVillages = (): Village[] => [
   {
     id: 'village-im-wellness',
@@ -62,9 +62,9 @@ const createSampleVillages = (): Village[] => [
     type: 'rotation',
     description: 'Supporting each other through the IM rotation grind',
     members: [
-      { id: '1', name: 'Sarah M.', avatar: '👩‍⚕️', role: 'founder', joinedAt: '2024-01-01', villagePoints: 450, streak: 12, isOnline: true },
-      { id: '2', name: 'James K.', avatar: '👨‍⚕️', role: 'moderator', joinedAt: '2024-01-15', villagePoints: 380, streak: 8, isOnline: false },
-      { id: '3', name: 'Emily R.', avatar: '👩‍⚕️', role: 'member', joinedAt: '2024-02-01', villagePoints: 220, streak: 5, isOnline: true },
+      { id: '1', name: 'Sarah M.', avatar: 'Doctor', role: 'founder', joinedAt: '2024-01-01', villagePoints: 450, streak: 12, isOnline: true },
+      { id: '2', name: 'James K.', avatar: 'Doctor', role: 'moderator', joinedAt: '2024-01-15', villagePoints: 380, streak: 8, isOnline: false },
+      { id: '3', name: 'Emily R.', avatar: 'Doctor', role: 'member', joinedAt: '2024-02-01', villagePoints: 220, streak: 5, isOnline: true },
     ],
     memberCount: 24,
     cause: 'physician-wellness',
@@ -72,8 +72,8 @@ const createSampleVillages = (): Village[] => [
     weeklyGoal: 500,
     weeklyProgress: 380,
     createdAt: '2024-01-01',
-    icon: '🏥',
-    color: 'blue'
+    icon: 'Hospital',
+    color: 'sage'
   },
   {
     id: 'village-mindful-medics',
@@ -81,8 +81,8 @@ const createSampleVillages = (): Village[] => [
     type: 'wellness',
     description: 'Daily mindfulness and meditation practice for busy med students',
     members: [
-      { id: '4', name: 'Alex T.', avatar: '🧘', role: 'founder', joinedAt: '2024-01-01', villagePoints: 680, streak: 21, isOnline: true },
-      { id: '5', name: 'Priya S.', avatar: '👩‍⚕️', role: 'member', joinedAt: '2024-01-20', villagePoints: 340, streak: 14, isOnline: true },
+      { id: '4', name: 'Alex T.', avatar: 'Meditation', role: 'founder', joinedAt: '2024-01-01', villagePoints: 680, streak: 21, isOnline: true },
+      { id: '5', name: 'Priya S.', avatar: 'Doctor', role: 'member', joinedAt: '2024-01-20', villagePoints: 340, streak: 14, isOnline: true },
     ],
     memberCount: 42,
     cause: 'mental-health-awareness',
@@ -90,8 +90,8 @@ const createSampleVillages = (): Village[] => [
     weeklyGoal: 600,
     weeklyProgress: 520,
     createdAt: '2024-01-01',
-    icon: '🧘',
-    color: 'purple'
+    icon: 'Meditation',
+    color: 'olive'
   },
   {
     id: 'village-sleep-squad',
@@ -105,8 +105,8 @@ const createSampleVillages = (): Village[] => [
     weeklyGoal: 300,
     weeklyProgress: 180,
     createdAt: '2024-02-01',
-    icon: '😴',
-    color: 'indigo'
+    icon: 'Moon',
+    color: 'slate'
   },
   {
     id: 'village-neuro-nerds',
@@ -120,8 +120,8 @@ const createSampleVillages = (): Village[] => [
     weeklyGoal: 400,
     weeklyProgress: 290,
     createdAt: '2024-01-15',
-    icon: '🧠',
-    color: 'pink'
+    icon: 'Brain',
+    color: 'brown'
   }
 ];
 

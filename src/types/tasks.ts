@@ -33,31 +33,31 @@ export interface TaskStats {
   studyWellnessBalance: number; // Percentage of wellness tasks
 }
 
-// Category configuration
+// Category configuration - uses icon names that map to SVG icons in Icons.tsx
 export const TASK_CATEGORIES: Record<TaskCategory, { label: string; icon: string; color: string; bgColor: string }> = {
   study: {
     label: 'Study',
-    icon: '📚',
-    color: 'text-blue-600 dark:text-blue-400',
-    bgColor: 'bg-blue-100 dark:bg-blue-900/30',
+    icon: 'Book',
+    color: 'text-[#5B7B6D] dark:text-[#7FA08F]',
+    bgColor: 'bg-[#E8E0D5] dark:bg-[#3D4A44]',
   },
   clinical: {
     label: 'Clinical',
-    icon: '🏥',
-    color: 'text-rose-600 dark:text-rose-400',
-    bgColor: 'bg-rose-100 dark:bg-rose-900/30',
+    icon: 'Hospital',
+    color: 'text-[#8B7355] dark:text-[#C4A77D]',
+    bgColor: 'bg-[#E8E0D5] dark:bg-[#3D3832]',
   },
   personal: {
     label: 'Personal',
-    icon: '👤',
-    color: 'text-purple-600 dark:text-purple-400',
-    bgColor: 'bg-purple-100 dark:bg-purple-900/30',
+    icon: 'Person',
+    color: 'text-[#6B7B8C] dark:text-[#9CAAB8]',
+    bgColor: 'bg-[#E8E4DE] dark:bg-[#3A3F44]',
   },
   wellness: {
     label: 'Wellness',
-    icon: '💚',
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
+    icon: 'Heart',
+    color: 'text-[#5DB075] dark:text-[#7FC796]',
+    bgColor: 'bg-[#E5EDE8] dark:bg-[#2D3D34]',
   },
 };
 
