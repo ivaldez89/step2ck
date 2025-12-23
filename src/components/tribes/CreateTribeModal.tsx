@@ -12,12 +12,12 @@ interface CreateTribeModalProps {
 const TRIBE_ICONS = ['🌊', '🔬', '🧘', '📚', '❤️', '🌱', '🎯', '💪', '🧠', '🌍', '🤝', '⭐'];
 
 const TRIBE_COLORS = [
-  { value: 'from-cyan-500 to-blue-600', label: 'Ocean' },
-  { value: 'from-tribe-sage-500 to-tribe-sage-600', label: 'Forest' },
-  { value: 'from-purple-500 to-indigo-600', label: 'Galaxy' },
-  { value: 'from-red-500 to-rose-600', label: 'Ruby' },
-  { value: 'from-amber-500 to-orange-600', label: 'Sunset' },
-  { value: 'from-pink-500 to-fuchsia-600', label: 'Bloom' },
+  { value: 'from-[#3D5A4C] to-[#2D4A3C]', label: 'Deep Forest' },
+  { value: 'from-[#5B7B6D] to-[#3D5A4C]', label: 'Forest' },
+  { value: 'from-[#6B8B7D] to-[#5B7B6D]', label: 'Sage' },
+  { value: 'from-[#8B7355] to-[#6B5344]', label: 'Bark' },
+  { value: 'from-[#A89070] to-[#8B7355]', label: 'Sand' },
+  { value: 'from-[#C4A77D] to-[#A89070]', label: 'Wheat' },
 ];
 
 const CAUSES: { value: SocialCause; label: string }[] = [
@@ -38,7 +38,7 @@ export function CreateTribeModal({ isOpen, onClose, onCreate }: CreateTribeModal
     type: 'study',
     visibility: 'public',
     icon: '🌊',
-    color: 'from-cyan-500 to-blue-600',
+    color: 'from-[#5B7B6D] to-[#3D5A4C]',
   });
   const [includeGoal, setIncludeGoal] = useState(false);
 
@@ -56,7 +56,7 @@ export function CreateTribeModal({ isOpen, onClose, onCreate }: CreateTribeModal
       type: 'study',
       visibility: 'public',
       icon: '🌊',
-      color: 'from-cyan-500 to-blue-600',
+      color: 'from-[#5B7B6D] to-[#3D5A4C]',
     });
     setIncludeGoal(false);
     onClose();

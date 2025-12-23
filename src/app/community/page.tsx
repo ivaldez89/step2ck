@@ -20,7 +20,7 @@ export default function CommunityPage() {
   const totalTribePoints = userTribes.reduce((sum, t) => sum + (t.totalPoints || 0), 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-amber-50/30 dark:from-slate-900 dark:to-amber-950/20">
+    <div className="min-h-screen bg-[#E8DFD0] dark:bg-slate-900">
       <Header />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -72,7 +72,7 @@ export default function CommunityPage() {
         </section>
 
         {/* Tab Navigation */}
-        <div className="flex gap-2 mb-6 border-b border-slate-200 dark:border-slate-700 overflow-x-auto animate-fade-in-up animation-delay-100">
+        <div className="flex gap-2 mb-6 border-b border-[#D4C4B0] dark:border-slate-700 overflow-x-auto animate-fade-in-up animation-delay-100">
           {[
             { id: 'overview', label: 'Overview', icon: <Icons.Chart /> },
             { id: 'tribes', label: 'My Tribes', icon: <Icons.Village /> },
@@ -186,9 +186,9 @@ export default function CommunityPage() {
 
             {/* My Tribes Preview */}
             {userTribes.length > 0 ? (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white">My Tribes</h3>
+                  <h3 className="text-lg font-semibold text-[#3D5A4C] dark:text-white">My Tribes</h3>
                   <Link
                     href="/tribes"
                     className="text-sm text-[#8B7355] dark:text-[#C4A77D] hover:underline"
@@ -241,7 +241,7 @@ export default function CommunityPage() {
                 </div>
               </div>
             ) : (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 text-center">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-8 text-center">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-[#E8E0D5] dark:bg-[#3D4A44] flex items-center justify-center text-[#5B7B6D] dark:text-[#7FA08F]">
                   <Icons.Village />
                 </div>
@@ -289,17 +289,17 @@ export default function CommunityPage() {
               <>
                 {/* Tribe Stats */}
                 <div className="grid md:grid-cols-3 gap-4">
-                  <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-6 text-center">
                     <p className="text-3xl font-bold text-[#8B7355] dark:text-[#C4A77D]">{userTribes.length}</p>
-                    <p className="text-slate-600 dark:text-slate-400">Tribes Joined</p>
+                    <p className="text-[#6B5344]/70 dark:text-slate-400">Tribes Joined</p>
                   </div>
-                  <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-6 text-center">
                     <p className="text-3xl font-bold text-[#5B7B6D] dark:text-[#7FA08F]">{totalTribeMembers}</p>
-                    <p className="text-slate-600 dark:text-slate-400">Total Members</p>
+                    <p className="text-[#6B5344]/70 dark:text-slate-400">Total Members</p>
                   </div>
-                  <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 text-center">
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-6 text-center">
                     <p className="text-3xl font-bold text-[#6B8B7D] dark:text-[#8BA89A]">{totalTribePoints.toLocaleString()}</p>
-                    <p className="text-slate-600 dark:text-slate-400">Collective Points</p>
+                    <p className="text-[#6B5344]/70 dark:text-slate-400">Collective Points</p>
                   </div>
                 </div>
 
@@ -309,7 +309,7 @@ export default function CommunityPage() {
                     <Link
                       key={tribe.id}
                       href={`/tribes/${tribe.id}`}
-                      className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 hover:shadow-lg transition-all"
+                      className="bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-6 hover:shadow-lg transition-all"
                     >
                       <div className="flex items-start gap-4">
                         <div
@@ -371,12 +371,12 @@ export default function CommunityPage() {
                 </div>
               </>
             ) : (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-12 text-center">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-12 text-center">
                 <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-[#E8E0D5] dark:bg-[#3D4A44] flex items-center justify-center text-[#5B7B6D] dark:text-[#7FA08F]">
                   <Icons.Village />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Tribes Yet</h3>
-                <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md mx-auto">
+                <h3 className="text-xl font-bold text-[#3D5A4C] dark:text-white mb-2">No Tribes Yet</h3>
+                <p className="text-[#6B5344]/70 dark:text-slate-400 mb-6 max-w-md mx-auto">
                   Join tribes to connect with peers, study together, and make a collective impact on causes you care about.
                 </p>
                 <Link
@@ -429,7 +429,7 @@ export default function CommunityPage() {
             {/* How It Works Link */}
             <Link
               href="/impact"
-              className="block bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 hover:shadow-lg transition-all"
+              className="block bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-6 hover:shadow-lg transition-all"
             >
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#8B7355] to-[#A89070] flex items-center justify-center text-white">
@@ -469,8 +469,8 @@ export default function CommunityPage() {
             </Link>
 
             {/* Conversion Info */}
-            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
-              <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Conversion Rate</h3>
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-6">
+              <h3 className="font-semibold text-[#3D5A4C] dark:text-white mb-4">Conversion Rate</h3>
               <div className="grid sm:grid-cols-3 gap-4">
                 <div className="p-4 bg-[#F5F0E8] dark:bg-slate-700/50 rounded-xl text-center">
                   <p className="text-xl font-bold text-[#5B7B6D] dark:text-[#7FA08F]">10 XP</p>
@@ -498,7 +498,7 @@ export default function CommunityPage() {
             {/* Coming Soon Features */}
             <div className="grid md:grid-cols-2 gap-4">
               {/* Mentorship */}
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-6">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#5B7B6D] to-[#6B8B7D] flex items-center justify-center text-white">
                     <Icons.Target />
@@ -517,7 +517,7 @@ export default function CommunityPage() {
               </div>
 
               {/* Day in the Life */}
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-6">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#6B8B7D] to-[#7FA08F] flex items-center justify-center text-white">
                     <Icons.Camera />
@@ -536,7 +536,7 @@ export default function CommunityPage() {
               </div>
 
               {/* Anonymous Support */}
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-6">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#A89070] to-[#C4A77D] flex items-center justify-center text-white">
                     <Icons.Chat />
@@ -555,7 +555,7 @@ export default function CommunityPage() {
               </div>
 
               {/* Events */}
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0]/50 dark:border-slate-700 shadow-md shadow-[#6B5344]/5 p-6">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#8B7355] to-[#A89070] flex items-center justify-center text-white">
                     <Icons.Calendar />

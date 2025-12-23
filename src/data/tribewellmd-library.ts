@@ -79,7 +79,7 @@ export const shelfCategories: CardCategory[] = [
     name: 'Surgery',
     description: 'General surgery, trauma, surgical subspecialties',
     icon: '🔪',
-    color: 'from-red-500 to-orange-500',
+    color: 'from-[#8B7355] to-[#6B5344]',
     subcategories: [
       {
         id: 'surg-gi',
@@ -100,7 +100,7 @@ export const shelfCategories: CardCategory[] = [
     name: 'OB/GYN',
     description: 'Obstetrics, gynecology, reproductive health',
     icon: '🤰',
-    color: 'from-pink-500 to-rose-500',
+    color: 'from-[#C4A77D] to-[#A89070]',
     subcategories: [
       {
         id: 'ob-hypertension',
@@ -142,7 +142,7 @@ export const shelfCategories: CardCategory[] = [
     name: 'Psychiatry',
     description: 'Mental health, psychopharmacology, behavioral disorders',
     icon: '🧠',
-    color: 'from-purple-500 to-violet-500',
+    color: 'from-[#6B8B7D] to-[#5B7B6D]',
     subcategories: [
       {
         id: 'psych-mood',
@@ -163,7 +163,7 @@ export const shelfCategories: CardCategory[] = [
     name: 'Neurology',
     description: 'Stroke, seizures, headaches, neuromuscular disorders',
     icon: '⚡',
-    color: 'from-indigo-500 to-blue-500',
+    color: 'from-[#5B7B6D] to-[#3D5A4C]',
     subcategories: [
       {
         id: 'neuro-stroke',
@@ -239,7 +239,7 @@ export const topicCategories: CardCategory[] = [
     name: 'Cardiology',
     description: 'Heart and vascular diseases',
     icon: '❤️',
-    color: 'from-red-500 to-rose-500',
+    color: 'from-[#8B7355] to-[#6B5344]',
     subcategories: [
       {
         id: 'card-arrhythmia',
@@ -359,7 +359,7 @@ export const topicCategories: CardCategory[] = [
     name: 'Endocrinology',
     description: 'Hormonal and metabolic disorders',
     icon: '🧬',
-    color: 'from-purple-500 to-pink-500',
+    color: 'from-[#A89070] to-[#8B7355]',
     subcategories: [
       {
         id: 'endo-diabetes',
@@ -413,7 +413,7 @@ export const topicCategories: CardCategory[] = [
     name: 'Neurology',
     description: 'Neurological disorders',
     icon: '🧠',
-    color: 'from-indigo-500 to-purple-500',
+    color: 'from-[#6B8B7D] to-[#5B7B6D]',
     subcategories: [
       {
         id: 'neuro-cva',
@@ -440,7 +440,7 @@ export const topicCategories: CardCategory[] = [
     name: 'Psychiatry',
     description: 'Mental health disorders',
     icon: '💭',
-    color: 'from-violet-500 to-purple-500',
+    color: 'from-[#7FA08F] to-[#6B8B7D]',
     subcategories: [
       {
         id: 'psych-depression',
@@ -473,7 +473,7 @@ export const topicCategories: CardCategory[] = [
     name: 'OB/GYN',
     description: 'Obstetrics and gynecology',
     icon: '🤱',
-    color: 'from-pink-500 to-rose-500',
+    color: 'from-[#C4A77D] to-[#A89070]',
     subcategories: [
       {
         id: 'ob-htn',

@@ -673,7 +673,7 @@ function createDemoTribes(): Tribe[] {
       type: 'cause',
       visibility: 'public',
       icon: '🌊',
-      color: 'from-cyan-500 to-blue-600',
+      color: 'from-[#5B7B6D] to-[#3D5A4C]',
       currentGoal: {
         id: 'goal-beach-cleanup',
         title: 'Beach Cleanup Drive',
@@ -701,7 +701,7 @@ function createDemoTribes(): Tribe[] {
       type: 'specialty',
       visibility: 'public',
       icon: '🔪',
-      color: 'from-red-500 to-rose-600',
+      color: 'from-[#8B7355] to-[#6B5344]',
       currentGoal: {
         id: 'goal-tutoring',
         title: 'Tutoring Initiative',
@@ -729,7 +729,7 @@ function createDemoTribes(): Tribe[] {
       type: 'wellness',
       visibility: 'public',
       icon: '🧘',
-      color: 'from-emerald-500 to-teal-600',
+      color: 'from-[#6B8B7D] to-[#5B7B6D]',
       currentGoal: {
         id: 'goal-community-garden',
         title: 'Community Garden',
@@ -757,7 +757,7 @@ function createDemoTribes(): Tribe[] {
       type: 'study',
       visibility: 'public',
       icon: '📚',
-      color: 'from-purple-500 to-indigo-600',
+      color: 'from-[#A89070] to-[#8B7355]',
       currentGoal: {
         id: 'goal-red-cross',
         title: 'Red Cross Support',
@@ -785,7 +785,7 @@ function createDemoTribes(): Tribe[] {
       type: 'specialty',
       visibility: 'private',
       icon: '👶',
-      color: 'from-pink-500 to-fuchsia-600',
+      color: 'from-[#C4A77D] to-[#A89070]',
       currentGoal: {
         id: 'goal-animal-shelter',
         title: 'Animal Shelter Week',

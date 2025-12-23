@@ -22,12 +22,12 @@ const typeIcons: Record<Tribe['type'], React.ReactNode> = {
 export function TribeCard({ tribe, isMember = false, onJoin }: TribeCardProps) {
   const goalProgress = tribe.currentGoal ? getGoalProgress(tribe.currentGoal) : 0;
 
-  // Type badge styles with dark mode support
+  // Type badge styles with forest theme colors
   const typeStyles: Record<Tribe['type'], string> = {
-    study: 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300',
-    specialty: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
-    wellness: 'bg-tribe-sage-100 dark:bg-tribe-sage-900/30 text-tribe-sage-700 dark:text-tribe-sage-300',
-    cause: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300',
+    study: 'bg-[#E8E0D5] dark:bg-[#A89070]/20 text-[#6B5344] dark:text-[#C4A77D]',
+    specialty: 'bg-[#E8E0D5] dark:bg-[#8B7355]/20 text-[#6B5344] dark:text-[#A89070]',
+    wellness: 'bg-[#E8E0D5] dark:bg-[#5B7B6D]/20 text-[#3D5A4C] dark:text-[#6B8B7D]',
+    cause: 'bg-[#E8E0D5] dark:bg-[#6B8B7D]/20 text-[#3D5A4C] dark:text-[#7FA08F]',
   };
 
   const handleJoinClick = (e: React.MouseEvent) => {
@@ -40,7 +40,7 @@ export function TribeCard({ tribe, isMember = false, onJoin }: TribeCardProps) {
 
   return (
     <Link href={`/tribes/${tribe.id}`}>
-      <div className="group bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-xl border border-slate-200 dark:border-slate-700 hover:border-amber-300 dark:hover:border-amber-600 transition-all duration-200 overflow-hidden cursor-pointer">
+      <div className="group bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-xl border border-[#D4C4B0]/50 dark:border-slate-700 hover:border-[#8B7355] dark:hover:border-[#A89070] transition-all duration-200 overflow-hidden cursor-pointer">
         {/* Header with gradient */}
         <div className={`px-4 py-4 bg-gradient-to-r ${tribe.color}`}>
           <div className="flex items-center justify-between">
@@ -79,7 +79,7 @@ export function TribeCard({ tribe, isMember = false, onJoin }: TribeCardProps) {
               {getTypeLabel(tribe.type)}
             </span>
             {tribe.rank > 0 && tribe.rank <= 10 && (
-              <span className="px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 flex items-center gap-1">
+              <span className="px-2 py-0.5 rounded text-xs font-medium bg-[#C4A77D]/20 dark:bg-[#C4A77D]/20 text-[#8B7355] dark:text-[#C4A77D] flex items-center gap-1">
                 <span className="w-3 h-3"><Icons.Trophy /></span>
                 #{tribe.rank}
               </span>
@@ -118,14 +118,14 @@ export function TribeCard({ tribe, isMember = false, onJoin }: TribeCardProps) {
             </div>
 
             {isMember ? (
-              <span className="px-3 py-1 text-xs font-medium bg-tribe-sage-100 dark:bg-tribe-sage-900/30 text-tribe-sage-700 dark:text-tribe-sage-300 rounded-full flex items-center gap-1">
+              <span className="px-3 py-1 text-xs font-medium bg-[#5B7B6D]/10 dark:bg-[#5B7B6D]/20 text-[#3D5A4C] dark:text-[#6B8B7D] rounded-full flex items-center gap-1">
                 <span className="w-3 h-3"><Icons.Check /></span>
                 Member
               </span>
             ) : (
               <button
                 onClick={handleJoinClick}
-                className="px-3 py-1.5 text-xs font-medium bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full hover:from-amber-600 hover:to-orange-600 transition-colors shadow-sm"
+                className="px-3 py-1.5 text-xs font-medium bg-gradient-to-r from-[#5B7B6D] to-[#3D5A4C] text-white rounded-full hover:from-[#3D5A4C] hover:to-[#2D4A3C] transition-colors shadow-sm"
               >
                 Join Tribe
               </button>
