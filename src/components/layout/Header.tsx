@@ -25,8 +25,8 @@ function NavLink({ href, children, onClick }: NavLinkProps) {
       className={`
         px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
         ${isActive
-          ? 'bg-emerald-600 text-white shadow-md'
-          : 'text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'
+          ? 'bg-tribe-sage-500 text-white shadow-soft'
+          : 'text-slate-600 dark:text-slate-300 hover:text-tribe-sage-600 dark:hover:text-tribe-sage-400 hover:bg-tribe-sage-50 dark:hover:bg-tribe-sage-900/20'
         }
       `}
     >
@@ -88,8 +88,8 @@ function NavDropdown({ label, href, items }: NavDropdownProps) {
         className={`
           flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
           ${isActive
-            ? 'bg-emerald-600 text-white shadow-md'
-            : 'text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'
+            ? 'bg-tribe-sage-500 text-white shadow-soft'
+            : 'text-slate-600 dark:text-slate-300 hover:text-tribe-sage-600 dark:hover:text-tribe-sage-400 hover:bg-tribe-sage-50 dark:hover:bg-tribe-sage-900/20'
           }
         `}
       >
@@ -101,12 +101,12 @@ function NavDropdown({ label, href, items }: NavDropdownProps) {
 
       {isOpen && (
         <div className="absolute top-full left-0 pt-1 w-64 z-[110]">
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-2">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-soft-lg border border-slate-100 dark:border-slate-700 py-2">
             {items.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="block px-4 py-3 border-l-2 border-transparent hover:border-teal-500 hover:bg-gradient-to-r hover:from-teal-50 hover:to-transparent dark:hover:from-teal-900/20 dark:hover:to-transparent transition-all duration-200"
+                className="block px-4 py-3 border-l-2 border-transparent hover:border-tribe-sage-500 hover:bg-gradient-to-r hover:from-tribe-sage-50 hover:to-transparent dark:hover:from-tribe-sage-900/20 dark:hover:to-transparent transition-all duration-200"
                 onClick={() => setIsOpen(false)}
               >
                 <span className="block text-sm font-medium text-slate-900 dark:text-white">{item.label}</span>
@@ -176,13 +176,13 @@ export function Header({ stats }: HeaderProps) {
         <div className="flex items-center justify-between h-16">
           {/* Logo - goes to appropriate home based on auth status */}
           <Link href={isAuthenticated ? "/home" : "/"} className="flex items-center gap-2 sm:gap-3 group flex-shrink-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl shadow-lg shadow-teal-500/25 group-hover:shadow-teal-500/40 transition-shadow overflow-hidden">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl shadow-soft group-hover:shadow-soft-md transition-shadow overflow-hidden">
               <img src="/logo.jpeg" alt="TribeWellMD" className="w-full h-full object-cover" />
             </div>
             <div>
               <span className="text-base sm:text-xl font-bold text-slate-900 dark:text-white">Tribe</span>
-              <span className="text-base sm:text-xl font-bold text-teal-600 dark:text-teal-400">Well</span>
-              <span className="text-base sm:text-xl font-light text-indigo-600 dark:text-indigo-400">MD</span>
+              <span className="text-base sm:text-xl font-bold text-tribe-sage-600 dark:text-tribe-sage-400">Well</span>
+              <span className="text-base sm:text-xl font-light text-tribe-sky-600 dark:text-tribe-sky-400">MD</span>
             </div>
           </Link>
 
@@ -229,7 +229,7 @@ export function Header({ stats }: HeaderProps) {
 
                 <Link
                   href="/study/flashcards"
-                  className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-teal-600 text-white shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 transition-shadow"
+                  className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-tribe-sage-500 text-white shadow-soft hover:shadow-soft-md transition-shadow"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -248,13 +248,13 @@ export function Header({ stats }: HeaderProps) {
               <div className="hidden sm:flex items-center gap-2">
                 <Link
                   href="/login"
-                  className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-tribe-sage-600 dark:hover:text-tribe-sage-400 transition-colors"
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/register"
-                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 rounded-lg shadow-md shadow-teal-500/25 transition-all"
+                  className="px-4 py-2 text-sm font-medium text-white bg-tribe-sage-500 hover:bg-tribe-sage-600 rounded-lg shadow-soft hover:shadow-soft-md transition-all"
                 >
                   Get Started
                 </Link>
@@ -283,7 +283,7 @@ export function Header({ stats }: HeaderProps) {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-teal-100 dark:border-slate-700 bg-white dark:bg-slate-900">
+        <div className="md:hidden border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900">
           <div className="max-w-7xl mx-auto px-4 py-4 space-y-2">
             {isAuthenticated ? (
               <>
@@ -342,7 +342,7 @@ export function Header({ stats }: HeaderProps) {
                   <Link
                     href="/register"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full px-4 py-3 text-center text-sm font-medium text-white bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 rounded-lg shadow-md transition-all"
+                    className="block w-full px-4 py-3 text-center text-sm font-medium text-white bg-tribe-sage-500 hover:bg-tribe-sage-600 rounded-lg shadow-soft transition-all"
                   >
                     Get Started
                   </Link>
@@ -368,8 +368,8 @@ function MobileNavLink({ href, children, onClick }: { href: string; children: Re
       className={`
         block px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200
         ${isActive
-          ? 'bg-emerald-600 text-white'
-          : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+          ? 'bg-tribe-sage-500 text-white'
+          : 'text-slate-700 dark:text-slate-200 hover:bg-tribe-sage-50 dark:hover:bg-tribe-sage-900/20'
         }
       `}
     >

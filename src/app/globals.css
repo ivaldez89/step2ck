@@ -40,24 +40,51 @@
 }
 
 @layer components {
+  /* TribeWell Brand Button - Primary sage green */
+  .btn-tribe {
+    @apply px-6 py-3 bg-tribe-sage-500 hover:bg-tribe-sage-600 text-white font-medium rounded-xl shadow-soft transition-all duration-200;
+  }
+
+  .btn-tribe:hover {
+    @apply shadow-soft-md transform -translate-y-0.5;
+  }
+
+  .btn-tribe:active {
+    @apply transform translate-y-0 shadow-soft;
+  }
+
+  /* TribeWell Card - soft shadows and subtle borders */
+  .card-tribe {
+    @apply bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-card transition-all duration-200;
+  }
+
+  .card-tribe:hover {
+    @apply shadow-card-hover border-slate-200 dark:border-slate-600;
+  }
+
+  /* TribeWell Text accent */
+  .text-tribe-accent {
+    @apply text-tribe-sage-500 dark:text-tribe-sage-400;
+  }
+
   /* Card animations */
   .card-flip {
     transform-style: preserve-3d;
     transition: transform 0.3s ease-out;
   }
-  
+
   .card-flip.flipped {
     transform: rotateY(180deg);
   }
-  
+
   /* Loading skeleton */
   .skeleton {
     @apply animate-pulse bg-slate-200 dark:bg-slate-700 rounded;
   }
-  
-  /* Focus ring for accessibility */
+
+  /* Focus ring for accessibility - using tribe sage */
   .focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900;
+    @apply focus:outline-none focus:ring-2 focus:ring-tribe-sage-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900;
   }
 }
 
@@ -72,9 +99,9 @@
     text-wrap: balance;
   }
   
-  /* Gradient text */
+  /* Gradient text - TribeWell sage green */
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-teal-600 dark:from-emerald-400 dark:to-teal-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-tribe-sage-500 to-tribe-sage-700 dark:from-tribe-sage-400 dark:to-tribe-sage-500;
   }
   
   /* Hide scrollbar but keep functionality */
