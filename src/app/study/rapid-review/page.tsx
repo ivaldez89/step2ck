@@ -82,7 +82,7 @@ export default function RapidReviewPage() {
   const [isRevealed, setIsRevealed] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [speechRate, setSpeechRate] = useState(1.0);
+  const [speechRate, setSpeechRate] = useState(1.25); // Default 1.25x speed baseline
   const [autoAdvance, setAutoAdvance] = useState(true);
   const [autoAdvanceDelay, setAutoAdvanceDelay] = useState(3);
   const [showSettings, setShowSettings] = useState(false);
@@ -131,25 +131,32 @@ export default function RapidReviewPage() {
       const englishVoices = availableVoices
         .filter(v => v.lang.startsWith('en'))
         .sort((a, b) => {
-          // Prioritize premium/enhanced voices
-          const aScore = (a.name.includes('Premium') || a.name.includes('Enhanced') || a.name.includes('Siri') ? 100 : 0) +
+          // Prioritize Aaron (en-US) first, then premium/enhanced voices
+          const aScore = (a.name.toLowerCase().includes('aaron') && a.lang === 'en-US' ? 200 : 0) +
+                        (a.name.includes('Premium') || a.name.includes('Enhanced') || a.name.includes('Siri') ? 100 : 0) +
                         (a.localService ? 10 : 0) +
                         (a.name.includes('Samantha') || a.name.includes('Alex') ? 50 : 0);
-          const bScore = (b.name.includes('Premium') || b.name.includes('Enhanced') || b.name.includes('Siri') ? 100 : 0) +
+          const bScore = (b.name.toLowerCase().includes('aaron') && b.lang === 'en-US' ? 200 : 0) +
+                        (b.name.includes('Premium') || b.name.includes('Enhanced') || b.name.includes('Siri') ? 100 : 0) +
                         (b.localService ? 10 : 0) +
                         (b.name.includes('Samantha') || b.name.includes('Alex') ? 50 : 0);
           return bScore - aScore;
         });
       setVoices(englishVoices);
-      
-      // Auto-select best voice
+
+      // Auto-select best voice - prioritize Aaron (en-US) as baseline
       if (englishVoices.length > 0 && selectedVoiceIndex === -1) {
-        // Try to find Siri or Samantha (Mac's best voices)
+        // Try to find Aaron (en-US) first - this is the baseline default
+        const aaronIndex = englishVoices.findIndex(v =>
+          v.name.toLowerCase().includes('aaron') && v.lang === 'en-US'
+        );
         const siriIndex = englishVoices.findIndex(v => v.name.includes('Siri'));
         const samanthaIndex = englishVoices.findIndex(v => v.name.includes('Samantha'));
         const premiumIndex = englishVoices.findIndex(v => v.name.includes('Premium') || v.name.includes('Enhanced'));
-        
-        if (siriIndex >= 0) setSelectedVoiceIndex(siriIndex);
+
+        // Baseline: Aaron (en-US), fallback to other quality voices
+        if (aaronIndex >= 0) setSelectedVoiceIndex(aaronIndex);
+        else if (siriIndex >= 0) setSelectedVoiceIndex(siriIndex);
         else if (samanthaIndex >= 0) setSelectedVoiceIndex(samanthaIndex);
         else if (premiumIndex >= 0) setSelectedVoiceIndex(premiumIndex);
         else setSelectedVoiceIndex(0);
@@ -182,8 +189,8 @@ export default function RapidReviewPage() {
   const getVoiceGender = (voice: SpeechSynthesisVoice): 'female' | 'male' | 'unknown' => {
     const name = voice.name.toLowerCase();
     const femaleNames = ['samantha', 'victoria', 'karen', 'moira', 'tessa', 'fiona', 'veena', 'alice', 'allison', 'ava', 'susan', 'zoe', 'nicky', 'siri female', 'female'];
-    const maleNames = ['alex', 'daniel', 'fred', 'ralph', 'tom', 'oliver', 'james', 'lee', 'siri male', 'male'];
-    
+    const maleNames = ['aaron', 'alex', 'daniel', 'fred', 'ralph', 'tom', 'oliver', 'james', 'lee', 'siri male', 'male'];
+
     if (femaleNames.some(n => name.includes(n))) return 'female';
     if (maleNames.some(n => name.includes(n))) return 'male';
     return 'unknown';
