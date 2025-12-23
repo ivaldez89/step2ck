@@ -35,7 +35,7 @@ export function TribeGoalProgress({ goal, color }: TribeGoalProgressProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+    <div className="bg-white dark:bg-slate-800 rounded-xl border border-[#D4C4B0]/50 dark:border-slate-700 overflow-hidden shadow-sm shadow-[#3D5A4C]/5">
       {/* Header */}
       <div className={`px-6 py-4 bg-gradient-to-r ${color}`}>
         <div className="flex items-center justify-between">
@@ -47,7 +47,7 @@ export function TribeGoalProgress({ goal, color }: TribeGoalProgressProps) {
             </div>
           </div>
           {isCompleted && (
-            <span className="px-3 py-1 bg-white text-tribe-sage-600 rounded-full text-sm font-semibold flex items-center gap-1">
+            <span className="px-3 py-1 bg-white text-[#5B7B6D] rounded-full text-sm font-semibold flex items-center gap-1">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
@@ -59,15 +59,15 @@ export function TribeGoalProgress({ goal, color }: TribeGoalProgressProps) {
 
       {/* Progress section */}
       <div className="p-6">
-        <p className="text-slate-600 mb-4">{goal.description}</p>
+        <p className="text-[#6B5344] dark:text-slate-300 mb-4">{goal.description}</p>
 
         {/* Progress bar */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-slate-700">Progress</span>
-            <span className="text-sm font-bold text-tribe-sage-600">{progress}%</span>
+            <span className="text-sm font-medium text-[#3D5A4C] dark:text-white">Progress</span>
+            <span className="text-sm font-bold text-[#5B7B6D] dark:text-[#6B8B7D]">{progress}%</span>
           </div>
-          <div className="h-4 bg-slate-100 rounded-full overflow-hidden">
+          <div className="h-4 bg-[#E8DFD0] dark:bg-slate-700 rounded-full overflow-hidden">
             <div
               className={`h-full bg-gradient-to-r ${color} rounded-full transition-all duration-500 relative`}
               style={{ width: `${progress}%` }}
@@ -81,29 +81,29 @@ export function TribeGoalProgress({ goal, color }: TribeGoalProgressProps) {
 
         {/* Stats grid */}
         <div className="grid grid-cols-3 gap-4 mb-4">
-          <div className="text-center p-3 bg-slate-50 rounded-lg">
-            <p className="text-2xl font-bold text-tribe-sage-600">
+          <div className="text-center p-3 bg-[#F5EFE6] dark:bg-slate-700/50 rounded-lg">
+            <p className="text-2xl font-bold text-[#5B7B6D] dark:text-[#6B8B7D]">
               {goal.currentPoints.toLocaleString()}
             </p>
-            <p className="text-xs text-slate-500">Current Points</p>
+            <p className="text-xs text-[#6B5344]/70 dark:text-slate-400">Current Points</p>
           </div>
-          <div className="text-center p-3 bg-slate-50 rounded-lg">
-            <p className="text-2xl font-bold text-slate-700">
+          <div className="text-center p-3 bg-[#F5EFE6] dark:bg-slate-700/50 rounded-lg">
+            <p className="text-2xl font-bold text-[#3D5A4C] dark:text-white">
               {goal.targetPoints.toLocaleString()}
             </p>
-            <p className="text-xs text-slate-500">Target Points</p>
+            <p className="text-xs text-[#6B5344]/70 dark:text-slate-400">Target Points</p>
           </div>
-          <div className="text-center p-3 bg-slate-50 rounded-lg">
-            <p className="text-2xl font-bold text-amber-600">
+          <div className="text-center p-3 bg-[#F5EFE6] dark:bg-slate-700/50 rounded-lg">
+            <p className="text-2xl font-bold text-[#8B7355] dark:text-[#C4A77D]">
               {(goal.targetPoints - goal.currentPoints).toLocaleString()}
             </p>
-            <p className="text-xs text-slate-500">Points to Go</p>
+            <p className="text-xs text-[#6B5344]/70 dark:text-slate-400">Points to Go</p>
           </div>
         </div>
 
         {/* Deadline & Reward */}
-        <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-          <div className="flex items-center gap-2 text-sm text-slate-600">
+        <div className="flex items-center justify-between pt-4 border-t border-[#D4C4B0]/50 dark:border-slate-700">
+          <div className="flex items-center gap-2 text-sm text-[#6B5344] dark:text-slate-300">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -116,15 +116,15 @@ export function TribeGoalProgress({ goal, color }: TribeGoalProgressProps) {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xl">🏅</span>
-            <span className="text-sm font-medium text-slate-700">{goal.reward}</span>
+            <span className="text-sm font-medium text-[#3D5A4C] dark:text-white">{goal.reward}</span>
           </div>
         </div>
       </div>
 
       {/* Motivation footer */}
       {!isCompleted && progress < 100 && (
-        <div className={`px-6 py-3 bg-gradient-to-r ${color} bg-opacity-10`}>
-          <p className="text-sm text-center">
+        <div className="px-6 py-3 bg-[#F5EFE6] dark:bg-slate-700/50 border-t border-[#D4C4B0]/50 dark:border-slate-700">
+          <p className="text-sm text-center text-[#6B5344] dark:text-slate-300">
             {progress < 25 && "🚀 Just getting started! Every point counts."}
             {progress >= 25 && progress < 50 && "💪 Great progress! Keep the momentum going."}
             {progress >= 50 && progress < 75 && "🔥 Over halfway there! The goal is in sight."}

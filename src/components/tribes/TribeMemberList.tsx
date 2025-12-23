@@ -43,9 +43,9 @@ export function TribeMemberList({ members, currentUserId = 'current-user' }: Tri
 
   const getRoleBadge = (role: TribeMember['role']) => {
     const styles = {
-      founder: 'bg-amber-100 text-amber-700',
-      moderator: 'bg-blue-100 text-blue-700',
-      member: 'bg-slate-100 text-slate-600',
+      founder: 'bg-[#C4A77D]/20 text-[#8B7355]',
+      moderator: 'bg-[#5B7B6D]/10 text-[#5B7B6D]',
+      member: 'bg-[#E8DFD0] dark:bg-slate-700 text-[#6B5344] dark:text-slate-300',
     };
     const labels = {
       founder: 'Founder',
@@ -64,12 +64,12 @@ export function TribeMemberList({ members, currentUserId = 'current-user' }: Tri
   };
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+    <div className="bg-white dark:bg-slate-800 rounded-xl border border-[#D4C4B0]/50 dark:border-slate-700 overflow-hidden shadow-sm shadow-[#3D5A4C]/5">
       {/* Search and filter */}
-      <div className="p-4 border-b border-slate-200 space-y-3">
+      <div className="p-4 border-b border-[#D4C4B0]/50 dark:border-slate-700 space-y-3">
         <div className="relative">
           <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B5344]/50 dark:text-slate-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -86,7 +86,7 @@ export function TribeMemberList({ members, currentUserId = 'current-user' }: Tri
             placeholder="Search members..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-tribe-sage-500 focus:border-tribe-sage-500"
+            className="w-full pl-10 pr-4 py-2 bg-[#F5EFE6] dark:bg-slate-700 border border-[#D4C4B0]/50 dark:border-slate-600 rounded-lg text-[#3D5A4C] dark:text-white placeholder-[#6B5344]/50 dark:placeholder-slate-400 focus:ring-2 focus:ring-[#5B7B6D] focus:border-[#5B7B6D] focus:outline-none"
           />
         </div>
 
@@ -97,8 +97,8 @@ export function TribeMemberList({ members, currentUserId = 'current-user' }: Tri
               onClick={() => setRoleFilter(role)}
               className={`px-3 py-1 text-sm rounded-lg transition-colors ${
                 roleFilter === role
-                  ? 'bg-tribe-sage-100 text-tribe-sage-700 font-medium'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-[#5B7B6D] text-white font-medium'
+                  : 'bg-[#F5EFE6] dark:bg-slate-700 text-[#6B5344] dark:text-slate-300 hover:bg-[#E8DFD0] dark:hover:bg-slate-600'
               }`}
             >
               {role === 'all' ? 'All' : role.charAt(0).toUpperCase() + role.slice(1)}s
@@ -108,55 +108,55 @@ export function TribeMemberList({ members, currentUserId = 'current-user' }: Tri
       </div>
 
       {/* Member count */}
-      <div className="px-4 py-2 bg-slate-50 text-sm text-slate-600 border-b border-slate-200">
+      <div className="px-4 py-2 bg-[#F5EFE6] dark:bg-slate-700/50 text-sm text-[#6B5344] dark:text-slate-300 border-b border-[#D4C4B0]/50 dark:border-slate-700">
         {filteredMembers.length} member{filteredMembers.length !== 1 ? 's' : ''}
         {roleFilter !== 'all' && ` (${roleFilter}s)`}
       </div>
 
       {/* Member list */}
-      <div className="divide-y divide-slate-100 max-h-[500px] overflow-y-auto">
+      <div className="divide-y divide-[#D4C4B0]/30 dark:divide-slate-700 max-h-[500px] overflow-y-auto">
         {sortedMembers.length > 0 ? (
           sortedMembers.map((member) => (
             <div
               key={member.id}
-              className={`flex items-center gap-3 p-4 hover:bg-slate-50 transition-colors ${
-                member.oderId === currentUserId ? 'bg-tribe-sage-50/50' : ''
+              className={`flex items-center gap-3 p-4 hover:bg-[#F5EFE6] dark:hover:bg-slate-700/50 transition-colors ${
+                member.oderId === currentUserId ? 'bg-[#5B7B6D]/5 dark:bg-[#5B7B6D]/10' : ''
               }`}
             >
               {/* Avatar */}
               <div className="relative">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-white font-medium text-sm">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#5B7B6D] to-[#6B8B7D] flex items-center justify-center text-white font-medium text-sm">
                   {member.avatar || getInitials(member.firstName, member.lastName)}
                 </div>
                 {member.isOnline && (
-                  <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-tribe-sage-500 border-2 border-white rounded-full" />
+                  <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#5B7B6D] border-2 border-white dark:border-slate-800 rounded-full" />
                 )}
               </div>
 
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-medium text-slate-800 truncate">
+                  <span className="font-medium text-[#3D5A4C] dark:text-white truncate">
                     {member.firstName} {member.lastName}
                     {member.oderId === currentUserId && (
-                      <span className="text-slate-400 font-normal"> (you)</span>
+                      <span className="text-[#6B5344]/70 dark:text-slate-400 font-normal"> (you)</span>
                     )}
                   </span>
                   {getRoleBadge(member.role)}
                 </div>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-[#6B5344]/70 dark:text-slate-400">
                   Joined {formatTribeTime(member.joinedAt)}
                 </p>
               </div>
 
               {/* Points */}
               <div className="text-right">
-                <p className="font-semibold text-tribe-sage-600">
+                <p className="font-semibold text-[#5B7B6D] dark:text-[#6B8B7D]">
                   {member.contributionPoints.toLocaleString()}
                 </p>
-                <p className="text-xs text-slate-400">points</p>
+                <p className="text-xs text-[#6B5344]/70 dark:text-slate-400">points</p>
                 {member.weeklyContribution > 0 && (
-                  <p className="text-xs text-tribe-sage-500">
+                  <p className="text-xs text-[#5B7B6D] dark:text-[#6B8B7D]">
                     +{member.weeklyContribution} this week
                   </p>
                 )}
@@ -164,7 +164,7 @@ export function TribeMemberList({ members, currentUserId = 'current-user' }: Tri
             </div>
           ))
         ) : (
-          <div className="p-8 text-center text-slate-500">
+          <div className="p-8 text-center text-[#6B5344]/70 dark:text-slate-400">
             <p>No members found</p>
           </div>
         )}
