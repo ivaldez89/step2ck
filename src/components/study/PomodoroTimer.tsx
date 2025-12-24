@@ -22,12 +22,26 @@ export function PomodoroTimer({ onSessionComplete }: PomodoroTimerProps) {
   const [sessionsCompleted, setSessionsCompleted] = useState(0);
   const [showPanel, setShowPanel] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // For portal - need to wait for client-side mount
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Calculate dropdown position when opening
+  const handleTogglePanel = () => {
+    if (!showPanel && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + 8, // 8px gap below button
+        left: Math.max(8, rect.left) // Keep at least 8px from left edge
+      });
+    }
+    setShowPanel(!showPanel);
+  };
 
   // Store remaining time for each mode so switching back preserves progress
   const savedTimesRef = useRef<Record<TimerMode, number>>({
@@ -173,7 +187,8 @@ export function PomodoroTimer({ onSessionComplete }: PomodoroTimerProps) {
     <div className="relative">
       {/* Toggle Button */}
       <button
-        onClick={() => setShowPanel(!showPanel)}
+        ref={buttonRef}
+        onClick={handleTogglePanel}
         className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors ${
           showPanel || isRunning
             ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
@@ -193,12 +208,18 @@ export function PomodoroTimer({ onSessionComplete }: PomodoroTimerProps) {
         <>
           {/* Backdrop to close panel */}
           <div
-            className="fixed inset-0 z-[9998] bg-black/20"
+            className="fixed inset-0 z-[9998]"
             onClick={() => setShowPanel(false)}
           />
 
-          {/* Panel - fixed modal on mobile, positioned on desktop */}
-          <div className="fixed inset-x-4 bottom-4 sm:inset-auto sm:top-20 sm:left-4 sm:right-auto w-auto sm:w-72 rounded-xl shadow-2xl border z-[9999] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+          {/* Panel - positioned directly below the button */}
+          <div
+            className="fixed w-72 rounded-xl shadow-2xl border z-[9999] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+            style={{
+              top: dropdownPosition.top,
+              left: dropdownPosition.left,
+            }}
+          >
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
