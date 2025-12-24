@@ -232,7 +232,7 @@ export default function HomePage() {
           <div className="relative bg-white dark:bg-slate-800 rounded-b-3xl shadow-xl px-6 md:px-8 pb-6">
             {/* Avatar - Overlapping cover */}
             <div className="flex flex-col md:flex-row md:items-end gap-4 -mt-16 md:-mt-20">
-              <Link href="/profile" className="relative group">
+              <Link href="/profile/settings" className="relative group">
                 <div className="w-28 h-28 md:w-36 md:h-36 rounded-2xl overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl">
                   {profile?.avatar ? (
                     <img

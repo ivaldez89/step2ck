@@ -414,7 +414,6 @@ export function Header({ stats }: HeaderProps) {
             {isAuthenticated ? (
               <>
                 <MobileNavLink href="/home" onClick={() => setMobileMenuOpen(false)}>Home</MobileNavLink>
-                <MobileNavLink href="/profile" onClick={() => setMobileMenuOpen(false)}>My Profile</MobileNavLink>
 
                 {/* Study Section */}
                 <div className="pt-2 border-t border-slate-100 dark:border-slate-800">

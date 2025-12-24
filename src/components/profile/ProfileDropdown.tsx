@@ -135,14 +135,14 @@ export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
             {/* Profile & Settings Buttons - side by side */}
             <div className="flex gap-2 mt-3">
               <Link
-                href="/profile"
+                href="/home"
                 onClick={() => setIsOpen(false)}
                 className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-tribe-sage-600 dark:text-tribe-sage-400 bg-tribe-sage-50 dark:bg-tribe-sage-900/30 hover:bg-tribe-sage-100 dark:hover:bg-teal-900/50 rounded-lg transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                Profile
+                Home
               </Link>
               <Link
                 href="/profile/settings"
