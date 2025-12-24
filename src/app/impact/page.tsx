@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { PARTNER_CHARITIES } from '@/data/charities';
+import { VillageLeaderboard } from '@/components/village/VillageLeaderboard';
 
 // Point conversion rates
 const POINT_CONVERSIONS = {
@@ -391,6 +392,23 @@ export default function ImpactPage() {
                 Suggest a Charity
               </Link>
             </div>
+          </div>
+        </section>
+
+        {/* Village Leaderboard - Live rankings */}
+        <section className="py-16 bg-white dark:bg-slate-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
+                Village Leaderboard
+              </h2>
+              <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                See how your Village (charity) ranks among all communities.
+                Every point you earn contributes to your Village&apos;s total impact.
+              </p>
+            </div>
+
+            <VillageLeaderboard variant="full" showTopContributors={true} />
           </div>
         </section>
 

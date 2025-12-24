@@ -13,13 +13,51 @@ import type {
   Achievement,
   WELLNESS_DOMAINS
 } from '@/types/wellness';
+import {
+  getCurrentVillageId,
+  addPointsToVillage,
+  getVillagePoints,
+  getTotalPointsContributed,
+  getUserProfile
+} from '@/lib/storage/profileStorage';
+import { PARTNER_CHARITIES, getCharityById } from '@/data/charities';
 
 const WELLNESS_STORAGE_KEY = 'tribewellmd_wellness_profile';
 const VILLAGES_STORAGE_KEY = 'tribewellmd_villages';
+const VILLAGE_LEADERBOARD_KEY = 'tribewellmd_village_leaderboard';
+
+// Village (Charity) leaderboard types
+export interface VillageLeaderboardEntry {
+  villageId: string;
+  villageName: string;
+  totalPoints: number;
+  totalDonated: number; // In dollars (points / 1000)
+  memberCount: number;
+  weeklyPoints: number;
+  topContributors: {
+    name: string;
+    points: number;
+  }[];
+}
+
+export interface UserVillageStats {
+  villageId: string | undefined;
+  villageName: string | undefined;
+  userPoints: number;
+  villageRank: number;
+  totalVillagePoints: number;
+  totalVillageDonated: number;
+  currentStreak: number;
+}
 
 // Calculate XP needed for each level (exponential growth)
 const getXPForLevel = (level: number): number => {
   return Math.floor(100 * Math.pow(1.5, level - 1));
+};
+
+// Points to dollars conversion (1000 points = $1)
+const pointsToDollars = (points: number): number => {
+  return points / 1000;
 };
 
 // Default wellness profile
@@ -222,9 +260,18 @@ export function useWellness() {
     } : prev);
   }, [profile]);
 
-  // Earn XP and village points
+  // Earn XP and village points (now also contributes to user's charity Village)
   const earnRewards = useCallback((xp: number, villagePoints: number, source: string) => {
     if (!profile) return;
+
+    // Contribute points to user's selected charity Village
+    const currentVillage = getCurrentVillageId();
+    if (currentVillage && villagePoints > 0) {
+      addPointsToVillage(villagePoints);
+
+      // Update global Village leaderboard
+      updateVillageLeaderboard(currentVillage, villagePoints);
+    }
 
     setProfile(prev => {
       if (!prev) return prev;
@@ -272,6 +319,50 @@ export function useWellness() {
       };
     });
   }, [profile]);
+
+  // Update global Village leaderboard when points are earned
+  const updateVillageLeaderboard = useCallback((villageId: string, points: number) => {
+    if (typeof window === 'undefined') return;
+
+    const stored = localStorage.getItem(VILLAGE_LEADERBOARD_KEY);
+    const leaderboard: Record<string, VillageLeaderboardEntry> = stored ? JSON.parse(stored) : {};
+
+    const charity = getCharityById(villageId);
+    if (!charity) return;
+
+    const userProfile = getUserProfile();
+    const userName = userProfile ? `${userProfile.firstName} ${userProfile.lastName?.[0]}.` : 'Anonymous';
+
+    if (!leaderboard[villageId]) {
+      leaderboard[villageId] = {
+        villageId,
+        villageName: charity.name,
+        totalPoints: 0,
+        totalDonated: 0,
+        memberCount: 1,
+        weeklyPoints: 0,
+        topContributors: []
+      };
+    }
+
+    leaderboard[villageId].totalPoints += points;
+    leaderboard[villageId].totalDonated = pointsToDollars(leaderboard[villageId].totalPoints);
+    leaderboard[villageId].weeklyPoints += points;
+
+    // Update top contributors
+    const existingContributor = leaderboard[villageId].topContributors.find(c => c.name === userName);
+    if (existingContributor) {
+      existingContributor.points += points;
+    } else {
+      leaderboard[villageId].topContributors.push({ name: userName, points });
+    }
+
+    // Sort and keep top 10
+    leaderboard[villageId].topContributors.sort((a, b) => b.points - a.points);
+    leaderboard[villageId].topContributors = leaderboard[villageId].topContributors.slice(0, 10);
+
+    localStorage.setItem(VILLAGE_LEADERBOARD_KEY, JSON.stringify(leaderboard));
+  }, []);
 
   // Complete a daily challenge
   const completeChallenge = useCallback((challengeId: string) => {
@@ -382,6 +473,84 @@ export function useWellness() {
     };
   }, [profile, dailyChallenges]);
 
+  // Get Village (charity) leaderboard - sorted by total points
+  const getVillageLeaderboard = useCallback((): VillageLeaderboardEntry[] => {
+    if (typeof window === 'undefined') return [];
+
+    const stored = localStorage.getItem(VILLAGE_LEADERBOARD_KEY);
+    if (!stored) {
+      // Initialize with all charities at 0 points
+      const initialLeaderboard: Record<string, VillageLeaderboardEntry> = {};
+      PARTNER_CHARITIES.forEach(charity => {
+        initialLeaderboard[charity.id] = {
+          villageId: charity.id,
+          villageName: charity.name,
+          totalPoints: 0,
+          totalDonated: 0,
+          memberCount: 0,
+          weeklyPoints: 0,
+          topContributors: []
+        };
+      });
+      localStorage.setItem(VILLAGE_LEADERBOARD_KEY, JSON.stringify(initialLeaderboard));
+      return Object.values(initialLeaderboard).sort((a, b) => b.totalPoints - a.totalPoints);
+    }
+
+    const leaderboard: Record<string, VillageLeaderboardEntry> = JSON.parse(stored);
+    return Object.values(leaderboard).sort((a, b) => b.totalPoints - a.totalPoints);
+  }, []);
+
+  // Get user's village stats and ranking
+  const getUserVillageStats = useCallback((): UserVillageStats | null => {
+    const currentVillage = getCurrentVillageId();
+    if (!currentVillage) return null;
+
+    const charity = getCharityById(currentVillage);
+    if (!charity) return null;
+
+    const userProfile = getUserProfile();
+    const userPoints = getVillagePoints(currentVillage);
+
+    const leaderboard = getVillageLeaderboard();
+    const villageEntry = leaderboard.find(v => v.villageId === currentVillage);
+    const villageRank = leaderboard.findIndex(v => v.villageId === currentVillage) + 1;
+
+    // Calculate user's current streak
+    const currentStreak = profile?.activeJourneys.reduce((max, j) => Math.max(max, j.currentStreak), 0) || 0;
+
+    return {
+      villageId: currentVillage,
+      villageName: charity.name,
+      userPoints,
+      villageRank,
+      totalVillagePoints: villageEntry?.totalPoints || 0,
+      totalVillageDonated: villageEntry?.totalDonated || 0,
+      currentStreak
+    };
+  }, [profile, getVillageLeaderboard]);
+
+  // Get global platform stats (all villages combined)
+  const getGlobalImpactStats = useCallback(() => {
+    const leaderboard = getVillageLeaderboard();
+
+    const totalPoints = leaderboard.reduce((sum, v) => sum + v.totalPoints, 0);
+    const totalDonated = pointsToDollars(totalPoints);
+    const totalMembers = leaderboard.reduce((sum, v) => sum + v.memberCount, 0);
+    const topVillage = leaderboard[0];
+
+    return {
+      totalPoints,
+      totalDonated,
+      totalMembers,
+      totalVillages: leaderboard.length,
+      topVillage: topVillage ? {
+        name: topVillage.villageName,
+        points: topVillage.totalPoints,
+        donated: topVillage.totalDonated
+      } : null
+    };
+  }, [getVillageLeaderboard]);
+
   return {
     profile,
     villages,
@@ -394,6 +563,10 @@ export function useWellness() {
     donatePoints,
     joinVillage,
     getUserVillages,
-    getStats
+    getStats,
+    // New Village (charity) functions
+    getVillageLeaderboard,
+    getUserVillageStats,
+    getGlobalImpactStats
   };
 }
