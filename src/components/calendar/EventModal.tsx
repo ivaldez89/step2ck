@@ -98,6 +98,33 @@ export function EventModal({
             />
           </div>
 
+          {/* Group Study Session Toggle */}
+          <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Group Study Session
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Create a study room others can join
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsGroupSession(!isGroupSession)}
+                className={`relative w-11 h-6 rounded-full transition-colors ${
+                  isGroupSession ? 'bg-[#5B7B6D]' : 'bg-slate-200 dark:bg-slate-600'
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                    isGroupSession ? 'translate-x-5' : ''
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+
           {/* Date */}
           <div>
             <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1.5">
@@ -170,33 +197,6 @@ export function EventModal({
               rows={2}
               className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#5B7B6D] focus:border-transparent resize-none placeholder-slate-400"
             />
-          </div>
-
-          {/* Group Study Session Toggle */}
-          <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Group Study Session
-                </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  Create a study room others can join
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsGroupSession(!isGroupSession)}
-                className={`relative w-11 h-6 rounded-full transition-colors ${
-                  isGroupSession ? 'bg-[#5B7B6D]' : 'bg-slate-200 dark:bg-slate-600'
-                }`}
-              >
-                <span
-                  className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
-                    isGroupSession ? 'translate-x-5' : ''
-                  }`}
-                />
-              </button>
-            </div>
           </div>
 
           {/* Actions */}

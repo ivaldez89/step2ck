@@ -67,7 +67,7 @@ export function UnifiedCalendarHub() {
       {/* Main Calendar Area */}
       <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300`}>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+        <div className="relative z-10 flex items-center justify-between px-6 py-4 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
           {/* Left: Navigation */}
           <div className="flex items-center gap-3">
             <button
