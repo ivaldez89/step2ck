@@ -135,6 +135,14 @@ export default function VillageCommunityPage() {
               >
                 Visit Website
               </a>
+              {isUserVillage && (
+                <Link
+                  href="/connections"
+                  className="px-4 py-2 bg-white text-[#5B7B6D] text-sm font-medium rounded-lg hover:bg-white/90 transition-colors"
+                >
+                  Find Connections
+                </Link>
+              )}
               {!isUserVillage && (
                 <Link
                   href="/register"

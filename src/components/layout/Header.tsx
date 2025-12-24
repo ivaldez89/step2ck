@@ -196,6 +196,7 @@ const wellnessDropdownItems: DropdownItem[] = [
 
 const communityDropdownItems: DropdownItem[] = [
   { label: 'My Village', href: '/village', description: 'Your charity community' },
+  { label: 'Connections', href: '/connections', description: 'Build meaningful relationships' },
   { label: 'My Tribes', href: '/tribes', description: 'Your study communities' },
   { label: 'PreMed', href: '/premed', description: 'Resources for pre-med students' },
   { label: 'How It Works', href: '/impact', description: 'Village Points & charitable giving' },
@@ -446,6 +447,7 @@ export function Header({ stats }: HeaderProps) {
                 <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                   <p className="px-4 py-1 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Community</p>
                   <MobileNavLink href="/village" onClick={() => setMobileMenuOpen(false)}>My Village</MobileNavLink>
+                  <MobileNavLink href="/connections" onClick={() => setMobileMenuOpen(false)}>Connections</MobileNavLink>
                   <MobileNavLink href="/tribes" onClick={() => setMobileMenuOpen(false)}>My Tribes</MobileNavLink>
                   <MobileNavLink href="/premed" onClick={() => setMobileMenuOpen(false)}>PreMed</MobileNavLink>
                   <MobileNavLink href="/impact" onClick={() => setMobileMenuOpen(false)}>How It Works</MobileNavLink>
