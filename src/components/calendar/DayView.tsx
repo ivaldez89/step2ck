@@ -104,9 +104,7 @@ export function DayView({ currentDate, events, onTimeSlotClick, onEventClick, on
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (confirm('Delete this event?')) {
-                          onDeleteEvent(event.id);
-                        }
+                        onDeleteEvent(event.id);
                       }}
                       className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-all flex-shrink-0"
                       title="Delete event"
@@ -181,9 +179,7 @@ export function DayView({ currentDate, events, onTimeSlotClick, onEventClick, on
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                if (confirm('Delete this event?')) {
-                                  onDeleteEvent(event.id);
-                                }
+                                onDeleteEvent(event.id);
                               }}
                               className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-all flex-shrink-0"
                               title="Delete event"

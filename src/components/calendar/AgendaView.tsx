@@ -182,9 +182,7 @@ export function AgendaView({ events, onEventClick, onDeleteEvent }: AgendaViewPr
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (confirm('Delete this event?')) {
-                            onDeleteEvent(event.id);
-                          }
+                          onDeleteEvent(event.id);
                         }}
                         className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all flex-shrink-0"
                         title="Delete event"

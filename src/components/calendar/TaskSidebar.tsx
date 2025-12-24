@@ -263,9 +263,7 @@ function TaskItem({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            if (confirm('Delete this task?')) {
-              onDelete();
-            }
+            onDelete();
           }}
           className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all flex-shrink-0"
           title="Delete task"

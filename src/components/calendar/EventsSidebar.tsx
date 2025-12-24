@@ -13,12 +13,15 @@ interface EventsSidebarProps {
 export function EventsSidebar({ events, onEventClick, onDeleteEvent }: EventsSidebarProps) {
   const today = new Date().toISOString().split('T')[0];
 
-  // Get today's events and upcoming events
+  // Get today's events and upcoming events (excluding tasks - tasks show in TaskSidebar)
   const { todayEvents, upcomingEvents } = useMemo(() => {
     const now = new Date();
     const todayStr = now.toISOString().split('T')[0];
 
-    const todayEvts = events
+    // Filter out tasks - they should only appear in the TaskSidebar
+    const nonTaskEvents = events.filter(e => e.type !== 'task');
+
+    const todayEvts = nonTaskEvents
       .filter(e => e.startDate === todayStr)
       .sort((a, b) => {
         if (!a.startTime) return -1;
@@ -27,7 +30,7 @@ export function EventsSidebar({ events, onEventClick, onDeleteEvent }: EventsSid
       });
 
     // Get upcoming events (next 7 days, excluding today)
-    const upcomingEvts = events
+    const upcomingEvts = nonTaskEvents
       .filter(e => {
         const eventDate = new Date(e.startDate);
         const diffDays = Math.ceil((eventDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
@@ -109,8 +112,7 @@ function EventItem({
 }) {
   const color = getEventColor(event);
   const isGroupSession = event.type === 'study-room' || event.linkedRoomId;
-  const isTask = event.type === 'task';
-  const canDelete = !isTask && !isGroupSession; // Can't delete tasks or study rooms from here
+  const canDelete = !isGroupSession; // Can't delete study rooms from here (tasks are filtered out)
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr + 'T00:00:00');
@@ -120,9 +122,7 @@ function EventItem({
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    if (confirm('Delete this event?')) {
-      onDelete();
-    }
+    onDelete();
   };
 
   const content = (
@@ -148,11 +148,6 @@ function EventItem({
             {isGroupSession && (
               <span className="flex-shrink-0 text-xs px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded">
                 Group
-              </span>
-            )}
-            {isTask && (
-              <span className="flex-shrink-0 text-xs px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded">
-                Task
               </span>
             )}
           </div>

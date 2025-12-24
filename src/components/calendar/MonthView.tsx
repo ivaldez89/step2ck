@@ -113,9 +113,7 @@ export function MonthView({ currentDate, events, onDateClick, onEventClick, onDe
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              if (confirm('Delete this event?')) {
-                                onDeleteEvent(event.id);
-                              }
+                              onDeleteEvent(event.id);
                             }}
                             className="opacity-0 group-hover:opacity-100 p-0.5 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-opacity flex-shrink-0"
                             title="Delete event"
