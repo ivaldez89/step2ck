@@ -104,20 +104,6 @@ export function TaskSidebar({
         </div>
       </div>
 
-      {/* Quick Add - fixed, non-scrolling */}
-      {showQuickAdd && (
-        <div className="flex-shrink-0 px-4 py-3 border-b border-slate-200 dark:border-slate-700">
-          <QuickTaskInput
-            onSubmit={(title) => {
-              const today = new Date().toISOString().split('T')[0];
-              onQuickAddTask(title, today);
-              setShowQuickAdd(false);
-            }}
-            onCancel={() => setShowQuickAdd(false)}
-          />
-        </div>
-      )}
-
       {/* Filter Pills - fixed, non-scrolling */}
       <div className="flex-shrink-0 px-4 py-3 border-b border-slate-200 dark:border-slate-700">
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
@@ -149,6 +135,20 @@ export function TaskSidebar({
           ))}
         </div>
       </div>
+
+      {/* Quick Add - fixed, non-scrolling, below filter pills */}
+      {showQuickAdd && (
+        <div className="flex-shrink-0 px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+          <QuickTaskInput
+            onSubmit={(title) => {
+              const today = new Date().toISOString().split('T')[0];
+              onQuickAddTask(title, today);
+              setShowQuickAdd(false);
+            }}
+            onCancel={() => setShowQuickAdd(false)}
+          />
+        </div>
+      )}
 
       {/* Task List - scrollable area */}
       <div className="flex-1 min-h-0 overflow-y-auto">
