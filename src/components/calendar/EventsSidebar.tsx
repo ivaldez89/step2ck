@@ -190,7 +190,7 @@ function EventItem({
   // If it's a group session, wrap in a Link to the study room
   if (isGroupSession && event.linkedRoomId) {
     return (
-      <Link href={`/progress/rooms/${event.linkedRoomId}`}>
+      <Link href={`/progress/room/${event.linkedRoomId}`}>
         {content}
       </Link>
     );

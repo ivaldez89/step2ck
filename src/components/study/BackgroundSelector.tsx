@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 // Beautiful high-resolution background images from Unsplash
 export const STUDY_BACKGROUNDS = [
@@ -38,12 +39,12 @@ export const STUDY_BACKGROUNDS = [
   // Custom upload option
   {
     id: 'custom',
-    name: 'Your Image',
+    name: 'Upload',
     emoji: '📷',
     url: null,
     category: 'custom'
   },
-  // Nature backgrounds
+  // ==================== BEACH & OCEAN ====================
   {
     id: 'beach-sunset',
     name: 'Beach Sunset',
@@ -53,11 +54,62 @@ export const STUDY_BACKGROUNDS = [
   },
   {
     id: 'tropical-beach',
-    name: 'Tropical Paradise',
+    name: 'Tropical',
     emoji: '🌴',
     url: 'https://images.unsplash.com/photo-1520454974749-611b7248ffdb?w=1920&q=80',
     category: 'beach'
   },
+  {
+    id: 'ocean-waves',
+    name: 'Ocean Waves',
+    emoji: '🌊',
+    url: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&q=80',
+    category: 'beach'
+  },
+  {
+    id: 'maldives',
+    name: 'Maldives',
+    emoji: '🏝️',
+    url: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=1920&q=80',
+    category: 'beach'
+  },
+  {
+    id: 'crystal-water',
+    name: 'Crystal Water',
+    emoji: '💎',
+    url: 'https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=1920&q=80',
+    category: 'beach'
+  },
+  // ==================== UNDERWATER ====================
+  {
+    id: 'underwater-coral',
+    name: 'Coral Reef',
+    emoji: '🐠',
+    url: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=1920&q=80',
+    category: 'underwater'
+  },
+  {
+    id: 'underwater-blue',
+    name: 'Deep Blue',
+    emoji: '🐋',
+    url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1920&q=80',
+    category: 'underwater'
+  },
+  {
+    id: 'underwater-fish',
+    name: 'Ocean Life',
+    emoji: '🐟',
+    url: 'https://images.unsplash.com/photo-1559825481-12a05cc00344?w=1920&q=80',
+    category: 'underwater'
+  },
+  {
+    id: 'jellyfish',
+    name: 'Jellyfish',
+    emoji: '🪼',
+    url: 'https://images.unsplash.com/photo-1460518451285-97b6aa326961?w=1920&q=80',
+    category: 'underwater'
+  },
+  // ==================== SPACE & COSMOS ====================
   {
     id: 'galaxy',
     name: 'Galaxy',
@@ -67,24 +119,347 @@ export const STUDY_BACKGROUNDS = [
   },
   {
     id: 'aurora',
-    name: 'Northern Lights',
+    name: 'Aurora',
     emoji: '🌠',
     url: 'https://images.unsplash.com/photo-1483347756197-71ef80e95f73?w=1920&q=80',
     category: 'space'
   },
   {
+    id: 'milky-way',
+    name: 'Milky Way',
+    emoji: '✨',
+    url: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=80',
+    category: 'space'
+  },
+  {
+    id: 'nebula',
+    name: 'Nebula',
+    emoji: '🔮',
+    url: 'https://images.unsplash.com/photo-1464802686167-b939a6910659?w=1920&q=80',
+    category: 'space'
+  },
+  {
+    id: 'earth-space',
+    name: 'Earth View',
+    emoji: '🌍',
+    url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80',
+    category: 'space'
+  },
+  {
+    id: 'moon-surface',
+    name: 'Moon',
+    emoji: '🌙',
+    url: 'https://images.unsplash.com/photo-1446941611757-91d2c3bd3d45?w=1920&q=80',
+    category: 'space'
+  },
+  {
+    id: 'saturn-rings',
+    name: 'Saturn',
+    emoji: '🪐',
+    url: 'https://images.unsplash.com/photo-1614732414444-096e5f1122d5?w=1920&q=80',
+    category: 'space'
+  },
+  {
+    id: 'starfield',
+    name: 'Starfield',
+    emoji: '⭐',
+    url: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=1920&q=80',
+    category: 'space'
+  },
+  // ==================== FORESTS ====================
+  {
+    id: 'forest',
+    name: 'Forest',
+    emoji: '🌲',
+    url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=1920&q=80',
+    category: 'forest'
+  },
+  {
+    id: 'autumn-forest',
+    name: 'Autumn Forest',
+    emoji: '🍂',
+    url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80',
+    category: 'forest'
+  },
+  {
+    id: 'misty-forest',
+    name: 'Misty Forest',
+    emoji: '🌫️',
+    url: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=1920&q=80',
+    category: 'forest'
+  },
+  {
+    id: 'redwood',
+    name: 'Redwood',
+    emoji: '🌳',
+    url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1920&q=80',
+    category: 'forest'
+  },
+  {
+    id: 'bamboo-forest',
+    name: 'Bamboo',
+    emoji: '🎍',
+    url: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1920&q=80',
+    category: 'forest'
+  },
+  {
+    id: 'spring-forest',
+    name: 'Spring Woods',
+    emoji: '🌸',
+    url: 'https://images.unsplash.com/photo-1476231682828-37e571bc172f?w=1920&q=80',
+    category: 'forest'
+  },
+  {
+    id: 'snow-forest',
+    name: 'Snowy Forest',
+    emoji: '🌨️',
+    url: 'https://images.unsplash.com/photo-1517299321609-52687d1bc55a?w=1920&q=80',
+    category: 'forest'
+  },
+  // ==================== JUNGLE & TROPICAL ====================
+  {
+    id: 'jungle',
+    name: 'Jungle',
+    emoji: '🦜',
+    url: 'https://images.unsplash.com/photo-1440342359743-84fcb8c21f21?w=1920&q=80',
+    category: 'jungle'
+  },
+  {
+    id: 'rainforest',
+    name: 'Rainforest',
+    emoji: '🌿',
+    url: 'https://images.unsplash.com/photo-1536147116438-62679a5e01f2?w=1920&q=80',
+    category: 'jungle'
+  },
+  {
+    id: 'amazon',
+    name: 'Amazon',
+    emoji: '🐆',
+    url: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1920&q=80',
+    category: 'jungle'
+  },
+  {
+    id: 'tropical-plants',
+    name: 'Tropical Leaves',
+    emoji: '🌺',
+    url: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=1920&q=80',
+    category: 'jungle'
+  },
+  // ==================== MOUNTAINS ====================
+  {
     id: 'mountains',
-    name: 'Mountain Peaks',
+    name: 'Mountains',
     emoji: '🏔️',
     url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80',
     category: 'mountains'
   },
   {
-    id: 'forest',
-    name: 'Enchanted Forest',
-    emoji: '🌲',
-    url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=1920&q=80',
+    id: 'alps',
+    name: 'Alpine',
+    emoji: '⛰️',
+    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80',
+    category: 'mountains'
+  },
+  {
+    id: 'mountain-lake',
+    name: 'Mountain Lake',
+    emoji: '🏞️',
+    url: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1920&q=80',
+    category: 'mountains'
+  },
+  {
+    id: 'snowy-peaks',
+    name: 'Snowy Peaks',
+    emoji: '🗻',
+    url: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1920&q=80',
+    category: 'mountains'
+  },
+  {
+    id: 'mountain-sunset',
+    name: 'Mountain Sunset',
+    emoji: '🌄',
+    url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&q=80',
+    category: 'mountains'
+  },
+  // ==================== NATURE ====================
+  {
+    id: 'waterfall',
+    name: 'Waterfall',
+    emoji: '💧',
+    url: 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=1920&q=80',
     category: 'nature'
+  },
+  {
+    id: 'japanese-garden',
+    name: 'Zen Garden',
+    emoji: '🎋',
+    url: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1920&q=80',
+    category: 'nature'
+  },
+  {
+    id: 'lavender-field',
+    name: 'Lavender',
+    emoji: '💜',
+    url: 'https://images.unsplash.com/photo-1499002238440-d264edd596ec?w=1920&q=80',
+    category: 'nature'
+  },
+  {
+    id: 'sunflower-field',
+    name: 'Sunflowers',
+    emoji: '🌻',
+    url: 'https://images.unsplash.com/photo-1470509037663-253afd7f0f51?w=1920&q=80',
+    category: 'nature'
+  },
+  {
+    id: 'cherry-blossom',
+    name: 'Cherry Blossom',
+    emoji: '🌸',
+    url: 'https://images.unsplash.com/photo-1522383225653-ed111181a951?w=1920&q=80',
+    category: 'nature'
+  },
+  {
+    id: 'northern-lights',
+    name: 'Northern Lights',
+    emoji: '💚',
+    url: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1920&q=80',
+    category: 'nature'
+  },
+  {
+    id: 'meadow',
+    name: 'Meadow',
+    emoji: '🌾',
+    url: 'https://images.unsplash.com/photo-1473773508845-188df298d2d1?w=1920&q=80',
+    category: 'nature'
+  },
+  // ==================== DESERT & SAVANNA ====================
+  {
+    id: 'desert-dunes',
+    name: 'Desert Dunes',
+    emoji: '🏜️',
+    url: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1920&q=80',
+    category: 'desert'
+  },
+  {
+    id: 'sahara',
+    name: 'Sahara',
+    emoji: '🐪',
+    url: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?w=1920&q=80',
+    category: 'desert'
+  },
+  {
+    id: 'savanna',
+    name: 'Savanna',
+    emoji: '🦁',
+    url: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1920&q=80',
+    category: 'desert'
+  },
+  {
+    id: 'desert-sunset',
+    name: 'Desert Sunset',
+    emoji: '🌅',
+    url: 'https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=1920&q=80',
+    category: 'desert'
+  },
+  // ==================== COZY ====================
+  {
+    id: 'rainy-window',
+    name: 'Rainy Day',
+    emoji: '🌧️',
+    url: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=1920&q=80',
+    category: 'cozy'
+  },
+  {
+    id: 'fireplace',
+    name: 'Fireplace',
+    emoji: '🔥',
+    url: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?w=1920&q=80',
+    category: 'cozy'
+  },
+  {
+    id: 'snowy-cabin',
+    name: 'Snow Cabin',
+    emoji: '❄️',
+    url: 'https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1920&q=80',
+    category: 'cozy'
+  },
+  {
+    id: 'cozy-rain',
+    name: 'Cozy Rain',
+    emoji: '☔',
+    url: 'https://images.unsplash.com/photo-1428592953211-077101b2021b?w=1920&q=80',
+    category: 'cozy'
+  },
+  {
+    id: 'candle-light',
+    name: 'Candlelight',
+    emoji: '🕯️',
+    url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80',
+    category: 'cozy'
+  },
+  // ==================== CITY ====================
+  {
+    id: 'night-city',
+    name: 'City Night',
+    emoji: '🌃',
+    url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1920&q=80',
+    category: 'city'
+  },
+  {
+    id: 'tokyo',
+    name: 'Tokyo',
+    emoji: '🗼',
+    url: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1920&q=80',
+    category: 'city'
+  },
+  {
+    id: 'new-york',
+    name: 'New York',
+    emoji: '🗽',
+    url: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=1920&q=80',
+    category: 'city'
+  },
+  {
+    id: 'paris',
+    name: 'Paris',
+    emoji: '🗼',
+    url: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1920&q=80',
+    category: 'city'
+  },
+  // ==================== WORLD LANDMARKS ====================
+  {
+    id: 'great-wall',
+    name: 'Great Wall',
+    emoji: '🏯',
+    url: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=1920&q=80',
+    category: 'world'
+  },
+  {
+    id: 'machu-picchu',
+    name: 'Machu Picchu',
+    emoji: '🏛️',
+    url: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=1920&q=80',
+    category: 'world'
+  },
+  {
+    id: 'santorini',
+    name: 'Santorini',
+    emoji: '🇬🇷',
+    url: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1920&q=80',
+    category: 'world'
+  },
+  {
+    id: 'iceland',
+    name: 'Iceland',
+    emoji: '🧊',
+    url: 'https://images.unsplash.com/photo-1504829857797-ddff29c27927?w=1920&q=80',
+    category: 'world'
+  },
+  {
+    id: 'norway-fjord',
+    name: 'Norway Fjord',
+    emoji: '🇳🇴',
+    url: 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=1920&q=80',
+    category: 'world'
   }
 ];
 
@@ -199,6 +574,25 @@ export function BackgroundOverlay({ backgroundId, opacity, className = '' }: Bac
   );
 }
 
+// Group backgrounds by category for organized display
+const CATEGORY_ORDER = ['medical', 'default', 'custom', 'beach', 'underwater', 'space', 'forest', 'jungle', 'mountains', 'nature', 'desert', 'cozy', 'city', 'world'];
+const CATEGORY_LABELS: Record<string, string> = {
+  medical: '📚 Study',
+  default: '⬜ None',
+  custom: '📷 Custom',
+  beach: '🏖️ Beach & Ocean',
+  underwater: '🐠 Underwater',
+  space: '🌌 Space & Cosmos',
+  forest: '🌲 Forests',
+  jungle: '🦜 Jungle & Tropical',
+  mountains: '🏔️ Mountains',
+  nature: '🌿 Nature',
+  desert: '🏜️ Desert & Savanna',
+  cozy: '🔥 Cozy',
+  city: '🌃 Cities',
+  world: '🌍 World Landmarks'
+};
+
 export function BackgroundSelector({
   selectedBackground,
   opacity,
@@ -210,9 +604,19 @@ export function BackgroundSelector({
 }: BackgroundSelectorProps) {
   const [showPanel, setShowPanel] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // For portal - need to wait for client-side mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isDark = variant === 'dark';
   const currentBg = STUDY_BACKGROUNDS.find(b => b.id === selectedBackground);
+
+  // Find which category the selected background belongs to
+  const selectedCategory = currentBg?.category || 'default';
 
   // Handle file upload for custom background
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -253,7 +657,7 @@ export function BackgroundSelector({
       {/* Toggle Button */}
       <button
         onClick={() => setShowPanel(!showPanel)}
-        className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors ${
+        className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${
           showPanel || selectedBackground !== 'none'
             ? isDark
               ? 'bg-teal-900/50 text-tribe-sage-400'
@@ -264,20 +668,20 @@ export function BackgroundSelector({
         }`}
       >
         <span>{currentBg?.emoji || '🖼️'}</span>
-        <span>Scene</span>
+        <span className="hidden sm:inline">Scene</span>
       </button>
 
-      {/* Dropdown Panel */}
-      {showPanel && (
+      {/* Dropdown Panel - rendered via portal to escape stacking contexts */}
+      {showPanel && mounted && createPortal(
         <>
           {/* Backdrop to close panel */}
           <div
-            className="fixed inset-0 z-[100]"
+            className="fixed inset-0 z-[9998] bg-black/20"
             onClick={() => setShowPanel(false)}
           />
 
-          {/* Panel - positioned to not overflow screen */}
-          <div className={`fixed right-4 mt-2 w-80 rounded-xl shadow-xl border z-[110] ${
+          {/* Panel - fixed position at document body level */}
+          <div className={`fixed inset-x-4 bottom-4 sm:inset-auto sm:top-auto sm:bottom-auto sm:left-auto sm:right-4 sm:top-20 w-auto sm:w-80 max-h-[70vh] overflow-y-auto rounded-xl shadow-2xl border z-[9999] ${
             isDark
               ? 'bg-slate-800 border-slate-700'
               : 'bg-white border-slate-200'
@@ -290,88 +694,147 @@ export function BackgroundSelector({
                 <span>Study Scene</span>
               </h3>
 
-              {/* Background Grid */}
-              <div className="grid grid-cols-4 gap-2 mb-4">
-                {STUDY_BACKGROUNDS.map((bg) => (
-                  bg.id === 'custom' ? (
-                    // Custom upload button
-                    <label
-                      key={bg.id}
-                      className={`relative flex flex-col items-center gap-1 p-2 rounded-lg transition-all cursor-pointer ${
-                        selectedBackground === 'custom'
-                          ? isDark
-                            ? 'bg-teal-900/50 border-2 border-tribe-sage-500'
-                            : 'bg-tribe-sage-50 border-2 border-tribe-sage-500'
-                          : isDark
-                            ? 'bg-slate-700 border-2 border-transparent hover:bg-slate-600'
-                            : 'bg-slate-50 border-2 border-transparent hover:bg-slate-100'
-                      }`}
-                      title="Upload your own image"
-                    >
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileUpload}
-                        className="hidden"
-                        disabled={isUploading}
-                      />
-                      {customBackgroundUrl ? (
-                        <div
-                          className="w-10 h-10 rounded-lg bg-cover bg-center"
-                          style={{ backgroundImage: `url(${customBackgroundUrl})` }}
-                        />
-                      ) : (
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          isDark ? 'bg-slate-600' : 'bg-slate-200'
-                        }`}>
-                          {isUploading ? (
-                            <span className="w-4 h-4 border-2 border-tribe-sage-500 border-t-transparent rounded-full animate-spin" />
-                          ) : (
-                            <span className="text-lg">{bg.emoji}</span>
-                          )}
+              {/* Current selection display */}
+              {selectedBackground !== 'none' && currentBg && (
+                <div className={`mb-3 p-2 rounded-lg flex items-center gap-2 ${
+                  isDark ? 'bg-teal-900/30' : 'bg-tribe-sage-50'
+                }`}>
+                  <span className="text-xl">{currentBg.emoji}</span>
+                  <span className={`text-sm font-medium ${isDark ? 'text-tribe-sage-300' : 'text-tribe-sage-700'}`}>
+                    {currentBg.name}
+                  </span>
+                  <button
+                    onClick={() => onBackgroundChange('none')}
+                    className={`ml-auto text-xs px-2 py-1 rounded ${
+                      isDark ? 'text-slate-400 hover:bg-slate-700' : 'text-slate-500 hover:bg-slate-200'
+                    }`}
+                  >
+                    Clear
+                  </button>
+                </div>
+              )}
+
+              {/* Category accordion */}
+              <div className="space-y-1 mb-4">
+                {CATEGORY_ORDER.map((category) => {
+                  const categoryBgs = STUDY_BACKGROUNDS.filter(bg => bg.category === category);
+                  if (categoryBgs.length === 0) return null;
+
+                  const isExpanded = expandedCategory === category;
+                  const hasSelected = categoryBgs.some(bg => bg.id === selectedBackground);
+
+                  // Skip none and custom in accordion - they're special
+                  if (category === 'default' || category === 'custom') {
+                    return (
+                      <div key={category} className="flex gap-2">
+                        {category === 'default' && (
+                          <button
+                            onClick={() => onBackgroundChange('none')}
+                            className={`flex-1 flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
+                              selectedBackground === 'none'
+                                ? isDark
+                                  ? 'bg-teal-900/50 text-tribe-sage-300'
+                                  : 'bg-tribe-sage-100 text-tribe-sage-700'
+                                : isDark
+                                  ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                            }`}
+                          >
+                            <span>⬜</span>
+                            <span>None</span>
+                          </button>
+                        )}
+                        {category === 'custom' && (
+                          <label
+                            className={`flex-1 flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors cursor-pointer ${
+                              selectedBackground === 'custom'
+                                ? isDark
+                                  ? 'bg-teal-900/50 text-tribe-sage-300'
+                                  : 'bg-tribe-sage-100 text-tribe-sage-700'
+                                : isDark
+                                  ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                            }`}
+                          >
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleFileUpload}
+                              className="hidden"
+                              disabled={isUploading}
+                            />
+                            <span>{isUploading ? '⏳' : '📷'}</span>
+                            <span>{customBackgroundUrl ? 'Your Image' : 'Upload'}</span>
+                          </label>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div key={category}>
+                      {/* Category header */}
+                      <button
+                        onClick={() => setExpandedCategory(isExpanded ? null : category)}
+                        className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                          hasSelected
+                            ? isDark
+                              ? 'bg-teal-900/30 text-tribe-sage-300'
+                              : 'bg-tribe-sage-50 text-tribe-sage-700'
+                            : isDark
+                              ? 'text-slate-300 hover:bg-slate-700'
+                              : 'text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >
+                        <span className="font-medium">{CATEGORY_LABELS[category] || category}</span>
+                        <div className="flex items-center gap-2">
+                          <span className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                            {categoryBgs.length}
+                          </span>
+                          <svg
+                            className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </button>
+
+                      {/* Category items - emoji grid (no images!) */}
+                      {isExpanded && (
+                        <div className="grid grid-cols-4 gap-1 mt-1 px-1">
+                          {categoryBgs.map((bg) => (
+                            <button
+                              key={bg.id}
+                              onClick={() => {
+                                onBackgroundChange(bg.id);
+                              }}
+                              className={`flex flex-col items-center gap-0.5 p-2 rounded-lg transition-colors ${
+                                selectedBackground === bg.id
+                                  ? isDark
+                                    ? 'bg-teal-900/50 ring-2 ring-tribe-sage-500'
+                                    : 'bg-tribe-sage-100 ring-2 ring-tribe-sage-500'
+                                  : isDark
+                                    ? 'hover:bg-slate-700'
+                                    : 'hover:bg-slate-100'
+                              }`}
+                              title={bg.name}
+                            >
+                              <span className="text-xl">{bg.emoji}</span>
+                              <span className={`text-[9px] truncate w-full text-center ${
+                                isDark ? 'text-slate-400' : 'text-slate-500'
+                              }`}>
+                                {bg.name}
+                              </span>
+                            </button>
+                          ))}
                         </div>
                       )}
-                      <span className={`text-[10px] truncate w-full text-center ${
-                        isDark ? 'text-slate-300' : 'text-slate-600'
-                      }`}>
-                        {customBackgroundUrl ? 'Your Image' : 'Upload'}
-                      </span>
-                    </label>
-                  ) : (
-                    <button
-                      key={bg.id}
-                      onClick={() => onBackgroundChange(bg.id)}
-                      className={`relative flex flex-col items-center gap-1 p-2 rounded-lg transition-all ${
-                        selectedBackground === bg.id
-                          ? isDark
-                            ? 'bg-teal-900/50 border-2 border-tribe-sage-500'
-                            : 'bg-tribe-sage-50 border-2 border-tribe-sage-500'
-                          : isDark
-                            ? 'bg-slate-700 border-2 border-transparent hover:bg-slate-600'
-                            : 'bg-slate-50 border-2 border-transparent hover:bg-slate-100'
-                      }`}
-                      title={bg.name}
-                    >
-                      {bg.url ? (
-                        <div
-                          className="w-10 h-10 rounded-lg bg-cover bg-center"
-                          style={{ backgroundImage: `url(${bg.url})` }}
-                        />
-                      ) : (
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          isDark ? 'bg-slate-600' : 'bg-slate-200'
-                        }`}>
-                          <span className="text-lg">{bg.emoji}</span>
-                        </div>
-                      )}
-                      <span className={`text-[10px] truncate w-full text-center ${
-                        isDark ? 'text-slate-300' : 'text-slate-600'
-                      }`}>
-                        {bg.name}
-                      </span>
-                    </button>
-                  )
-                ))}
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Opacity Slider - only show when background selected */}
@@ -387,7 +850,7 @@ export function BackgroundSelector({
                   </div>
                   <input
                     type="range"
-                    min="0.25"
+                    min="0.5"
                     max="1.0"
                     step="0.05"
                     value={opacity}
@@ -399,13 +862,14 @@ export function BackgroundSelector({
                     }`}
                   />
                   <p className={`mt-2 text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
-                    25% = subtle, 100% = full intensity
+                    50% = subtle, 100% = full intensity
                   </p>
                 </div>
               )}
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   );

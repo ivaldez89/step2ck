@@ -21,9 +21,9 @@ export default function VillageRedirectPage() {
   // If user hasn't selected a village yet, show them the options
   if (!currentVillageId) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800">
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800">
         <Header />
-        <main className="max-w-5xl mx-auto px-4 py-6">
+        <main className="flex-1 max-w-5xl mx-auto px-4 py-6 w-full">
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
             <div className="text-center mb-8">
               <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-3">

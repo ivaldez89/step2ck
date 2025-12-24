@@ -80,7 +80,7 @@ export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
             className="w-9 h-9 rounded-full object-cover border-2 border-white dark:border-slate-700 shadow-md"
           />
         ) : (
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-teal-400 via-cyan-500 to-indigo-500 flex items-center justify-center text-white text-sm font-bold shadow-md border-2 border-white dark:border-slate-700">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#5B7B6D] to-[#7FA08F] flex items-center justify-center text-white text-sm font-bold shadow-md border-2 border-white dark:border-slate-700">
             {initials}
           </div>
         )}
@@ -98,7 +98,7 @@ export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
           {/* Profile Header */}
           <div className="relative">
             {/* Gradient Banner */}
-            <div className="h-16 bg-gradient-to-r from-tribe-sage-500 via-cyan-500 to-indigo-500" />
+            <div className="h-16 bg-gradient-to-r from-[#5B7B6D] via-[#7FA08F] to-[#C4A77D]" />
 
             {/* Avatar overlapping banner */}
             <div className="absolute -bottom-8 left-4">
@@ -109,7 +109,7 @@ export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
                   className="w-16 h-16 rounded-xl object-cover border-4 border-white dark:border-slate-800 shadow-lg"
                 />
               ) : (
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-teal-400 via-cyan-500 to-indigo-500 flex items-center justify-center text-white text-xl font-bold border-4 border-white dark:border-slate-800 shadow-lg">
+                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#5B7B6D] to-[#7FA08F] flex items-center justify-center text-white text-xl font-bold border-4 border-white dark:border-slate-800 shadow-lg">
                   {initials}
                 </div>
               )}
@@ -236,11 +236,11 @@ export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
                   )}
                 </div>
                 <div className="text-center">
-                  <div className="text-lg font-bold text-indigo-600 dark:text-indigo-400">0</div>
+                  <div className="text-lg font-bold text-[#5B7B6D] dark:text-[#7FA08F]">0</div>
                   <div className="text-xs text-slate-500 dark:text-slate-400">Study Hours</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-lg font-bold text-amber-600 dark:text-amber-400">0</div>
+                  <div className="text-lg font-bold text-[#C4A77D] dark:text-[#D4B78D]">0</div>
                   <div className="text-xs text-slate-500 dark:text-slate-400">Day Streak</div>
                 </div>
               </div>
@@ -252,9 +252,9 @@ export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
             <Link
               href="/dashboard"
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-gradient-to-r hover:from-teal-50 hover:to-transparent dark:hover:from-teal-900/20 dark:hover:to-transparent transition-all duration-200"
+              className="flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-gradient-to-r hover:from-[#5B7B6D]/10 hover:to-transparent dark:hover:from-[#5B7B6D]/20 dark:hover:to-transparent transition-all duration-200"
             >
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#5B7B6D] to-[#7FA08F] flex items-center justify-center">
                 <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
                 </svg>

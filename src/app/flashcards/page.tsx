@@ -621,15 +621,15 @@ export default function FlashcardsPage() {
     <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800 relative">
       <Header stats={stats} />
 
-      {/* Background overlay - positioned below header and toolbar, behind all content */}
+      {/* Background overlay - positioned below header, behind all content */}
       {selectedBackground !== 'none' && (
         <div
           className="fixed left-0 right-0 bottom-0 bg-no-repeat transition-opacity duration-500 pointer-events-none"
           style={{
-            top: '180px', // Below header + toolbar area
+            top: '64px', // Right below header
             backgroundImage: `url(${getBackgroundUrl(selectedBackground)})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center bottom',
+            backgroundPosition: 'center',
             backgroundAttachment: 'fixed',
             opacity: opacity,
             zIndex: 0
@@ -639,36 +639,47 @@ export default function FlashcardsPage() {
 
       <main className="relative max-w-5xl mx-auto px-4 py-8" style={{ zIndex: 2 }}>
         {/* Session progress bar - solid background to cover the scene */}
-        <div className="mb-6 flex items-center justify-between flex-wrap gap-2 bg-slate-50 py-2 -mx-4 px-4 -mt-8 pt-8">
-          <div className="flex items-center gap-4">
-            {session && (
-              <>
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-[#5B7B6D] font-medium">{session.cardsCorrect}</span>
-                  <span className="text-slate-400">correct</span>
+        <div className="mb-6 bg-slate-50/95 dark:bg-slate-800/95 backdrop-blur-sm py-3 -mx-4 px-4 -mt-8 pt-8 rounded-b-xl">
+          {/* Top row: Stats */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
+              {session && (
+                <>
+                  <div className="flex items-center gap-1.5 text-sm">
+                    <span className="text-[#5B7B6D] font-medium">{session.cardsCorrect}</span>
+                    <span className="text-slate-400">correct</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-sm">
+                    <span className="text-red-500 font-medium">{session.cardsFailed}</span>
+                    <span className="text-slate-400">again</span>
+                  </div>
+                </>
+              )}
+
+              {hasActiveFilters && (
+                <div className="flex items-center gap-1.5 text-xs px-2 py-1 bg-indigo-50 text-indigo-600 rounded-lg">
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                  </svg>
+                  <span>Filtered</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-red-500 font-medium">{session.cardsFailed}</span>
-                  <span className="text-slate-400">again</span>
-                </div>
-              </>
-            )}
-            
-            {hasActiveFilters && (
-              <div className="flex items-center gap-2 text-sm px-2 py-1 bg-indigo-50 text-indigo-600 rounded-lg">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
-                <span>Filtered</span>
-              </div>
-            )}
+              )}
+            </div>
+
+            <button
+              onClick={endSession}
+              className="text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors"
+            >
+              End
+            </button>
           </div>
-          
-          <div className="flex items-center gap-2">
+
+          {/* Bottom row: Tools - scrollable on mobile */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 -mb-1 scrollbar-hide">
             {/* Pomodoro Timer (compact) */}
             <PomodoroTimer />
 
-            {/* Exam Countdown (compact) */}
+            {/* Exam Countdown (compact) - hide label on mobile */}
             <ExamCountdown variant="compact" />
 
             {/* Cram Mode toggle */}
@@ -679,17 +690,17 @@ export default function FlashcardsPage() {
                 setCramRevealed(false);
               }}
               disabled={cramCards.length === 0}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${
                 cramMode
                   ? 'bg-orange-100 text-orange-700 border border-orange-300'
                   : cramCards.length > 0
-                    ? 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+                    ? 'text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
                     : 'text-slate-300 cursor-not-allowed'
               }`}
               title={cramCards.length === 0 ? 'No cards to cram - you haven\'t missed any yet!' : `Cram ${cramCards.length} missed cards`}
             >
               <span className="text-base">🔥</span>
-              <span>Cram</span>
+              <span className="hidden sm:inline">Cram</span>
               {cramCards.length > 0 && (
                 <span className={`text-xs px-1.5 py-0.5 rounded-full ${
                   cramMode ? 'bg-orange-200' : 'bg-slate-200'
@@ -702,10 +713,10 @@ export default function FlashcardsPage() {
             {/* Sounds & Music button */}
             <button
               onClick={() => setShowAmbient(!showAmbient)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${
                 showAmbient || isPlaying || isMusicPlaying
                   ? 'bg-purple-100 text-purple-700'
-                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               {isPlaying || isMusicPlaying ? (
@@ -721,7 +732,7 @@ export default function FlashcardsPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
                 </svg>
               )}
-              Audio
+              <span className="hidden sm:inline">Audio</span>
             </button>
 
             {/* Background scene selector */}
@@ -736,23 +747,16 @@ export default function FlashcardsPage() {
             {/* Toggle filters button */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors ${
-                showFilters 
-                  ? 'bg-indigo-100 text-indigo-700' 
-                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${
+                showFilters
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
-              Filters
-            </button>
-            
-            <button
-              onClick={endSession}
-              className="text-sm text-slate-500 hover:text-slate-700 transition-colors"
-            >
-              End Session
+              <span className="hidden sm:inline">Filters</span>
             </button>
           </div>
         </div>

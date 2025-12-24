@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 interface PomodoroTimerProps {
   onSessionComplete?: () => void;
@@ -20,7 +21,13 @@ export function PomodoroTimer({ onSessionComplete }: PomodoroTimerProps) {
   const [isRunning, setIsRunning] = useState(false);
   const [sessionsCompleted, setSessionsCompleted] = useState(0);
   const [showPanel, setShowPanel] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // For portal - need to wait for client-side mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Store remaining time for each mode so switching back preserves progress
   const savedTimesRef = useRef<Record<TimerMode, number>>({
@@ -181,17 +188,17 @@ export function PomodoroTimer({ onSessionComplete }: PomodoroTimerProps) {
         )}
       </button>
 
-      {/* Dropdown Panel */}
-      {showPanel && (
+      {/* Dropdown Panel - rendered via portal to escape stacking contexts */}
+      {showPanel && mounted && createPortal(
         <>
           {/* Backdrop to close panel */}
           <div
-            className="fixed inset-0 z-[100]"
+            className="fixed inset-0 z-[9998] bg-black/20"
             onClick={() => setShowPanel(false)}
           />
 
-          {/* Panel */}
-          <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl shadow-xl border z-[110] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
+          {/* Panel - fixed modal on mobile, positioned on desktop */}
+          <div className="fixed inset-x-4 bottom-4 sm:inset-auto sm:top-20 sm:left-4 sm:right-auto w-auto sm:w-72 rounded-xl shadow-2xl border z-[9999] bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
@@ -303,7 +310,8 @@ export function PomodoroTimer({ onSessionComplete }: PomodoroTimerProps) {
               </p>
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   );

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
-import { Icons } from '@/components/ui/Icons';
+import { Footer } from '@/components/layout/Footer';
 import { useFlashcards } from '@/hooks/useFlashcards';
 import { useStreak } from '@/hooks/useStreak';
 import { useWellness } from '@/hooks/useWellness';
@@ -31,6 +31,8 @@ interface Reflection {
   createdAt: Date;
   visibility: 'private' | 'village' | 'connections';
   prompt?: string;
+  likes?: number;
+  comments?: number;
 }
 
 // Reflection prompts that rotate
@@ -41,6 +43,102 @@ const REFLECTION_PROMPTS = [
   "What's something you're proud of right now?",
   "How did medicine feel for you today?",
   "Mark a milestone or turning point in your journey.",
+];
+
+// Sample reflections for demo (10 entries for scrolling)
+const SAMPLE_REFLECTIONS: Reflection[] = [
+  {
+    id: 'sample-1',
+    content: "Just finished my first week of rotations in the ER. The adrenaline is real, but so is the exhaustion. Grateful for the attending who took time to teach us proper suturing techniques today. Small wins matter.",
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+    visibility: 'village',
+    prompt: "How did medicine feel for you today?",
+    likes: 24,
+    comments: 5
+  },
+  {
+    id: 'sample-2',
+    content: "Milestone: Passed Step 1! After months of studying, sleepless nights, and too much coffee, I finally did it. This journey is tough but moments like these remind me why I started.",
+    imageUrl: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80',
+    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+    visibility: 'connections',
+    prompt: "Mark a milestone or turning point in your journey.",
+    likes: 156,
+    comments: 32
+  },
+  {
+    id: 'sample-3',
+    content: "Had a patient thank me today for simply listening. Sometimes the most powerful medicine isn't a prescription - it's presence. Need to remember this on the hard days.",
+    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+    visibility: 'village',
+    prompt: "What's one moment from today you want to remember?",
+    likes: 89,
+    comments: 12
+  },
+  {
+    id: 'sample-4',
+    content: "Struggling with imposter syndrome lately. Everyone around me seems so confident while I'm still questioning if I belong here. Talked to a senior resident who said they still feel this way sometimes. It helps to know I'm not alone.",
+    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+    visibility: 'private',
+    prompt: "What's been challenging you most this week?",
+    likes: 0,
+    comments: 0
+  },
+  {
+    id: 'sample-5',
+    content: "Study group session was incredibly productive today. We tackled cardiology together and finally made sense of heart murmurs. The power of learning together cannot be overstated.",
+    imageUrl: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80',
+    createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), // 4 days ago
+    visibility: 'connections',
+    prompt: "What's something you're proud of right now?",
+    likes: 45,
+    comments: 8
+  },
+  {
+    id: 'sample-6',
+    content: "Attended a wellness workshop through TribeWellMD today. Learning to balance medicine with mental health is just as important as learning pathophysiology. Self-care isn't selfish.",
+    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+    visibility: 'village',
+    likes: 67,
+    comments: 14
+  },
+  {
+    id: 'sample-7',
+    content: "First time leading morning rounds today. Nervous doesn't begin to describe it, but the team was supportive. Growth happens outside our comfort zone.",
+    createdAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000), // 6 days ago
+    visibility: 'connections',
+    prompt: "What did you learn about yourself recently?",
+    likes: 78,
+    comments: 19
+  },
+  {
+    id: 'sample-8',
+    content: "Donated my earned wellness points to the village charity today. It feels amazing knowing that my study efforts are also helping others. Medicine is about community.",
+    imageUrl: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&q=80',
+    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
+    visibility: 'village',
+    likes: 112,
+    comments: 23
+  },
+  {
+    id: 'sample-9',
+    content: "Watched my first surgery today - a laparoscopic cholecystectomy. The precision and teamwork in the OR was incredible. Thinking surgery might be calling my name.",
+    createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+    visibility: 'connections',
+    prompt: "How did medicine feel for you today?",
+    likes: 93,
+    comments: 27
+  },
+  {
+    id: 'sample-10',
+    content: "One month into medical school. Looking back at my first day photos and realizing how much has changed. The fear has transformed into excitement. Still scared, but now I know that's okay.",
+    imageUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80',
+    createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 2 weeks ago
+    visibility: 'village',
+    prompt: "Mark a milestone or turning point in your journey.",
+    likes: 201,
+    comments: 45
+  }
 ];
 
 // Get stored reflections
@@ -63,7 +161,9 @@ function saveReflection(reflection: Omit<Reflection, 'id' | 'createdAt'>): Refle
   const newReflection: Reflection = {
     ...reflection,
     id: `reflection-${Date.now()}`,
-    createdAt: new Date()
+    createdAt: new Date(),
+    likes: 0,
+    comments: 0
   };
   reflections.unshift(newReflection);
   localStorage.setItem('tribewellmd_reflections', JSON.stringify(reflections));
@@ -109,8 +209,9 @@ export default function HomePage() {
       setConnections(getConnectedUsers());
       setConnectionCount(getConnectionCount());
 
-      // Load reflections
-      setReflections(getReflections());
+      // Load reflections and combine with samples
+      const userReflections = getReflections();
+      setReflections([...userReflections, ...SAMPLE_REFLECTIONS]);
 
       // Rotate prompt daily
       const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
@@ -164,10 +265,17 @@ export default function HomePage() {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800">
         <Header />
-        <main className="max-w-5xl mx-auto px-4 py-8">
-          <div className="animate-pulse space-y-6">
-            <div className="h-64 bg-[#B89B78]/50 dark:bg-slate-800 rounded-3xl" />
-            <div className="h-96 bg-[#B89B78]/50 dark:bg-slate-800 rounded-2xl" />
+        <main className="max-w-7xl mx-auto px-4 py-8">
+          <div className="animate-pulse flex gap-6">
+            <div className="hidden lg:block w-72 space-y-4">
+              <div className="h-96 bg-[#B89B78]/30 dark:bg-slate-800 rounded-2xl" />
+              <div className="h-48 bg-[#B89B78]/30 dark:bg-slate-800 rounded-2xl" />
+            </div>
+            <div className="flex-1 space-y-4">
+              <div className="h-32 bg-[#B89B78]/30 dark:bg-slate-800 rounded-2xl" />
+              <div className="h-64 bg-[#B89B78]/30 dark:bg-slate-800 rounded-2xl" />
+              <div className="h-64 bg-[#B89B78]/30 dark:bg-slate-800 rounded-2xl" />
+            </div>
           </div>
         </main>
       </div>
@@ -185,417 +293,605 @@ export default function HomePage() {
     return 'Medicine Tribe Member';
   };
 
-  // Get location (using school as location)
-  const getLocation = () => {
-    if (profile?.school) return profile.school;
-    return '';
-  };
-
   // Format time ago for reflections
   const formatTimeAgo = (date: Date) => {
     const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
     if (seconds < 60) return 'just now';
     const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes}m ago`;
+    if (minutes < 60) return `${minutes}m`;
     const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}h ago`;
+    if (hours < 24) return `${hours}h`;
     const days = Math.floor(hours / 24);
-    if (days < 7) return `${days}d ago`;
+    if (days < 7) return `${days}d`;
+    if (days < 30) return `${Math.floor(days / 7)}w`;
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
+  // Format numbers (like 1.2k)
+  const formatNumber = (num: number) => {
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+    return num.toString();
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-[#E8E0D5] dark:bg-slate-900">
       <Header />
 
-      <main className="max-w-5xl mx-auto px-4 py-6">
-        {/* ===== MEMBER OVERVIEW SECTION ===== */}
-        <section className="relative mb-6">
-          {/* Cover Photo */}
-          <div className="h-40 md:h-56 rounded-t-3xl bg-gradient-to-br from-[#5B7B6D] via-[#6B8B7D] to-[#7FA08F] relative overflow-hidden">
-            {/* Decorative elements */}
-            <div className="absolute inset-0">
-              <div className="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
-              <div className="absolute bottom-10 left-10 w-48 h-48 bg-white/5 rounded-full blur-3xl" />
-              <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <defs>
-                  <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                    <circle cx="1" cy="1" r="1" fill="white" />
-                  </pattern>
-                </defs>
-                <rect width="100" height="100" fill="url(#grid)" />
-              </svg>
-            </div>
-          </div>
-
-          {/* Profile Info Card */}
-          <div className="relative bg-white dark:bg-slate-800 rounded-b-3xl shadow-xl px-6 md:px-8 pb-6">
-            {/* Avatar - Overlapping cover */}
-            <div className="flex flex-col md:flex-row md:items-end gap-4 -mt-16 md:-mt-20">
-              <Link href="/profile/settings" className="relative group">
-                <div className="w-28 h-28 md:w-36 md:h-36 rounded-2xl overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl">
+      <main className="max-w-7xl mx-auto px-4 py-4 lg:py-6">
+        {/* ===== MOBILE PROFILE CARD (visible only on mobile) ===== */}
+        <div className="lg:hidden mb-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),0_4px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)] border border-slate-200/80 dark:border-slate-600/50 border-b-slate-300 dark:border-b-slate-500">
+            <div className="flex items-center gap-4">
+              {/* Avatar */}
+              <Link href="/profile/settings">
+                <div className="w-14 h-14 rounded-xl overflow-hidden border-2 border-[#5B7B6D]/20 shadow-md bg-gradient-to-br from-[#5B7B6D] to-[#7FA08F]">
                   {profile?.avatar ? (
-                    <img
-                      src={profile.avatar}
-                      alt="Profile"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                    />
+                    <img src={profile.avatar} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[#5B7B6D] via-[#6B8B7D] to-[#8B7355] flex items-center justify-center text-white text-4xl md:text-5xl font-bold">
+                    <div className="w-full h-full flex items-center justify-center text-white text-xl font-bold">
                       {initials}
                     </div>
                   )}
                 </div>
-                {/* Online indicator */}
-                <span className="absolute bottom-2 right-2 w-5 h-5 md:w-6 md:h-6 bg-[#5B7B6D] border-3 border-white dark:border-slate-800 rounded-full" />
               </Link>
 
-              {/* Name & Basic Info */}
-              <div className="flex-1 pt-2 md:pt-0 md:pb-2">
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
-                    {displayName}
-                  </h1>
-                  <Link
-                    href="/profile/settings"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-medium rounded-lg transition-colors w-fit"
-                  >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                    </svg>
-                    Edit Profile
+              {/* Name & Role */}
+              <div className="flex-1 min-w-0">
+                <Link href="/profile/settings" className="hover:underline">
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white truncate">{displayName}</h2>
+                </Link>
+                <p className="text-sm text-slate-500 dark:text-slate-400 truncate">{getRoleLabel()}</p>
+              </div>
+
+              {/* Stats - compact */}
+              <div className="flex gap-4 text-center">
+                <div>
+                  <p className="text-lg font-bold text-[#5B7B6D] dark:text-[#7FA08F]">{connectionCount}</p>
+                  <p className="text-[10px] text-slate-400">Friends</p>
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-[#C4A77D] dark:text-[#D4B78D]">{streakData?.currentStreak || 0}</p>
+                  <p className="text-[10px] text-slate-400">Streak</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-6">
+          {/* ===== LEFT SIDEBAR - Member Info (Facebook-style) - Desktop only ===== */}
+          <aside className="hidden lg:block w-72 flex-shrink-0">
+            <div className="sticky top-20 space-y-4">
+              {/* Profile Card */}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),0_4px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)] border border-slate-200/80 dark:border-slate-600/50 border-b-slate-300 dark:border-b-slate-500">
+                {/* Cover gradient */}
+                <div className="h-20 bg-gradient-to-br from-[#5B7B6D] via-[#6B8B7D] to-[#C4A77D]" />
+
+                {/* Avatar & Name */}
+                <div className="px-4 pb-4 -mt-10">
+                  <Link href="/profile/settings" className="block">
+                    <div className="w-20 h-20 rounded-xl overflow-hidden border-4 border-white dark:border-slate-800 shadow-lg bg-gradient-to-br from-[#5B7B6D] to-[#7FA08F]">
+                      {profile?.avatar ? (
+                        <img src={profile.avatar} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-white text-2xl font-bold">
+                          {initials}
+                        </div>
+                      )}
+                    </div>
                   </Link>
+                  <Link href="/profile/settings" className="block mt-3 hover:underline">
+                    <h2 className="text-lg font-bold text-slate-900 dark:text-white">{displayName}</h2>
+                  </Link>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{getRoleLabel()}</p>
+                  {profile?.school && (
+                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{profile.school}</p>
+                  )}
                 </div>
-                <p className="text-slate-600 dark:text-slate-400 mt-1">{getRoleLabel()}</p>
-                {getLocation() && (
-                  <p className="text-slate-500 dark:text-slate-500 text-sm mt-0.5 flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    {getLocation()}
-                  </p>
-                )}
-                {profile?.bio && (
-                  <p className="text-slate-700 dark:text-slate-300 mt-3 max-w-xl">{profile.bio}</p>
-                )}
+
+                {/* Stats */}
+                <div className="border-t border-slate-100 dark:border-slate-700 px-4 py-3 grid grid-cols-3 gap-2 text-center">
+                  <div>
+                    <p className="text-lg font-bold text-[#5B7B6D] dark:text-[#7FA08F]">{connectionCount}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Connections</p>
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold text-[#C4A77D] dark:text-[#D4B78D]">{streakData?.currentStreak || 0}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Day Streak</p>
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold text-[#8B7355] dark:text-[#A89070]">{stats.reviewCards || 0}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Reviewed</p>
+                  </div>
+                </div>
               </div>
 
-              {/* Stats Summary */}
-              <div className="flex gap-6 md:gap-8 pt-4 md:pt-0 md:pb-2">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">{connectionCount}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Connections</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">{userTribes.length}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Groups</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">{streakData?.currentStreak || 0}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">Day Streak</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Extended Profile Info */}
-            <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-700">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Interests */}
-                {profile?.interestedSpecialties && profile.interestedSpecialties.length > 0 && (
-                  <div>
-                    <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Interests</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {profile.interestedSpecialties.slice(0, 4).map((specialty) => (
-                        <span
-                          key={specialty}
-                          className="px-3 py-1 bg-gradient-to-r from-[#E8E0D5] to-[#F5F0E8] dark:from-[#3D4A44] dark:to-[#4A5A50] text-[#5B7B6D] dark:text-[#7FA08F] rounded-full text-sm font-medium"
-                        >
-                          {specialty}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Groups */}
-                {userTribes.length > 0 && (
-                  <div>
-                    <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Groups</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {userTribes.slice(0, 3).map((tribe) => (
-                        <Link
-                          key={tribe.id}
-                          href={`/groups/${tribe.id}`}
-                          className="px-3 py-1 bg-[#F5EFE6] dark:bg-slate-700 hover:bg-[#E8DFD0] dark:hover:bg-slate-600 text-[#6B5344] dark:text-slate-300 rounded-full text-sm font-medium transition-colors"
-                        >
-                          {tribe.name}
-                        </Link>
-                      ))}
-                      {userTribes.length > 3 && (
-                        <Link
-                          href="/groups"
-                          className="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-full text-sm"
-                        >
-                          +{userTribes.length - 3} more
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Village */}
-                {villageCharity && (
-                  <div>
-                    <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Village</h3>
-                    <Link
-                      href={`/village/${villageCharity.id}`}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[#5B7B6D]/10 to-[#6B8B7D]/10 dark:from-[#5B7B6D]/20 dark:to-[#6B8B7D]/20 text-[#5B7B6D] dark:text-[#7FA08F] rounded-lg text-sm font-medium hover:from-[#5B7B6D]/20 hover:to-[#6B8B7D]/20 transition-colors"
-                    >
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              {/* Quick Links */}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),0_4px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)] border border-slate-200/80 dark:border-slate-600/50 border-b-slate-300 dark:border-b-slate-500">
+                <nav className="space-y-1">
+                  <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#5B7B6D] to-[#7FA08F] flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
-                      {villageCharity.shortName}
-                    </Link>
-                  </div>
-                )}
-
-                {/* External Links */}
-                {(profile?.linkedIn || profile?.twitter) && (
-                  <div>
-                    <h3 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">Connect</h3>
-                    <div className="flex gap-2">
-                      {profile.linkedIn && (
-                        <a
-                          href={profile.linkedIn.startsWith('http') ? profile.linkedIn : `https://${profile.linkedIn}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white hover:bg-blue-700 transition-colors"
-                        >
-                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                          </svg>
-                        </a>
-                      )}
-                      {profile.twitter && (
-                        <a
-                          href={`https://twitter.com/${profile.twitter.replace('@', '')}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-white hover:bg-slate-800 transition-colors"
-                        >
-                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                          </svg>
-                        </a>
-                      )}
                     </div>
+                    <span className="font-medium text-slate-700 dark:text-slate-200 group-hover:text-[#5B7B6D]">Calendar</span>
+                  </Link>
+
+                  <Link href="/flashcards" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#C4A77D] to-[#D4B78D] flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                      </svg>
+                    </div>
+                    <span className="font-medium text-slate-700 dark:text-slate-200 group-hover:text-[#C4A77D]">Flashcards</span>
+                  </Link>
+
+                  <Link href="/connections" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#8B7355] to-[#A89070] flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <span className="font-medium text-slate-700 dark:text-slate-200 group-hover:text-[#8B7355]">Connections</span>
+                  </Link>
+
+                  <Link href="/wellness" className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                    </div>
+                    <span className="font-medium text-slate-700 dark:text-slate-200 group-hover:text-pink-500">Wellness</span>
+                  </Link>
+
+                  {villageCharity && (
+                    <Link href={`/village/${villageCharity.id}`} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors group">
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                      </div>
+                      <span className="font-medium text-slate-700 dark:text-slate-200 group-hover:text-emerald-500">{villageCharity.shortName}</span>
+                    </Link>
+                  )}
+                </nav>
+              </div>
+
+              {/* Groups */}
+              {userTribes.length > 0 && (
+                <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),0_4px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)] border border-slate-200/80 dark:border-slate-600/50 border-b-slate-300 dark:border-b-slate-500">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold text-slate-900 dark:text-white">Your Groups</h3>
+                    <Link href="/groups" className="text-sm text-[#5B7B6D] hover:underline">See all</Link>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ===== MY JOURNEY SECTION ===== */}
-        <section className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
-          {/* Section Header */}
-          <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                  <svg className="w-6 h-6 text-[#5B7B6D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                  My Journey
-                </h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                  A personal space to reflect, share moments, and mark milestones in your journey through medicine.
-                </p>
-              </div>
-              <button
-                onClick={() => setShowReflectionForm(true)}
-                className="px-4 py-2 bg-gradient-to-r from-[#5B7B6D] to-[#6B8B7D] hover:from-[#4A6A5C] hover:to-[#5B7B6D] text-white font-medium rounded-xl transition-all shadow-md flex items-center gap-2"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Add Reflection
-              </button>
-            </div>
-          </div>
-
-          {/* Reflection Form */}
-          {showReflectionForm && (
-            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/50">
-              {/* Prompt */}
-              <div className="mb-4 p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-600">
-                <p className="text-sm text-slate-500 dark:text-slate-400 italic">
-                  "{REFLECTION_PROMPTS[currentPromptIndex]}"
-                </p>
-              </div>
-
-              {/* Text Input */}
-              <textarea
-                value={newReflectionContent}
-                onChange={(e) => setNewReflectionContent(e.target.value)}
-                placeholder="Write your reflection..."
-                className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-[#5B7B6D] text-slate-900 dark:text-white placeholder:text-slate-400"
-                rows={4}
-                autoFocus
-              />
-
-              {/* Selected Image Preview */}
-              {selectedImage && (
-                <div className="mt-3 relative inline-block">
-                  <img src={selectedImage} alt="Selected" className="max-h-40 rounded-xl" />
-                  <button
-                    onClick={() => setSelectedImage(null)}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-slate-900 text-white rounded-full flex items-center justify-center"
-                  >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
+                  <div className="space-y-2">
+                    {userTribes.slice(0, 3).map((tribe) => (
+                      <Link
+                        key={tribe.id}
+                        href={`/groups/${tribe.id}`}
+                        className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                      >
+                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tribe.color || 'from-orange-400 to-amber-500'} flex items-center justify-center text-lg`}>
+                          {tribe.icon || '👥'}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-slate-700 dark:text-slate-200 truncate">{tribe.name}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">{tribe.memberCount} members</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               )}
 
-              {/* Actions */}
-              <div className="mt-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {/* Add Photo */}
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-sm"
-                  >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    Add Photo
-                  </button>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageSelect}
-                    className="hidden"
-                  />
-
-                  {/* Visibility Selector */}
-                  <select
-                    value={reflectionVisibility}
-                    onChange={(e) => setReflectionVisibility(e.target.value as 'private' | 'village' | 'connections')}
-                    className="px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-600 dark:text-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#5B7B6D]"
-                  >
-                    <option value="private">Private</option>
-                    <option value="village">My Village</option>
-                    <option value="connections">My Connections</option>
-                  </select>
+              {/* Interests */}
+              {profile?.interestedSpecialties && profile.interestedSpecialties.length > 0 && (
+                <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),0_4px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)] border border-slate-200/80 dark:border-slate-600/50 border-b-slate-300 dark:border-b-slate-500">
+                  <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Interests</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {profile.interestedSpecialties.map((specialty) => (
+                      <span
+                        key={specialty}
+                        className="px-3 py-1.5 bg-gradient-to-r from-[#E8E0D5] to-[#F5F0E8] dark:from-[#3D4A44] dark:to-[#4A5A50] text-[#5B7B6D] dark:text-[#7FA08F] rounded-full text-sm font-medium"
+                      >
+                        {specialty}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      setShowReflectionForm(false);
-                      setNewReflectionContent('');
-                      setSelectedImage(null);
-                    }}
-                    className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-medium"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleAddReflection}
-                    disabled={!newReflectionContent.trim() && !selectedImage}
-                    className="px-4 py-2 bg-gradient-to-r from-[#5B7B6D] to-[#6B8B7D] hover:from-[#4A6A5C] hover:to-[#5B7B6D] disabled:from-slate-400 disabled:to-slate-500 text-white font-medium rounded-xl transition-all shadow-md"
-                  >
-                    Save Reflection
-                  </button>
-                </div>
-              </div>
+              )}
             </div>
-          )}
+          </aside>
 
-          {/* Reflections List */}
-          <div className="p-6">
-            {reflections.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#E8E0D5] to-[#F5F0E8] dark:from-[#3D4A44] dark:to-[#4A5A50] flex items-center justify-center">
-                  <svg className="w-8 h-8 text-[#8B7355] dark:text-[#A89070]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
+          {/* ===== CENTER FEED - Scrollable Journey ===== */}
+          <div className="flex-1 w-full lg:max-w-2xl">
+            {/* Create Post Card */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 mb-4 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),0_4px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)] border border-slate-200/80 dark:border-slate-600/50 border-b-slate-300 dark:border-b-slate-500">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-[#5B7B6D] to-[#7FA08F] flex-shrink-0">
+                  {profile?.avatar ? (
+                    <img src={profile.avatar} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white font-bold">
+                      {initials}
+                    </div>
+                  )}
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
-                  You haven&apos;t added any reflections yet.
-                </h3>
-                <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
-                  This is your space to capture moments, milestones, and thoughts as you move through medicine.
-                </p>
                 <button
                   onClick={() => setShowReflectionForm(true)}
-                  className="px-6 py-3 bg-gradient-to-r from-[#5B7B6D] to-[#6B8B7D] hover:from-[#4A6A5C] hover:to-[#5B7B6D] text-white font-medium rounded-xl transition-all shadow-md"
+                  className="flex-1 text-left px-4 py-3 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-full text-slate-500 dark:text-slate-400 transition-colors"
                 >
-                  Add Your First Reflection
+                  What&apos;s on your mind, {profile?.firstName || 'there'}?
                 </button>
               </div>
-            ) : (
-              <div className="space-y-6">
-                {reflections.map((reflection) => (
-                  <div
-                    key={reflection.id}
-                    className="p-5 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-100 dark:border-slate-600"
-                  >
-                    {/* Reflection Header */}
-                    <div className="flex items-start justify-between mb-3">
+
+              <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 dark:border-slate-700">
+                <button
+                  onClick={() => {
+                    setShowReflectionForm(true);
+                    setTimeout(() => fileInputRef.current?.click(), 100);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-medium text-slate-600 dark:text-slate-400"
+                >
+                  <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Photo
+                </button>
+                <button
+                  onClick={() => setShowReflectionForm(true)}
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-medium text-slate-600 dark:text-slate-400"
+                >
+                  <svg className="w-5 h-5 text-[#C4A77D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Milestone
+                </button>
+                <button
+                  onClick={() => setShowReflectionForm(true)}
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors text-sm font-medium text-slate-600 dark:text-slate-400"
+                >
+                  <svg className="w-5 h-5 text-[#5B7B6D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  Reflect
+                </button>
+              </div>
+            </div>
+
+            {/* Reflection Form Modal */}
+            {showReflectionForm && (
+              <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                  {/* Modal Header */}
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Create Reflection</h3>
+                    <button
+                      onClick={() => {
+                        setShowReflectionForm(false);
+                        setNewReflectionContent('');
+                        setSelectedImage(null);
+                      }}
+                      className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors"
+                    >
+                      <svg className="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Modal Body */}
+                  <div className="p-4">
+                    {/* User info */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-[#5B7B6D] to-[#7FA08F]">
+                        {profile?.avatar ? (
+                          <img src={profile.avatar} alt="Profile" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-white font-bold">
+                            {initials}
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium text-slate-900 dark:text-white">{displayName}</p>
+                        <select
+                          value={reflectionVisibility}
+                          onChange={(e) => setReflectionVisibility(e.target.value as 'private' | 'village' | 'connections')}
+                          className="text-xs bg-slate-100 dark:bg-slate-700 border-0 rounded px-2 py-1 text-slate-600 dark:text-slate-400"
+                        >
+                          <option value="private">Only me</option>
+                          <option value="village">My Village</option>
+                          <option value="connections">My Connections</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Prompt */}
+                    <div className="mb-4 p-3 bg-gradient-to-r from-[#5B7B6D]/10 to-[#C4A77D]/10 dark:from-[#5B7B6D]/20 dark:to-[#C4A77D]/20 rounded-xl border border-[#5B7B6D]/20">
+                      <p className="text-sm text-[#5B7B6D] dark:text-[#7FA08F] italic">
+                        &ldquo;{REFLECTION_PROMPTS[currentPromptIndex]}&rdquo;
+                      </p>
+                    </div>
+
+                    {/* Text Input */}
+                    <textarea
+                      value={newReflectionContent}
+                      onChange={(e) => setNewReflectionContent(e.target.value)}
+                      placeholder="Share your thoughts..."
+                      className="w-full px-0 py-2 bg-transparent border-0 resize-none focus:outline-none focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-400 text-lg"
+                      rows={4}
+                      autoFocus
+                    />
+
+                    {/* Selected Image Preview */}
+                    {selectedImage && (
+                      <div className="mt-3 relative inline-block">
+                        <img src={selectedImage} alt="Selected" className="max-h-48 rounded-xl" />
+                        <button
+                          onClick={() => setSelectedImage(null)}
+                          className="absolute top-2 right-2 w-8 h-8 bg-slate-900/80 text-white rounded-full flex items-center justify-center hover:bg-slate-900 transition-colors"
+                        >
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Add Photo Button */}
+                    <div className="mt-4 p-3 border border-slate-200 dark:border-slate-600 rounded-xl">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Add to your reflection</span>
+                        <button
+                          onClick={() => fileInputRef.current?.click()}
+                          className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors"
+                        >
+                          <svg className="w-6 h-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageSelect}
+                      className="hidden"
+                    />
+                  </div>
+
+                  {/* Modal Footer */}
+                  <div className="px-4 pb-4">
+                    <button
+                      onClick={handleAddReflection}
+                      disabled={!newReflectionContent.trim() && !selectedImage}
+                      className="w-full py-3 bg-gradient-to-r from-[#5B7B6D] to-[#6B8B7D] hover:from-[#4A6A5C] hover:to-[#5B7B6D] disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all shadow-md"
+                    >
+                      Post
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Journey Header */}
+            <div className="flex items-center gap-2 mb-4 px-2">
+              <svg className="w-5 h-5 text-[#5B7B6D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">My Journey</h2>
+            </div>
+
+            {/* Reflections Feed */}
+            <div className="space-y-4">
+              {reflections.map((reflection) => (
+                <article
+                  key={reflection.id}
+                  className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),0_4px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)] border border-slate-200/80 dark:border-slate-600/50 border-b-slate-300 dark:border-b-slate-500"
+                >
+                  {/* Post Header */}
+                  <div className="p-4 pb-0">
+                    <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#5B7B6D] to-[#8B7355] flex items-center justify-center text-white font-bold text-sm">
-                          {initials}
+                        <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-[#5B7B6D] to-[#8B7355]">
+                          {profile?.avatar && !reflection.id.startsWith('sample') ? (
+                            <img src={profile.avatar} alt="Profile" className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-white font-bold text-sm">
+                              {initials}
+                            </div>
+                          )}
                         </div>
                         <div>
-                          <p className="font-medium text-slate-900 dark:text-white">{displayName}</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">{formatTimeAgo(reflection.createdAt)}</p>
+                          <p className="font-semibold text-slate-900 dark:text-white">{displayName}</p>
+                          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                            <span>{formatTimeAgo(reflection.createdAt)}</span>
+                            <span>·</span>
+                            <span className="flex items-center gap-1">
+                              {reflection.visibility === 'private' ? (
+                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                              ) : reflection.visibility === 'village' ? (
+                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                              ) : (
+                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                              )}
+                              {reflection.visibility === 'private' ? 'Only me' : reflection.visibility === 'village' ? 'Village' : 'Connections'}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        reflection.visibility === 'private'
-                          ? 'bg-slate-100 dark:bg-slate-600 text-slate-500 dark:text-slate-400'
-                          : reflection.visibility === 'village'
-                            ? 'bg-[#5B7B6D]/10 text-[#5B7B6D]'
-                            : 'bg-[#8B7355]/10 text-[#8B7355]'
-                      }`}>
-                        {reflection.visibility === 'private' ? 'Private' : reflection.visibility === 'village' ? 'Village' : 'Connections'}
-                      </span>
+                      <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors">
+                        <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                        </svg>
+                      </button>
                     </div>
 
                     {/* Prompt if present */}
                     {reflection.prompt && (
-                      <p className="text-sm text-slate-500 dark:text-slate-400 italic mb-2">
-                        "{reflection.prompt}"
+                      <p className="mt-3 text-sm text-[#5B7B6D] dark:text-[#7FA08F] italic">
+                        &ldquo;{reflection.prompt}&rdquo;
                       </p>
                     )}
 
                     {/* Content */}
-                    <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+                    <p className="mt-3 text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed">
                       {reflection.content}
                     </p>
-
-                    {/* Image if present */}
-                    {reflection.imageUrl && (
-                      <div className="mt-4">
-                        <img
-                          src={reflection.imageUrl}
-                          alt="Reflection"
-                          className="max-h-64 rounded-xl object-cover"
-                        />
-                      </div>
-                    )}
                   </div>
-                ))}
-              </div>
-            )}
+
+                  {/* Image if present */}
+                  {reflection.imageUrl && (
+                    <div className="mt-3">
+                      <img
+                        src={reflection.imageUrl}
+                        alt="Reflection"
+                        className="w-full max-h-[500px] object-cover"
+                      />
+                    </div>
+                  )}
+
+                  {/* Engagement Stats */}
+                  {(reflection.likes !== undefined && reflection.likes > 0) && (
+                    <div className="px-4 py-2 flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
+                      <div className="flex items-center gap-1">
+                        <div className="flex -space-x-1">
+                          <span className="w-5 h-5 rounded-full bg-[#5B7B6D] flex items-center justify-center text-white text-xs">
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                          </span>
+                        </div>
+                        <span>{formatNumber(reflection.likes)}</span>
+                      </div>
+                      {reflection.comments !== undefined && reflection.comments > 0 && (
+                        <span>{formatNumber(reflection.comments)} comments</span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="px-4 py-2 border-t border-slate-100 dark:border-slate-700 flex items-center justify-around">
+                    <button className="flex-1 flex items-center justify-center gap-2 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors text-slate-600 dark:text-slate-400 font-medium">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                      <span className="hidden sm:inline">Support</span>
+                    </button>
+                    <button className="flex-1 flex items-center justify-center gap-2 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors text-slate-600 dark:text-slate-400 font-medium">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                      <span className="hidden sm:inline">Comment</span>
+                    </button>
+                    <button className="flex-1 flex items-center justify-center gap-2 py-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors text-slate-600 dark:text-slate-400 font-medium">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                      </svg>
+                      <span className="hidden sm:inline">Share</span>
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            {/* End of feed */}
+            <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+              <p className="text-sm">You&apos;re all caught up!</p>
+            </div>
           </div>
-        </section>
+
+          {/* ===== RIGHT SIDEBAR (Optional - for larger screens) ===== */}
+          <aside className="hidden xl:block w-64 flex-shrink-0">
+            <div className="sticky top-20 space-y-4">
+              {/* Daily Prompt */}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),0_4px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)] border border-slate-200/80 dark:border-slate-600/50 border-b-slate-300 dark:border-b-slate-500">
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                  <span className="text-lg">💭</span>
+                  Daily Prompt
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 italic">
+                  &ldquo;{REFLECTION_PROMPTS[currentPromptIndex]}&rdquo;
+                </p>
+                <button
+                  onClick={() => setShowReflectionForm(true)}
+                  className="mt-3 w-full py-2 text-sm font-medium text-[#5B7B6D] hover:bg-[#5B7B6D]/10 rounded-lg transition-colors"
+                >
+                  Write a reflection
+                </button>
+              </div>
+
+              {/* Connections */}
+              {connections.length > 0 && (
+                <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),0_4px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)] border border-slate-200/80 dark:border-slate-600/50 border-b-slate-300 dark:border-b-slate-500">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold text-slate-900 dark:text-white">Connections</h3>
+                    <Link href="/connections" className="text-sm text-[#5B7B6D] hover:underline">See all</Link>
+                  </div>
+                  <div className="space-y-3">
+                    {connections.slice(0, 5).map((connection) => {
+                      const fullName = `${connection.firstName} ${connection.lastName}`;
+                      return (
+                        <div key={connection.id} className="flex items-center gap-3">
+                          <div className="relative">
+                            <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-[#5B7B6D] to-[#8B7355]">
+                              {connection.avatar ? (
+                                <img src={connection.avatar} alt={fullName} className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-white text-xs font-bold">
+                                  {connection.firstName[0]}{connection.lastName[0]}
+                                </div>
+                              )}
+                            </div>
+                            {connection.isOnline && (
+                              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white dark:border-slate-800 rounded-full" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate">{fullName}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Study Stats */}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_4px_12px_rgba(0,0,0,0.05),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3),0_4px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)] border border-slate-200/80 dark:border-slate-600/50 border-b-slate-300 dark:border-b-slate-500">
+                <h3 className="font-semibold text-slate-900 dark:text-white mb-3">This Week</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-600 dark:text-slate-400">Cards reviewed</span>
+                    <span className="font-semibold text-[#5B7B6D]">{stats.reviewCards || 0}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-600 dark:text-slate-400">Current streak</span>
+                    <span className="font-semibold text-[#C4A77D]">{streakData?.currentStreak || 0} days</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-600 dark:text-slate-400">Weekly goal</span>
+                    <span className="font-semibold text-pink-500">
+                      {wellnessProfile?.weeklyGoal ? Math.round((wellnessProfile.weeklyGoal.completed / wellnessProfile.weeklyGoal.minutes) * 100) : 0}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

@@ -574,7 +574,7 @@ function LibraryStudyContent() {
             top: '64px',
             backgroundImage: `url(${getBackgroundUrl(selectedBackground, customBackgroundUrl)})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center bottom',
+            backgroundPosition: 'center',
             backgroundAttachment: 'fixed',
             opacity: opacity,
             zIndex: 0

@@ -557,12 +557,12 @@ export function ExamCountdown({ variant = 'full' }: ExamCountdownProps) {
           <>
             {/* Backdrop */}
             <div
-              className="fixed inset-0 z-[100]"
+              className="fixed inset-0 z-[100] bg-black/20 sm:bg-transparent"
               onClick={() => setShowPanel(false)}
             />
 
-            {/* Panel */}
-            <div className="absolute right-0 mt-2 w-80 rounded-xl shadow-xl border z-[110] bg-white border-slate-200 max-h-[70vh] overflow-y-auto">
+            {/* Panel - fixed modal on mobile, dropdown on desktop */}
+            <div className="fixed sm:absolute inset-x-4 sm:inset-x-auto bottom-4 sm:bottom-auto sm:right-0 sm:left-auto sm:top-full sm:mt-2 w-auto sm:w-80 rounded-xl shadow-xl border z-[110] bg-white border-slate-200 max-h-[70vh] overflow-y-auto">
               <div className="p-4">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-slate-900 flex items-center gap-2">
