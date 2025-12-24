@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 // Beautiful high-resolution background images from Unsplash
@@ -606,11 +606,31 @@ export function BackgroundSelector({
   const [isUploading, setIsUploading] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // For portal - need to wait for client-side mount
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Calculate dropdown position when opening
+  const handleTogglePanel = () => {
+    if (!showPanel && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const panelWidth = 320; // w-80 = 20rem = 320px
+      // Position below button, but keep within viewport
+      let left = rect.left;
+      if (left + panelWidth > window.innerWidth - 8) {
+        left = window.innerWidth - panelWidth - 8;
+      }
+      setDropdownPosition({
+        top: rect.bottom + 8,
+        left: Math.max(8, left)
+      });
+    }
+    setShowPanel(!showPanel);
+  };
 
   const isDark = variant === 'dark';
   const currentBg = STUDY_BACKGROUNDS.find(b => b.id === selectedBackground);
@@ -656,7 +676,8 @@ export function BackgroundSelector({
     <div className="relative">
       {/* Toggle Button */}
       <button
-        onClick={() => setShowPanel(!showPanel)}
+        ref={buttonRef}
+        onClick={handleTogglePanel}
         className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors whitespace-nowrap flex-shrink-0 ${
           showPanel || selectedBackground !== 'none'
             ? isDark
@@ -676,16 +697,22 @@ export function BackgroundSelector({
         <>
           {/* Backdrop to close panel */}
           <div
-            className="fixed inset-0 z-[9998] bg-black/20"
+            className="fixed inset-0 z-[9998]"
             onClick={() => setShowPanel(false)}
           />
 
-          {/* Panel - fixed position at document body level */}
-          <div className={`fixed inset-x-4 bottom-4 sm:inset-auto sm:top-auto sm:bottom-auto sm:left-auto sm:right-4 sm:top-20 w-auto sm:w-80 max-h-[70vh] overflow-y-auto rounded-xl shadow-2xl border z-[9999] ${
-            isDark
-              ? 'bg-slate-800 border-slate-700'
-              : 'bg-white border-slate-200'
-          }`}>
+          {/* Panel - positioned directly below the button */}
+          <div
+            className={`fixed w-80 max-h-[70vh] overflow-y-auto rounded-xl shadow-2xl border z-[9999] ${
+              isDark
+                ? 'bg-slate-800 border-slate-700'
+                : 'bg-white border-slate-200'
+            }`}
+            style={{
+              top: dropdownPosition.top,
+              left: dropdownPosition.left,
+            }}
+          >
             <div className="p-4">
               <h3 className={`font-semibold mb-3 flex items-center gap-2 ${
                 isDark ? 'text-white' : 'text-slate-900'
