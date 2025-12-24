@@ -16,11 +16,12 @@ interface MonthViewProps {
   events: CalendarEvent[];
   onDateClick: (date: Date) => void;
   onEventClick: (event: CalendarEvent) => void;
+  onDeleteEvent?: (eventId: string) => void;
 }
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export function MonthView({ currentDate, events, onDateClick, onEventClick }: MonthViewProps) {
+export function MonthView({ currentDate, events, onDateClick, onEventClick, onDeleteEvent }: MonthViewProps) {
   const days = useMemo(() => {
     return getMonthDays(currentDate.getFullYear(), currentDate.getMonth());
   }, [currentDate]);
@@ -88,24 +89,45 @@ export function MonthView({ currentDate, events, onDateClick, onEventClick }: Mo
 
                 {/* Events (show max 2) */}
                 <div className="space-y-1 overflow-hidden">
-                  {dayEvents.slice(0, 2).map(event => (
-                    <div
-                      key={event.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onEventClick(event);
-                      }}
-                      className="group px-1.5 py-0.5 rounded text-xs truncate cursor-pointer hover:opacity-80"
-                      style={{ backgroundColor: `${getEventColor(event)}20`, color: getEventColor(event) }}
-                    >
-                      {!event.isAllDay && event.startTime && (
-                        <span className="font-medium mr-1">
-                          {event.startTime.split(':').slice(0, 2).join(':')}
+                  {dayEvents.slice(0, 2).map(event => {
+                    const canDelete = event.type !== 'task' && event.type !== 'study-room' && !event.linkedRoomId;
+                    return (
+                      <div
+                        key={event.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEventClick(event);
+                        }}
+                        className="group flex items-center gap-0.5 px-1.5 py-0.5 rounded text-xs cursor-pointer hover:opacity-80"
+                        style={{ backgroundColor: `${getEventColor(event)}20`, color: getEventColor(event) }}
+                      >
+                        <span className="truncate flex-1">
+                          {!event.isAllDay && event.startTime && (
+                            <span className="font-medium mr-1">
+                              {event.startTime.split(':').slice(0, 2).join(':')}
+                            </span>
+                          )}
+                          {event.title}
                         </span>
-                      )}
-                      {event.title}
-                    </div>
-                  ))}
+                        {canDelete && onDeleteEvent && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (confirm('Delete this event?')) {
+                                onDeleteEvent(event.id);
+                              }
+                            }}
+                            className="opacity-0 group-hover:opacity-100 p-0.5 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-opacity flex-shrink-0"
+                            title="Delete event"
+                          >
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             );

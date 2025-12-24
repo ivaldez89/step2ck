@@ -11,6 +11,7 @@ import {
 interface AgendaViewProps {
   events: CalendarEvent[];
   onEventClick: (event: CalendarEvent) => void;
+  onDeleteEvent?: (eventId: string) => void;
 }
 
 interface GroupedEvents {
@@ -21,7 +22,7 @@ interface GroupedEvents {
   events: CalendarEvent[];
 }
 
-export function AgendaView({ events, onEventClick }: AgendaViewProps) {
+export function AgendaView({ events, onEventClick, onDeleteEvent }: AgendaViewProps) {
   const groupedEvents = useMemo(() => {
     const today = dateToString(new Date());
     const tomorrow = dateToString(new Date(Date.now() + 86400000));
@@ -97,89 +98,109 @@ export function AgendaView({ events, onEventClick }: AgendaViewProps) {
 
             {/* Events for this date */}
             <div className="space-y-2 mt-2">
-              {group.events.map(event => (
-                <div
-                  key={event.id}
-                  onClick={() => onEventClick(event)}
-                  className="flex items-start gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors"
-                >
-                  {/* Time or all-day indicator */}
-                  <div className="w-20 flex-shrink-0 text-right">
-                    {event.isAllDay || !event.startTime ? (
-                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                        All day
-                      </span>
-                    ) : (
-                      <div>
-                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                          {formatTime12h(event.startTime)}
-                        </div>
-                        {event.endTime && (
-                          <div className="text-xs text-gray-500 dark:text-gray-400">
-                            {formatTime12h(event.endTime)}
+              {group.events.map(event => {
+                const canDelete = event.type !== 'task' && event.type !== 'study-room' && !event.linkedRoomId;
+                return (
+                  <div
+                    key={event.id}
+                    onClick={() => onEventClick(event)}
+                    className="group flex items-start gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+                  >
+                    {/* Time or all-day indicator */}
+                    <div className="w-20 flex-shrink-0 text-right">
+                      {event.isAllDay || !event.startTime ? (
+                        <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                          All day
+                        </span>
+                      ) : (
+                        <div>
+                          <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                            {formatTime12h(event.startTime)}
                           </div>
+                          {event.endTime && (
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                              {formatTime12h(event.endTime)}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Color bar */}
+                    <div
+                      className="w-1 self-stretch rounded-full flex-shrink-0"
+                      style={{ backgroundColor: getEventColor(event) }}
+                    />
+
+                    {/* Event content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-medium text-gray-900 dark:text-gray-100 truncate">
+                          {event.title}
+                        </h4>
+                        <EventTypeBadge type={event.type} />
+                      </div>
+
+                      {event.description && (
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+                          {event.description}
+                        </p>
+                      )}
+
+                      {/* Additional info */}
+                      <div className="flex items-center gap-3 mt-2 text-xs text-gray-500 dark:text-gray-400">
+                        {event.category && (
+                          <span className="flex items-center gap-1">
+                            <span
+                              className="w-2 h-2 rounded-full"
+                              style={{ backgroundColor: getEventColor(event) }}
+                            />
+                            {event.category}
+                          </span>
+                        )}
+                        {event.linkedRoomId && (
+                          <span className="flex items-center gap-1">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            Study Room
+                          </span>
+                        )}
+                        {event.participants && event.participants.length > 0 && (
+                          <span className="flex items-center gap-1">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            {event.participants.length} participants
+                          </span>
                         )}
                       </div>
-                    )}
-                  </div>
-
-                  {/* Color bar */}
-                  <div
-                    className="w-1 self-stretch rounded-full flex-shrink-0"
-                    style={{ backgroundColor: getEventColor(event) }}
-                  />
-
-                  {/* Event content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-medium text-gray-900 dark:text-gray-100 truncate">
-                        {event.title}
-                      </h4>
-                      <EventTypeBadge type={event.type} />
                     </div>
 
-                    {event.description && (
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
-                        {event.description}
-                      </p>
+                    {/* Delete button or Arrow */}
+                    {canDelete && onDeleteEvent ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm('Delete this event?')) {
+                            onDeleteEvent(event.id);
+                          }
+                        }}
+                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all flex-shrink-0"
+                        title="Delete event"
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    ) : (
+                      <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     )}
-
-                    {/* Additional info */}
-                    <div className="flex items-center gap-3 mt-2 text-xs text-gray-500 dark:text-gray-400">
-                      {event.category && (
-                        <span className="flex items-center gap-1">
-                          <span
-                            className="w-2 h-2 rounded-full"
-                            style={{ backgroundColor: getEventColor(event) }}
-                          />
-                          {event.category}
-                        </span>
-                      )}
-                      {event.linkedRoomId && (
-                        <span className="flex items-center gap-1">
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
-                          Study Room
-                        </span>
-                      )}
-                      {event.participants && event.participants.length > 0 && (
-                        <span className="flex items-center gap-1">
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                          </svg>
-                          {event.participants.length} participants
-                        </span>
-                      )}
-                    </div>
                   </div>
-
-                  {/* Arrow */}
-                  <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         ))}

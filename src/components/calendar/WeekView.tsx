@@ -17,9 +17,10 @@ interface WeekViewProps {
   events: CalendarEvent[];
   onTimeSlotClick: (date: Date, time: string) => void;
   onEventClick: (event: CalendarEvent) => void;
+  onDeleteEvent?: (eventId: string) => void;
 }
 
-export function WeekView({ currentDate, events, onTimeSlotClick, onEventClick }: WeekViewProps) {
+export function WeekView({ currentDate, events, onTimeSlotClick, onEventClick, onDeleteEvent }: WeekViewProps) {
   const days = useMemo(() => getWeekDays(currentDate), [currentDate]);
   const timeSlots = useMemo(() => generateTimeSlots(6, 22), []);
 
@@ -91,16 +92,35 @@ export function WeekView({ currentDate, events, onTimeSlotClick, onEventClick }:
                 key={index}
                 className="border-l border-gray-100 dark:border-gray-800 p-0.5 space-y-0.5"
               >
-                {allDayEvents.slice(0, 2).map(event => (
-                  <div
-                    key={event.id}
-                    onClick={() => onEventClick(event)}
-                    className="px-1 py-0.5 text-xs rounded truncate cursor-pointer hover:opacity-80"
-                    style={{ backgroundColor: `${getEventColor(event)}20`, color: getEventColor(event) }}
-                  >
-                    {event.title}
-                  </div>
-                ))}
+                {allDayEvents.slice(0, 2).map(event => {
+                  const canDelete = event.type !== 'task' && event.type !== 'study-room' && !event.linkedRoomId;
+                  return (
+                    <div
+                      key={event.id}
+                      onClick={() => onEventClick(event)}
+                      className="group flex items-center gap-0.5 px-1 py-0.5 text-xs rounded cursor-pointer hover:opacity-80"
+                      style={{ backgroundColor: `${getEventColor(event)}20`, color: getEventColor(event) }}
+                    >
+                      <span className="truncate flex-1">{event.title}</span>
+                      {canDelete && onDeleteEvent && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm('Delete this event?')) {
+                              onDeleteEvent(event.id);
+                            }
+                          }}
+                          className="opacity-0 group-hover:opacity-100 p-0.5 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-opacity flex-shrink-0"
+                          title="Delete"
+                        >
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
                 {allDayEvents.length > 2 && (
                   <div className="text-xs text-gray-500 px-1">+{allDayEvents.length - 2}</div>
                 )}
@@ -147,23 +167,44 @@ export function WeekView({ currentDate, events, onTimeSlotClick, onEventClick }:
                         onClick={() => onTimeSlotClick(date, time)}
                         className="h-12 border-b border-gray-50 dark:border-gray-800/50 relative cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/30"
                       >
-                        {hourEvents.map((event, eventIndex) => (
-                          <div
-                            key={event.id}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onEventClick(event);
-                            }}
-                            className="absolute left-0.5 right-0.5 px-1 py-0.5 text-xs rounded truncate cursor-pointer hover:opacity-80 z-10"
-                            style={{
-                              backgroundColor: `${getEventColor(event)}20`,
-                              color: getEventColor(event),
-                              top: `${eventIndex * 20}px`,
-                            }}
-                          >
-                            <span className="font-medium">{event.startTime}</span> {event.title}
-                          </div>
-                        ))}
+                        {hourEvents.map((event, eventIndex) => {
+                          const canDelete = event.type !== 'task' && event.type !== 'study-room' && !event.linkedRoomId;
+                          return (
+                            <div
+                              key={event.id}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onEventClick(event);
+                              }}
+                              className="group absolute left-0.5 right-0.5 px-1 py-0.5 text-xs rounded cursor-pointer hover:opacity-80 z-10 flex items-center gap-0.5"
+                              style={{
+                                backgroundColor: `${getEventColor(event)}20`,
+                                color: getEventColor(event),
+                                top: `${eventIndex * 20}px`,
+                              }}
+                            >
+                              <span className="truncate flex-1">
+                                <span className="font-medium">{event.startTime}</span> {event.title}
+                              </span>
+                              {canDelete && onDeleteEvent && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (confirm('Delete this event?')) {
+                                      onDeleteEvent(event.id);
+                                    }
+                                  }}
+                                  className="opacity-0 group-hover:opacity-100 p-0.5 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-opacity flex-shrink-0"
+                                  title="Delete"
+                                >
+                                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                  </svg>
+                                </button>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     );
                   })}

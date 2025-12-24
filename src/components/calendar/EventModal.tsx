@@ -7,6 +7,7 @@ interface EventModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (data: CreateEventData) => Promise<void>;
+  onDelete?: (eventId: string) => Promise<void>;
   initialDate?: Date;
   initialTime?: string;
   existingEvent?: CalendarEvent;
@@ -16,11 +17,13 @@ export function EventModal({
   isOpen,
   onClose,
   onSave,
+  onDelete,
   initialDate,
   initialTime,
   existingEvent,
 }: EventModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [title, setTitle] = useState(existingEvent?.title || '');
   const [description, setDescription] = useState(existingEvent?.description || '');
@@ -201,10 +204,30 @@ export function EventModal({
 
           {/* Actions */}
           <div className="flex gap-3 pt-2">
+            {existingEvent && onDelete && (
+              <button
+                type="button"
+                onClick={async () => {
+                  if (confirm('Are you sure you want to delete this event?')) {
+                    setIsDeleting(true);
+                    try {
+                      await onDelete(existingEvent.id);
+                      onClose();
+                    } finally {
+                      setIsDeleting(false);
+                    }
+                  }
+                }}
+                disabled={isDeleting}
+                className="px-4 py-2.5 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+            )}
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors font-medium"
+              className={`${existingEvent && onDelete ? '' : 'flex-1'} px-4 py-2.5 text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors font-medium`}
             >
               Cancel
             </button>

@@ -137,6 +137,7 @@ export function UnifiedCalendarHub() {
                   events={events}
                   onDateClick={handleDateClick}
                   onEventClick={handleEventClick}
+                  onDeleteEvent={handleDeleteEvent}
                 />
               )}
               {view === 'week' && (
@@ -145,6 +146,7 @@ export function UnifiedCalendarHub() {
                   events={events}
                   onTimeSlotClick={handleTimeSlotClick}
                   onEventClick={handleEventClick}
+                  onDeleteEvent={handleDeleteEvent}
                 />
               )}
               {view === 'day' && (
@@ -153,12 +155,14 @@ export function UnifiedCalendarHub() {
                   events={events}
                   onTimeSlotClick={handleDayTimeSlotClick}
                   onEventClick={handleEventClick}
+                  onDeleteEvent={handleDeleteEvent}
                 />
               )}
               {view === 'agenda' && (
                 <AgendaView
                   events={events}
                   onEventClick={handleEventClick}
+                  onDeleteEvent={handleDeleteEvent}
                 />
               )}
             </>
@@ -208,6 +212,9 @@ export function UnifiedCalendarHub() {
         isOpen={showEventModal}
         onClose={closeEventModal}
         onSave={handleCreateEvent}
+        onDelete={async (eventId) => {
+          await handleDeleteEvent(eventId);
+        }}
         initialDate={selectedDate}
         initialTime={selectedTime}
         existingEvent={selectedEvent}
