@@ -428,10 +428,10 @@ export default function HomePage() {
                       Rapid Review
                     </Link>
                     <Link
-                      href="/progress"
+                      href="/progress/rooms"
                       className="px-4 py-3 bg-[#F5EFE6] dark:bg-slate-700 hover:bg-[#E8DFD0] dark:hover:bg-slate-600 text-[#3D5A4C] dark:text-slate-200 rounded-xl text-center font-medium transition-all text-sm border border-[#D4C4B0]/50 dark:border-slate-600"
                     >
-                      Dashboard
+                      Study Group
                     </Link>
                   </div>
                 </div>
