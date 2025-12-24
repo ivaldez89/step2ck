@@ -162,7 +162,7 @@ export default function HomePage() {
 
   if (isLoading || isAuthenticated === null) {
     return (
-      <div className="min-h-screen bg-[#C4A77D] dark:bg-slate-900">
+      <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800">
         <Header />
         <main className="max-w-5xl mx-auto px-4 py-8">
           <div className="animate-pulse space-y-6">
@@ -205,7 +205,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#C4A77D] dark:bg-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800">
       <Header />
 
       <main className="max-w-5xl mx-auto px-4 py-6">
