@@ -276,6 +276,9 @@ export default function HomePage() {
                     {getLocation()}
                   </p>
                 )}
+                {profile?.bio && (
+                  <p className="text-slate-700 dark:text-slate-300 mt-3 max-w-xl">{profile.bio}</p>
+                )}
               </div>
 
               {/* Stats Summary */}

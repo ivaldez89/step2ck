@@ -90,9 +90,9 @@ export default function GroupsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#E8DFD0] dark:bg-slate-900">
+      <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800">
         <Header />
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-5xl mx-auto px-4 py-6">
           <div className="animate-pulse space-y-6">
             <div className="h-48 bg-[#D4C4B0]/50 dark:bg-slate-800 rounded-3xl"></div>
             <div className="h-16 bg-[#D4C4B0]/50 dark:bg-slate-800 rounded-2xl"></div>
@@ -108,16 +108,11 @@ export default function GroupsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#E8DFD0] dark:bg-slate-900 relative">
-      {/* Subtle organic pattern overlay on sides */}
-      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-        <div className="absolute top-0 left-0 w-1/4 h-full bg-gradient-to-r from-[#D4C4B0]/30 to-transparent" />
-        <div className="absolute top-0 right-0 w-1/4 h-full bg-gradient-to-l from-[#D4C4B0]/30 to-transparent" />
-      </div>
-
+    <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800">
       <Header />
 
-      <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-5xl mx-auto px-4 py-6">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 space-y-6">
         {/* Hero Banner */}
         <section className="mb-8 animate-fade-in-up">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#5B7B6D] via-[#6B8B7D] to-[#7FA08F] p-8 md:p-10 shadow-2xl shadow-[#3D5A4C]/20">
@@ -357,6 +352,7 @@ export default function GroupsPage() {
             <Icons.Users />
             Back to Community Hub
           </Link>
+        </div>
         </div>
       </main>
 

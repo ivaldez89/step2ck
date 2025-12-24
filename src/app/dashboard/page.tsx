@@ -19,10 +19,10 @@ export default function DashboardPage() {
 
   if (isAuthenticated === null) {
     return (
-      <div className="min-h-screen bg-[#F5F0E8] dark:bg-slate-900">
+      <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800">
         <Header />
-        <main className="h-[calc(100vh-64px)]">
-          <div className="flex items-center justify-center h-full">
+        <main className="max-w-5xl mx-auto px-4 py-6">
+          <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5B7B6D]" />
           </div>
         </main>
@@ -31,10 +31,12 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] dark:bg-slate-900 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800">
       <Header />
-      <main className="flex-1 h-[calc(100vh-64px)]">
-        <UnifiedCalendarHub />
+      <main className="max-w-5xl mx-auto px-4 py-6">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <UnifiedCalendarHub />
+        </div>
       </main>
     </div>
   );

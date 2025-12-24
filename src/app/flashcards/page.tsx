@@ -527,7 +527,7 @@ export default function FlashcardsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="animate-spin w-10 h-10 border-4 border-[#8B7355] border-t-transparent rounded-full" />
           <p className="text-slate-500">Loading cards...</p>
@@ -539,10 +539,11 @@ export default function FlashcardsPage() {
   // No cards due - show completion screen
   if (filteredDueCards.length === 0) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800">
         <Header stats={stats} />
-        
-        <main className="max-w-3xl mx-auto px-4 py-16 text-center">
+
+        <main className="max-w-5xl mx-auto px-4 py-6">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 text-center">
           <div className="mb-8">
             <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#E8E0D5] to-[#D4C4B0] flex items-center justify-center">
               <svg className="w-12 h-12 text-[#5B7B6D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -602,21 +603,22 @@ export default function FlashcardsPage() {
           )}
           
           <Link
-            href="/"
+            href="/home"
             className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            <span>Back to Dashboard</span>
+            <span>Back to Home</span>
           </Link>
+          </div>
         </main>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 relative">
+    <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800 relative">
       <Header stats={stats} />
 
       {/* Background overlay - positioned below header and toolbar, behind all content */}
