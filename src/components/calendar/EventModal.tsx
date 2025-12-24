@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CalendarEvent, CreateEventData, EventType, EventCategory, dateToString } from '@/types/calendar';
+import { CalendarEvent, CreateEventData, EventType, dateToString } from '@/types/calendar';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -24,15 +24,15 @@ export function EventModal({
 
   const [title, setTitle] = useState(existingEvent?.title || '');
   const [description, setDescription] = useState(existingEvent?.description || '');
-  const [eventType, setEventType] = useState<EventType>(existingEvent?.type || 'study-session');
-  const [category, setCategory] = useState<EventCategory | ''>(existingEvent?.category || '');
   const [startDate, setStartDate] = useState(
     existingEvent?.startDate || (initialDate ? dateToString(initialDate) : dateToString(new Date()))
   );
   const [startTime, setStartTime] = useState(existingEvent?.startTime || initialTime || '09:00');
   const [endTime, setEndTime] = useState(existingEvent?.endTime || '10:00');
   const [isAllDay, setIsAllDay] = useState(existingEvent?.isAllDay || false);
-  const [createStudyRoom, setCreateStudyRoom] = useState(false);
+  const [isGroupSession, setIsGroupSession] = useState(
+    existingEvent?.type === 'study-room' || existingEvent?.linkedRoomId !== undefined
+  );
 
   if (!isOpen) return null;
 
@@ -42,6 +42,9 @@ export function EventModal({
 
     setIsSubmitting(true);
     try {
+      // Default to study-session type, but create study room if group session is enabled
+      const eventType: EventType = isGroupSession ? 'study-room' : 'study-session';
+
       await onSave({
         type: eventType,
         title: title.trim(),
@@ -50,8 +53,7 @@ export function EventModal({
         startTime: isAllDay ? undefined : startTime,
         endTime: isAllDay ? undefined : endTime,
         isAllDay,
-        category: category || undefined,
-        createStudyRoom: eventType === 'study-session' && createStudyRoom,
+        createStudyRoom: isGroupSession,
       });
       onClose();
     } finally {
@@ -65,195 +67,197 @@ export function EventModal({
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            {existingEvent ? 'Edit Event' : 'Create Event'}
+        <div className="flex items-center justify-between p-5 border-b border-slate-200 dark:border-slate-700">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+            {existingEvent ? 'Edit Event' : 'Add Event'}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
           >
-            <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-4 space-y-4">
+        <form onSubmit={handleSubmit} className="p-5 space-y-5">
           {/* Title */}
           <div>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Event title"
-              className="w-full px-4 py-3 text-lg font-medium border-0 border-b-2 border-gray-200 dark:border-gray-700 bg-transparent focus:border-blue-500 focus:ring-0 text-gray-900 dark:text-gray-100 placeholder-gray-400"
+              placeholder="What's on your schedule?"
+              className="w-full px-4 py-3 text-lg border-0 border-b-2 border-slate-200 dark:border-slate-600 bg-transparent focus:border-[#5B7B6D] focus:ring-0 text-slate-900 dark:text-white placeholder-slate-400"
               required
               autoFocus
             />
           </div>
 
-          {/* Event Type */}
+          {/* Date */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Event Type
+            <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1.5">
+              Date
             </label>
-            <div className="grid grid-cols-2 gap-2">
-              {[
-                { value: 'study-session', label: 'Study Session', icon: '📚' },
-                { value: 'task', label: 'Task', icon: '✓' },
-                { value: 'study-room', label: 'Study Room', icon: '👥' },
-                { value: 'wellness', label: 'Wellness', icon: '🧘' },
-              ].map((type) => (
-                <button
-                  key={type.value}
-                  type="button"
-                  onClick={() => setEventType(type.value as EventType)}
-                  className={`
-                    flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-colors
-                    ${eventType === type.value
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                    }
-                  `}
-                >
-                  <span>{type.icon}</span>
-                  <span className="text-sm font-medium">{type.label}</span>
-                </button>
-              ))}
-            </div>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#5B7B6D] focus:border-transparent"
+              required
+            />
           </div>
 
-          {/* Date and Time */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Date
-              </label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                required
+          {/* All Day Toggle */}
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-600 dark:text-slate-400">All day</span>
+            <button
+              type="button"
+              onClick={() => setIsAllDay(!isAllDay)}
+              className={`relative w-11 h-6 rounded-full transition-colors ${
+                isAllDay ? 'bg-[#5B7B6D]' : 'bg-slate-200 dark:bg-slate-600'
+              }`}
+            >
+              <span
+                className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                  isAllDay ? 'translate-x-5' : ''
+                }`}
               />
-            </div>
-
-            <div className="flex items-end">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isAllDay}
-                  onChange={(e) => setIsAllDay(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">All day</span>
-              </label>
-            </div>
+            </button>
           </div>
 
+          {/* Time Selection */}
           {!isAllDay && (
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Start Time
+                <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1.5">
+                  Start
                 </label>
                 <input
                   type="time"
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#5B7B6D] focus:border-transparent"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  End Time
+                <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1.5">
+                  End
                 </label>
                 <input
                   type="time"
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#5B7B6D] focus:border-transparent"
                 />
               </div>
             </div>
           )}
 
-          {/* Category */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Category
-            </label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value as EventCategory | '')}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="">No category</option>
-              <option value="study">Study</option>
-              <option value="clinical">Clinical</option>
-              <option value="personal">Personal</option>
-              <option value="wellness">Wellness</option>
-            </select>
-          </div>
-
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Description
+            <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1.5">
+              Notes
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add description..."
-              rows={3}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              placeholder="Add any details..."
+              rows={2}
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#5B7B6D] focus:border-transparent resize-none placeholder-slate-400"
             />
           </div>
 
-          {/* Study Room Option */}
-          {eventType === 'study-session' && (
-            <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={createStudyRoom}
-                  onChange={(e) => setCreateStudyRoom(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+          {/* Group Study Session Toggle */}
+          <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Group Study Session
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Create a study room others can join
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsGroupSession(!isGroupSession)}
+                className={`relative w-11 h-6 rounded-full transition-colors ${
+                  isGroupSession ? 'bg-[#5B7B6D]' : 'bg-slate-200 dark:bg-slate-600'
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
+                    isGroupSession ? 'translate-x-5' : ''
+                  }`}
                 />
-                <div>
-                  <span className="text-sm font-medium text-purple-700 dark:text-purple-300">
-                    Create a Study Room
-                  </span>
-                  <p className="text-xs text-purple-600 dark:text-purple-400">
-                    Invite others to join with chat and shared timer
-                  </p>
-                </div>
-              </label>
+              </button>
             </div>
-          )}
+          </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              className="flex-1 px-4 py-2.5 text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors font-medium"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || !title.trim()}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 px-4 py-2.5 bg-[#5B7B6D] text-white rounded-xl hover:bg-[#4A6A5C] disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
-              {isSubmitting ? 'Saving...' : existingEvent ? 'Save Changes' : 'Create Event'}
+              {isSubmitting ? 'Saving...' : existingEvent ? 'Save' : 'Add Event'}
             </button>
           </div>
         </form>
+
+        {/* Calendar Connect Section */}
+        <div className="px-5 pb-5 pt-2 border-t border-slate-100 dark:border-slate-700">
+          <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-3">
+            Connect your calendar
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              Google Calendar
+            </button>
+            <button
+              type="button"
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+            >
+              <svg className="w-4 h-4 text-[#0078D4]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21.17 3H2.83A1.83 1.83 0 0 0 1 4.83v14.34A1.83 1.83 0 0 0 2.83 21h18.34A1.83 1.83 0 0 0 23 19.17V4.83A1.83 1.83 0 0 0 21.17 3zM12 17.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
+              </svg>
+              Outlook
+            </button>
+            <button
+              type="button"
+              disabled
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-lg cursor-not-allowed"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+              School Portal
+              <span className="text-[10px] text-slate-400">Coming soon</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
