@@ -384,7 +384,7 @@ export function CalendarWidget({ variant = 'compact', onEventClick }: CalendarWi
               {/* View Full Calendar Link */}
               <div className="p-3 border-t border-slate-200 dark:border-slate-700">
                 <a
-                  href="/study/progress"
+                  href="/progress/progress"
                   className="block w-full text-center text-sm text-indigo-600 dark:text-indigo-400 hover:underline"
                 >
                   View Full Calendar →

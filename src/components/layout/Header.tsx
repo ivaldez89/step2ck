@@ -172,11 +172,11 @@ function NavDropdown({ label, href, items }: NavDropdownProps) {
 
 // Dropdown menu configurations
 const studyDropdownItems: DropdownItem[] = [
-  { label: 'Flashcards', href: '/study', description: 'Study sessions & Pomodoro timer' },
-  { label: 'Study Rooms', href: '/study/rooms', description: 'Collaborative study with chat & timers' },
+  { label: 'Flashcards', href: '/progress', description: 'Study sessions & Pomodoro timer' },
+  { label: 'Study Rooms', href: '/progress/rooms', description: 'Collaborative study with chat & timers' },
   { label: 'Clinical Cases', href: '/cases', description: 'Interactive patient scenarios' },
   { label: 'AI Generator', href: '/generate', description: 'Create flashcards with AI' },
-  { label: 'Rapid Review', href: '/study/rapid-review', description: 'Quick concept review' },
+  { label: 'Rapid Review', href: '/progress/rapid-review', description: 'Quick concept review' },
   { label: 'Card Library', href: '/library', description: 'QBank-linked cards' },
   { label: 'Resources', href: '/resources', description: 'Visual guides & infographics' },
 ];
@@ -255,10 +255,10 @@ export function Header({ stats }: HeaderProps) {
                     </svg>
                   }
                 />
-                {/* Study */}
+                {/* Progress */}
                 <IconNavLink
-                  href="/study"
-                  label="Study"
+                  href="/progress"
+                  label="Progress"
                   matchPrefix
                   icon={
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -353,7 +353,7 @@ export function Header({ stats }: HeaderProps) {
                 </div>
 
                 <Link
-                  href="/study/flashcards"
+                  href="/progress/flashcards"
                   className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-tribe-sage-500 text-white shadow-soft hover:shadow-soft-md transition-shadow"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -418,11 +418,11 @@ export function Header({ stats }: HeaderProps) {
                 {/* Study Section */}
                 <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                   <p className="px-4 py-1 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Study</p>
-                  <MobileNavLink href="/study" onClick={() => setMobileMenuOpen(false)}>Flashcards</MobileNavLink>
+                  <MobileNavLink href="/progress/flashcards" onClick={() => setMobileMenuOpen(false)}>Flashcards</MobileNavLink>
                   <MobileNavLink href="/cases" onClick={() => setMobileMenuOpen(false)}>Clinical Cases</MobileNavLink>
                   <MobileNavLink href="/generate" onClick={() => setMobileMenuOpen(false)}>AI Generator</MobileNavLink>
                   <MobileNavLink href="/library" onClick={() => setMobileMenuOpen(false)}>Card Library</MobileNavLink>
-                  <MobileNavLink href="/study/progress" onClick={() => setMobileMenuOpen(false)}>Study Progress</MobileNavLink>
+                  <MobileNavLink href="/progress" onClick={() => setMobileMenuOpen(false)}>Study Progress</MobileNavLink>
                 </div>
 
                 {/* Tools Section */}

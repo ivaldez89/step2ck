@@ -107,7 +107,7 @@ const PLATFORM_PILLARS = [
   {
     title: 'Study',
     description: 'AI-powered adaptive learning with FSRS spaced repetition. High-yield visual guides, clinical pearls, and audio mode for on-the-go learning.',
-    href: '/study',
+    href: '/progress',
     icon: 'Study',
     gradient: 'from-[#C4A77D] to-[#A89070]',
     features: ['Adaptive AI Review', 'Visual Guides', 'Clinical Pearls', 'Text-to-Speech']

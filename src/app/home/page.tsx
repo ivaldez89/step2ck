@@ -317,7 +317,7 @@ export default function HomePage() {
                 <div className="mt-6 flex flex-wrap items-center gap-3">
                   {dueCards.length > 0 && (
                     <Link
-                      href="/study"
+                      href="/progress"
                       className="inline-flex items-center gap-2 px-4 py-2 bg-[#F5EFE6] hover:bg-[#E8DFD0] dark:bg-slate-700/50 dark:hover:bg-slate-600/50 rounded-xl text-[#3D5A4C] dark:text-white text-sm font-medium transition-all border border-[#D4C4B0]/50 dark:border-slate-600"
                     >
                       <span className="w-2 h-2 bg-[#5B7B6D] rounded-full animate-pulse" />
@@ -369,7 +369,7 @@ export default function HomePage() {
                     <div className="w-6 h-6"><Icons.Book /></div>
                     Study
                   </h2>
-                  <Link href="/study" className="text-sm text-white/80 hover:text-white font-medium">
+                  <Link href="/progress" className="text-sm text-white/80 hover:text-white font-medium">
                     View All →
                   </Link>
                 </div>
@@ -410,28 +410,28 @@ export default function HomePage() {
                   {/* Quick Actions */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <Link
-                      href="/study"
+                      href="/progress/flashcards"
                       className="px-4 py-3 bg-gradient-to-r from-[#3D5A4C] to-[#5B7B6D] text-white rounded-xl text-center font-medium shadow-md shadow-[#3D5A4C]/20 hover:shadow-lg hover:shadow-[#3D5A4C]/30 transition-all text-sm"
                     >
-                      Start Studying
-                    </Link>
-                    <Link
-                      href="/study/rapid-review"
-                      className="px-4 py-3 bg-[#F5EFE6] dark:bg-slate-700 hover:bg-[#E8DFD0] dark:hover:bg-slate-600 text-[#3D5A4C] dark:text-slate-200 rounded-xl text-center font-medium transition-all text-sm border border-[#D4C4B0]/50 dark:border-slate-600"
-                    >
-                      Rapid Review
-                    </Link>
-                    <Link
-                      href="/generate"
-                      className="px-4 py-3 bg-[#F5EFE6] dark:bg-slate-700 hover:bg-[#E8DFD0] dark:hover:bg-slate-600 text-[#3D5A4C] dark:text-slate-200 rounded-xl text-center font-medium transition-all text-sm border border-[#D4C4B0]/50 dark:border-slate-600"
-                    >
-                      AI Generate
+                      Flashcards
                     </Link>
                     <Link
                       href="/cases"
                       className="px-4 py-3 bg-[#F5EFE6] dark:bg-slate-700 hover:bg-[#E8DFD0] dark:hover:bg-slate-600 text-[#3D5A4C] dark:text-slate-200 rounded-xl text-center font-medium transition-all text-sm border border-[#D4C4B0]/50 dark:border-slate-600"
                     >
                       Cases
+                    </Link>
+                    <Link
+                      href="/progress/rapid-review"
+                      className="px-4 py-3 bg-[#F5EFE6] dark:bg-slate-700 hover:bg-[#E8DFD0] dark:hover:bg-slate-600 text-[#3D5A4C] dark:text-slate-200 rounded-xl text-center font-medium transition-all text-sm border border-[#D4C4B0]/50 dark:border-slate-600"
+                    >
+                      Rapid Review
+                    </Link>
+                    <Link
+                      href="/progress"
+                      className="px-4 py-3 bg-[#F5EFE6] dark:bg-slate-700 hover:bg-[#E8DFD0] dark:hover:bg-slate-600 text-[#3D5A4C] dark:text-slate-200 rounded-xl text-center font-medium transition-all text-sm border border-[#D4C4B0]/50 dark:border-slate-600"
+                    >
+                      Dashboard
                     </Link>
                   </div>
                 </div>
@@ -782,7 +782,7 @@ export default function HomePage() {
                 </div>
                 <div className="px-4 py-3 bg-[#F5EFE6]/50 dark:bg-slate-700/30 text-center border-t border-[#E8DFD0] dark:border-slate-700">
                   <Link
-                    href="/study/progress"
+                    href="/progress/progress"
                     className="text-sm text-[#5B7B6D] dark:text-[#6B8B7D] hover:underline font-medium"
                   >
                     View Full Progress

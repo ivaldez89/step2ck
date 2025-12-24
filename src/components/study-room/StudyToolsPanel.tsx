@@ -17,7 +17,7 @@ export function StudyToolsPanel() {
           />
         </svg>
       ),
-      href: '/study',
+      href: '/progress',
       color: 'from-tribe-sage-500 to-cyan-600',
       available: true,
     },
@@ -29,7 +29,7 @@ export function StudyToolsPanel() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       ),
-      href: '/study/rapid-review',
+      href: '/progress/rapid-review',
       color: 'from-amber-500 to-orange-600',
       available: true,
     },

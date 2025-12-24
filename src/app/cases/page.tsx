@@ -416,7 +416,7 @@ export default function CasesPage() {
 
             {/* Box 3: Progress */}
             <Link
-              href="/study/progress"
+              href="/progress/progress"
               className="group relative p-6 bg-gradient-to-br from-[#A89070] to-[#C4A77D] rounded-2xl shadow-lg shadow-[#A89070]/25 hover:shadow-[#A89070]/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
             >
               <div className="relative z-10">

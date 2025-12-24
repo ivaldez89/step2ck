@@ -11,12 +11,12 @@ const AUTH_PAGES = ['/login', '/register'];
 
 // Pages where we don't want to show the ChatBubble (they have their own chat)
 const HIDE_CHAT_BUBBLE_PATTERNS = [
-  '/study/room/', // Study room has its own SessionChat in the sidebar
+  '/progress/room/', // Study room has its own SessionChat in the sidebar
 ];
 
 // Pages where we don't want to show the Spotify player
 const HIDE_SPOTIFY_PATTERNS = [
-  '/study/room/', // Study room has its own music controls in the UI
+  '/progress/room/', // Study room has its own music controls in the UI
 ];
 
 export function GlobalUI() {

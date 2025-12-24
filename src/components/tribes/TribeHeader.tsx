@@ -4,6 +4,32 @@ import Link from 'next/link';
 import type { Tribe } from '@/types/tribes';
 import { getTypeLabel } from '@/lib/storage/tribeStorage';
 
+// Forest theme colors - only these are allowed
+const FOREST_THEME_COLORS = [
+  'from-[#3D5A4C] to-[#2D4A3C]', // Deep Forest
+  'from-[#5B7B6D] to-[#3D5A4C]', // Forest
+  'from-[#6B8B7D] to-[#5B7B6D]', // Sage
+  'from-[#8B7355] to-[#6B5344]', // Bark
+  'from-[#A89070] to-[#8B7355]', // Sand
+  'from-[#C4A77D] to-[#A89070]', // Wheat
+];
+
+// Map tribe types to forest theme colors (fallback)
+const TYPE_COLORS: Record<Tribe['type'], string> = {
+  study: 'from-[#A89070] to-[#8B7355]',    // Sand
+  specialty: 'from-[#8B7355] to-[#6B5344]', // Bark
+  wellness: 'from-[#6B8B7D] to-[#5B7B6D]',  // Sage
+  cause: 'from-[#5B7B6D] to-[#3D5A4C]',     // Forest
+};
+
+// Validate and get forest theme color
+function getForestColor(color: string | undefined, type: Tribe['type']): string {
+  if (color && FOREST_THEME_COLORS.includes(color)) {
+    return color;
+  }
+  return TYPE_COLORS[type] || 'from-[#5B7B6D] to-[#3D5A4C]';
+}
+
 interface TribeHeaderProps {
   tribe: Tribe;
   isMember: boolean;
@@ -21,8 +47,10 @@ export function TribeHeader({
   onLeave,
   onSetPrimary,
 }: TribeHeaderProps) {
+  const tribeColor = getForestColor(tribe.color, tribe.type);
+
   return (
-    <div className={`bg-gradient-to-r ${tribe.color} rounded-2xl overflow-hidden`}>
+    <div className={`bg-gradient-to-r ${tribeColor} rounded-2xl overflow-hidden`}>
       {/* Back button */}
       <div className="px-4 py-3 bg-black/10">
         <Link
@@ -53,7 +81,7 @@ export function TribeHeader({
                   </span>
                 )}
                 {isPrimary && (
-                  <span className="px-2 py-0.5 text-xs font-medium bg-yellow-400 text-yellow-900 rounded-full">
+                  <span className="px-2 py-0.5 text-xs font-medium bg-[#C4A77D] text-[#3D5A4C] rounded-full">
                     Primary
                   </span>
                 )}
@@ -97,7 +125,7 @@ export function TribeHeader({
                 )}
                 <button
                   onClick={onLeave}
-                  className="px-4 py-2 bg-white/20 hover:bg-red-500/50 text-white rounded-lg text-sm font-medium transition-colors"
+                  className="px-4 py-2 bg-white/20 hover:bg-[#6B5344]/50 text-white rounded-lg text-sm font-medium transition-colors"
                 >
                   Leave Tribe
                 </button>

@@ -8,7 +8,33 @@ import { TribeCard } from '@/components/tribes/TribeCard';
 import { CreateTribeModal } from '@/components/tribes/CreateTribeModal';
 import { useTribes } from '@/hooks/useTribes';
 import { Icons } from '@/components/ui/Icons';
-import type { TribeType, SocialCause, TribeFilter } from '@/types/tribes';
+import type { Tribe, TribeType, SocialCause, TribeFilter } from '@/types/tribes';
+
+// Forest theme colors - only these are allowed
+const FOREST_THEME_COLORS = [
+  'from-[#3D5A4C] to-[#2D4A3C]', // Deep Forest
+  'from-[#5B7B6D] to-[#3D5A4C]', // Forest
+  'from-[#6B8B7D] to-[#5B7B6D]', // Sage
+  'from-[#8B7355] to-[#6B5344]', // Bark
+  'from-[#A89070] to-[#8B7355]', // Sand
+  'from-[#C4A77D] to-[#A89070]', // Wheat
+];
+
+// Map tribe types to forest theme colors (fallback)
+const TYPE_COLORS: Record<TribeType, string> = {
+  study: 'from-[#A89070] to-[#8B7355]',    // Sand
+  specialty: 'from-[#8B7355] to-[#6B5344]', // Bark
+  wellness: 'from-[#6B8B7D] to-[#5B7B6D]',  // Sage
+  cause: 'from-[#5B7B6D] to-[#3D5A4C]',     // Forest
+};
+
+// Validate and get forest theme color
+function getForestColor(color: string | undefined, type: TribeType): string {
+  if (color && FOREST_THEME_COLORS.includes(color)) {
+    return color;
+  }
+  return TYPE_COLORS[type] || 'from-[#5B7B6D] to-[#3D5A4C]';
+}
 
 type SortOption = 'popular' | 'newest' | 'points' | 'alphabetical';
 
@@ -323,7 +349,7 @@ export default function TribesPage() {
                   >
                     {index + 1}
                   </span>
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tribe.color} flex items-center justify-center shadow-md text-white`}>
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${getForestColor(tribe.color, tribe.type)} flex items-center justify-center shadow-md text-white`}>
                     <Icons.Village />
                   </div>
                   <div className="flex-1 min-w-0">

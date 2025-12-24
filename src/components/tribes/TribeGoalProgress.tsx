@@ -3,6 +3,24 @@
 import type { SocialImpactGoal } from '@/types/tribes';
 import { getGoalProgress, getCauseLabel } from '@/lib/storage/tribeStorage';
 
+// Forest theme colors - only these are allowed
+const FOREST_THEME_COLORS = [
+  'from-[#3D5A4C] to-[#2D4A3C]', // Deep Forest
+  'from-[#5B7B6D] to-[#3D5A4C]', // Forest
+  'from-[#6B8B7D] to-[#5B7B6D]', // Sage
+  'from-[#8B7355] to-[#6B5344]', // Bark
+  'from-[#A89070] to-[#8B7355]', // Sand
+  'from-[#C4A77D] to-[#A89070]', // Wheat
+];
+
+// Validate and get forest theme color
+function getForestColor(color: string | undefined): string {
+  if (color && FOREST_THEME_COLORS.includes(color)) {
+    return color;
+  }
+  return 'from-[#5B7B6D] to-[#3D5A4C]'; // Default forest green
+}
+
 interface TribeGoalProgressProps {
   goal: SocialImpactGoal;
   color: string;
@@ -11,6 +29,7 @@ interface TribeGoalProgressProps {
 export function TribeGoalProgress({ goal, color }: TribeGoalProgressProps) {
   const progress = getGoalProgress(goal);
   const isCompleted = !!goal.completedAt;
+  const validColor = getForestColor(color);
 
   const causeIcons: Record<SocialImpactGoal['cause'], string> = {
     'red-cross': '❤️',
@@ -37,7 +56,7 @@ export function TribeGoalProgress({ goal, color }: TribeGoalProgressProps) {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl border border-[#D4C4B0]/50 dark:border-slate-700 overflow-hidden shadow-sm shadow-[#3D5A4C]/5">
       {/* Header */}
-      <div className={`px-6 py-4 bg-gradient-to-r ${color}`}>
+      <div className={`px-6 py-4 bg-gradient-to-r ${validColor}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-3xl">{causeIcons[goal.cause]}</span>
@@ -69,7 +88,7 @@ export function TribeGoalProgress({ goal, color }: TribeGoalProgressProps) {
           </div>
           <div className="h-4 bg-[#E8DFD0] dark:bg-slate-700 rounded-full overflow-hidden">
             <div
-              className={`h-full bg-gradient-to-r ${color} rounded-full transition-all duration-500 relative`}
+              className={`h-full bg-gradient-to-r ${validColor} rounded-full transition-all duration-500 relative`}
               style={{ width: `${progress}%` }}
             >
               {progress > 10 && (

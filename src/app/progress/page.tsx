@@ -906,7 +906,7 @@ export default function StudyPage() {
 
                 {/* Box 3: Your Progress */}
                 <Link
-                  href="/study/progress"
+                  href="/progress/progress"
                   className="group relative p-6 bg-gradient-to-br from-[#5B7B6D] to-[#4A6A5C] rounded-2xl shadow-lg shadow-[#5B7B6D]/25 hover:shadow-[#5B7B6D]/40 hover:scale-[1.02] transition-all duration-300 text-white overflow-hidden"
                 >
                   <div className="relative z-10">
@@ -991,7 +991,7 @@ export default function StudyPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {/* Rapid Review */}
                 <Link
-                  href="/study/rapid-review"
+                  href="/progress/rapid-review"
                   className="group flex flex-col items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-[#D4C4B0]/50 dark:border-slate-700 hover:border-[#8B7355] dark:hover:border-[#C4A77D] hover:shadow-lg hover:shadow-[#8B7355]/10 transition-all text-center"
                 >
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#A89070] to-[#8B7355] flex items-center justify-center">

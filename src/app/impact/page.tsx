@@ -494,7 +494,7 @@ export default function ImpactPage() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
-                href="/study/flashcards"
+                href="/progress/flashcards"
                 className="px-8 py-4 bg-white text-[#5B7B6D] font-semibold rounded-xl hover:bg-[#F5F0E8] transition-colors"
               >
                 Start Studying

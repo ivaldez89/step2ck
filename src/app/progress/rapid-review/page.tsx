@@ -387,7 +387,7 @@ export default function RapidReviewPage() {
             </div>
             <h1 className="text-3xl font-bold text-[#3D5A4C] dark:text-white mb-4">No Cards Available</h1>
             <p className="text-lg text-[#6B5344]/80 dark:text-slate-400 mb-8">Import some cards first to use Rapid Review mode.</p>
-            <Link href="/study" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#5B7B6D] to-[#6B8B7D] hover:from-[#4A6B5D] hover:to-[#5B7B6D] text-white font-medium rounded-xl transition-colors shadow-lg shadow-[#5B7B6D]/20">
+            <Link href="/progress" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#5B7B6D] to-[#6B8B7D] hover:from-[#4A6B5D] hover:to-[#5B7B6D] text-white font-medium rounded-xl transition-colors shadow-lg shadow-[#5B7B6D]/20">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
@@ -462,7 +462,7 @@ export default function RapidReviewPage() {
               {/* Right side - Back link only */}
               <div className="flex flex-col items-center gap-3">
                 <Link
-                  href="/study"
+                  href="/progress"
                   className="px-4 py-2 bg-white/90 dark:bg-slate-800/90 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-sm font-medium transition-colors shadow-sm"
                 >
                   ← Back to Flashcards

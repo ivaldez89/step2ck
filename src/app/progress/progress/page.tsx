@@ -165,7 +165,7 @@ export default function ProgressPage() {
       <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Link */}
         <Link
-          href="/study"
+          href="/progress"
           className="inline-flex items-center gap-2 text-[#6B5344]/80 dark:text-slate-400 hover:text-[#5B7B6D] dark:hover:text-[#6B8B7D] mb-6 transition-colors"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -649,7 +649,7 @@ export default function ProgressPage() {
         {/* Quick Action */}
         <div className="mt-8 text-center">
           <Link
-            href="/study"
+            href="/progress"
             className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#C4A77D] to-[#A89070] hover:from-[#A89070] hover:to-[#8B7355] text-white font-semibold rounded-xl transition-colors shadow-lg"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -7,6 +7,21 @@ import { Icons } from '@/components/ui/Icons';
 import Link from 'next/link';
 import { useTribes } from '@/hooks/useTribes';
 import { useWellness } from '@/hooks/useWellness';
+import type { TribeType } from '@/types/tribes';
+
+// Forest theme hex colors for inline styles
+const TYPE_HEX_COLORS: Record<TribeType, { from: string; to: string }> = {
+  study: { from: '#A89070', to: '#8B7355' },    // Sand
+  specialty: { from: '#8B7355', to: '#6B5344' }, // Bark
+  wellness: { from: '#6B8B7D', to: '#5B7B6D' },  // Sage
+  cause: { from: '#5B7B6D', to: '#3D5A4C' },     // Forest
+};
+
+// Get hex gradient for inline styles
+function getTypeGradient(type: TribeType): string {
+  const colors = TYPE_HEX_COLORS[type] || TYPE_HEX_COLORS.study;
+  return `linear-gradient(135deg, ${colors.from}, ${colors.to})`;
+}
 
 export default function CommunityPage() {
   const { userTribes, primaryTribe, tribes } = useTribes();
@@ -205,8 +220,8 @@ export default function CommunityPage() {
                     >
                       <div className="flex items-center gap-3">
                         <div
-                          className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-lg"
-                          style={{ background: `linear-gradient(135deg, ${tribe.color}, ${tribe.color}dd)` }}
+                          className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shadow-lg text-white"
+                          style={{ background: getTypeGradient(tribe.type) }}
                         >
                           {tribe.icon}
                         </div>
@@ -313,8 +328,8 @@ export default function CommunityPage() {
                     >
                       <div className="flex items-start gap-4">
                         <div
-                          className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg flex-shrink-0"
-                          style={{ background: `linear-gradient(135deg, ${tribe.color}, ${tribe.color}dd)` }}
+                          className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shadow-lg flex-shrink-0 text-white"
+                          style={{ background: getTypeGradient(tribe.type) }}
                         >
                           {tribe.icon}
                         </div>

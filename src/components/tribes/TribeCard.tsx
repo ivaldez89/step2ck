@@ -11,6 +11,33 @@ interface TribeCardProps {
   onJoin?: (tribeId: string) => void;
 }
 
+// Forest theme colors - only these are allowed
+const FOREST_THEME_COLORS = [
+  'from-[#3D5A4C] to-[#2D4A3C]', // Deep Forest
+  'from-[#5B7B6D] to-[#3D5A4C]', // Forest
+  'from-[#6B8B7D] to-[#5B7B6D]', // Sage
+  'from-[#8B7355] to-[#6B5344]', // Bark
+  'from-[#A89070] to-[#8B7355]', // Sand
+  'from-[#C4A77D] to-[#A89070]', // Wheat
+];
+
+// Map tribe types to forest theme colors (fallback)
+const TYPE_COLORS: Record<Tribe['type'], string> = {
+  study: 'from-[#A89070] to-[#8B7355]',    // Sand
+  specialty: 'from-[#8B7355] to-[#6B5344]', // Bark
+  wellness: 'from-[#6B8B7D] to-[#5B7B6D]',  // Sage
+  cause: 'from-[#5B7B6D] to-[#3D5A4C]',     // Forest
+};
+
+// Validate and get forest theme color
+function getForestColor(color: string | undefined, type: Tribe['type']): string {
+  if (color && FOREST_THEME_COLORS.includes(color)) {
+    return color;
+  }
+  // Fallback to type-based color
+  return TYPE_COLORS[type] || 'from-[#5B7B6D] to-[#3D5A4C]';
+}
+
 // Map tribe types to appropriate icons
 const typeIcons: Record<Tribe['type'], React.ReactNode> = {
   study: <Icons.Book />,
@@ -21,6 +48,7 @@ const typeIcons: Record<Tribe['type'], React.ReactNode> = {
 
 export function TribeCard({ tribe, isMember = false, onJoin }: TribeCardProps) {
   const goalProgress = tribe.currentGoal ? getGoalProgress(tribe.currentGoal) : 0;
+  const tribeColor = getForestColor(tribe.color, tribe.type);
 
   // Type badge styles with forest theme colors
   const typeStyles: Record<Tribe['type'], string> = {
@@ -42,7 +70,7 @@ export function TribeCard({ tribe, isMember = false, onJoin }: TribeCardProps) {
     <Link href={`/tribes/${tribe.id}`}>
       <div className="group bg-white dark:bg-slate-800 rounded-2xl shadow-md hover:shadow-xl border border-[#D4C4B0]/50 dark:border-slate-700 hover:border-[#8B7355] dark:hover:border-[#A89070] transition-all duration-200 overflow-hidden cursor-pointer">
         {/* Header with gradient */}
-        <div className={`px-4 py-4 bg-gradient-to-r ${tribe.color}`}>
+        <div className={`px-4 py-4 bg-gradient-to-r ${tribeColor}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-white">
@@ -95,7 +123,7 @@ export function TribeCard({ tribe, isMember = false, onJoin }: TribeCardProps) {
               </div>
               <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                 <div
-                  className={`h-full bg-gradient-to-r ${tribe.color} rounded-full transition-all duration-300`}
+                  className={`h-full bg-gradient-to-r ${tribeColor} rounded-full transition-all duration-300`}
                   style={{ width: `${goalProgress}%` }}
                 />
               </div>

@@ -115,13 +115,13 @@ export default function StudyRoomPage() {
   // Handle leave room
   const handleLeave = async () => {
     await leaveRoom();
-    router.push('/study/rooms');
+    router.push('/progress/rooms');
   };
 
   // Handle end room (host only)
   const handleEndRoom = async () => {
     await endRoom();
-    router.push('/study/rooms');
+    router.push('/progress/rooms');
   };
 
   // Loading state
@@ -158,7 +158,7 @@ export default function StudyRoomPage() {
                 This study room may have ended or doesn&apos;t exist.
               </p>
               <Link
-                href="/study/rooms"
+                href="/progress/rooms"
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#C4A77D] to-[#A89070] hover:from-[#A89070] hover:to-[#8B7355] text-white font-medium rounded-xl transition-all shadow-sm"
               >
                 Back to Rooms
@@ -181,7 +181,7 @@ export default function StudyRoomPage() {
               <h2 className="text-xl font-semibold text-[#8B7355] dark:text-white mb-2">
                 Study Session Ended
               </h2>
-              <Link href="/study/rooms" className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#C4A77D] to-[#A89070] hover:from-[#A89070] hover:to-[#8B7355] text-white font-medium rounded-xl transition-all shadow-sm">
+              <Link href="/progress/rooms" className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#C4A77D] to-[#A89070] hover:from-[#A89070] hover:to-[#8B7355] text-white font-medium rounded-xl transition-all shadow-sm">
                 Find Another Room
               </Link>
             </div>
@@ -198,7 +198,7 @@ export default function StudyRoomPage() {
         return (
           <div className="h-full">
             <iframe
-              src="/study/flashcards"
+              src="/progress/flashcards"
               className="w-full h-full border-0 rounded-lg"
               title="Flashcards"
             />
@@ -208,7 +208,7 @@ export default function StudyRoomPage() {
         return (
           <div className="h-full">
             <iframe
-              src="/study/rapid-review"
+              src="/progress/rapid-review"
               className="w-full h-full border-0 rounded-lg"
               title="Rapid Review"
             />
@@ -283,7 +283,7 @@ export default function StudyRoomPage() {
           {/* Left: Room info */}
           <div className="flex items-center gap-4">
             <Link
-              href="/study/rooms"
+              href="/progress/rooms"
               className="p-2 hover:bg-[#F5F0E8] dark:hover:bg-slate-700 rounded-lg transition-colors"
             >
               <svg className="w-5 h-5 text-[#A89070] dark:text-[#D4C4B0]" fill="none" viewBox="0 0 24 24" stroke="currentColor">

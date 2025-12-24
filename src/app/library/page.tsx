@@ -32,7 +32,7 @@ export default function LibraryPage() {
     if (results.length > 0) {
       sessionStorage.setItem('qbank-cards', JSON.stringify(results.map(c => c.id)));
       sessionStorage.setItem('qbank-codes', codeInput);
-      router.push('/study/flashcards?source=qbank');
+      router.push('/progress/flashcards?source=qbank');
     } else {
       setSearchMessage({ type: 'error', text: 'No cards found for those codes. Try different codes.' });
     }
@@ -50,7 +50,7 @@ export default function LibraryPage() {
     if (results.length > 0) {
       sessionStorage.setItem('qbank-cards', JSON.stringify(results.map(c => c.id)));
       sessionStorage.setItem('qbank-codes', code);
-      router.push('/study/flashcards?source=qbank');
+      router.push('/progress/flashcards?source=qbank');
     } else {
       setSearchMessage({ type: 'error', text: 'No cards found for that code.' });
     }
@@ -73,7 +73,7 @@ export default function LibraryPage() {
 
             <div className="relative z-10">
               <Link
-                href="/study"
+                href="/progress"
                 className="inline-flex items-center gap-2 text-white/70 hover:text-white mb-4 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -356,7 +356,7 @@ export default function LibraryPage() {
                         if (categoryCards.length > 0) {
                           sessionStorage.setItem('qbank-cards', JSON.stringify(categoryCards.map(c => c.id)));
                           sessionStorage.setItem('qbank-codes', category);
-                          router.push('/study/flashcards?source=qbank');
+                          router.push('/progress/flashcards?source=qbank');
                         }
                       }}
                       className="p-5 bg-white dark:bg-slate-800 rounded-2xl border border-[#D4C4B0] dark:border-slate-700 hover:border-[#C4A77D] dark:hover:border-[#A89070] transition-all cursor-pointer group text-left"
