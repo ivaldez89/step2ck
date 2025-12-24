@@ -126,8 +126,8 @@ export function TaskSidebar({
       </div>
 
       {/* Quick Add - fixed, non-scrolling, below filter pills */}
-      {showQuickAdd && (
-        <div className="flex-shrink-0 px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+      <div className="flex-shrink-0 px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+        {showQuickAdd ? (
           <QuickTaskInput
             onSubmit={(title) => {
               const today = new Date().toISOString().split('T')[0];
@@ -136,8 +136,20 @@ export function TaskSidebar({
             }}
             onCancel={() => setShowQuickAdd(false)}
           />
-        </div>
-      )}
+        ) : (
+          <button
+            onClick={() => setShowQuickAdd(true)}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-left"
+          >
+            <div className="w-6 h-6 rounded-full bg-violet-500 flex items-center justify-center flex-shrink-0">
+              <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            </div>
+            <span className="text-sm text-slate-500 dark:text-slate-400">Add a task...</span>
+          </button>
+        )}
+      </div>
 
       {/* Task List - scrollable area */}
       <div className="flex-1 min-h-0 overflow-y-auto">
