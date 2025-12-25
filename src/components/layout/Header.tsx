@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ThemeToggle } from '@/components/theme/ThemeProvider';
+import { ForestThemeToggle } from '@/components/theme/ThemeProvider';
 import { ProfileDropdown } from '@/components/profile/ProfileDropdown';
 import { StreakCounter } from '@/components/gamification/StreakCounter';
 import { useIsAuthenticated } from '@/hooks/useAuth';
@@ -343,8 +343,8 @@ export function Header({ stats }: HeaderProps) {
             {/* Only show streak counter when authenticated */}
             {isAuthenticated && <StreakCounter variant="compact" />}
 
-            {/* Theme Toggle */}
-            <ThemeToggle />
+            {/* Forest Theme Demo Toggle */}
+            <ForestThemeToggle />
 
             {/* Stats Badge - only when authenticated */}
             {isAuthenticated && stats && stats.dueToday > 0 && (
