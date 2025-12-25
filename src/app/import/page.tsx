@@ -24,17 +24,17 @@ export default function ImportPage() {
 
     try {
       const parsed = JSON.parse(jsonInput);
-      
+
       // Handle array of cards or object with cards property
       const cards: Flashcard[] = Array.isArray(parsed) ? parsed : parsed.cards || parsed.flashcards;
-      
+
       if (!Array.isArray(cards) || cards.length === 0) {
         throw new Error('No valid cards found in JSON');
       }
 
       // Validate cards have required fields
-      const validCards = cards.filter(card => 
-        card.content?.front && 
+      const validCards = cards.filter(card =>
+        card.content?.front &&
         card.content?.back
       );
 
@@ -70,7 +70,7 @@ export default function ImportPage() {
       }));
 
       addCards(processedCards);
-      
+
       setImportResult({
         success: true,
         message: `Successfully imported ${processedCards.length} cards!`,
@@ -116,14 +116,14 @@ export default function ImportPage() {
 ]`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F5F0E8] to-[#E8E0D5] dark:from-slate-900 dark:to-slate-800 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header stats={stats} />
-      
+
       <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {/* Back Link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-[#A89070] mb-6 transition-colors"
+          className="inline-flex items-center gap-2 text-content-muted hover:text-secondary mb-6 transition-colors"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -131,9 +131,9 @@ export default function ImportPage() {
           Back to Dashboard
         </Link>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 md:p-8">
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">Import Flashcards</h1>
-          <p className="text-slate-600 mb-6">
+        <div className="bg-surface rounded-2xl border border-border shadow-sm p-6 md:p-8">
+          <h1 className="text-2xl font-bold text-secondary mb-2">Import Flashcards</h1>
+          <p className="text-content-muted mb-6">
             Add new cards to your deck without losing your study progress. Paste JSON or upload a file.
           </p>
 
@@ -141,27 +141,27 @@ export default function ImportPage() {
           {importResult && (
             <div className={`mb-6 p-4 rounded-xl ${
               importResult.success
-                ? 'bg-[#F5F0E8] border border-[#D4C4B0]'
-                : 'bg-red-50 border border-red-200'
+                ? 'bg-success-light border border-success/30'
+                : 'bg-error-light border border-error/30'
             }`}>
               <div className="flex items-center gap-3">
                 {importResult.success ? (
-                  <svg className="w-6 h-6 text-[#5B7B6D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-6 h-6 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 ) : (
-                  <svg className="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-6 h-6 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 )}
-                <span className={importResult.success ? 'text-[#2D5A4A]' : 'text-red-700'}>
+                <span className={importResult.success ? 'text-primary' : 'text-error'}>
                   {importResult.message}
                 </span>
               </div>
               {importResult.success && (
                 <Link
                   href="/flashcards"
-                  className="inline-flex items-center gap-2 mt-3 text-[#5B7B6D] hover:text-[#2D5A4A] font-medium"
+                  className="inline-flex items-center gap-2 mt-3 text-primary hover:text-primary-hover font-medium"
                 >
                   Start studying new cards →
                 </Link>
@@ -180,7 +180,7 @@ export default function ImportPage() {
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-surface-muted hover:bg-border text-content-secondary rounded-lg transition-colors"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -191,14 +191,14 @@ export default function ImportPage() {
 
           {/* JSON Input */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label className="block text-sm font-medium text-content-secondary mb-2">
               Or paste JSON directly:
             </label>
             <textarea
               value={jsonInput}
               onChange={(e) => setJsonInput(e.target.value)}
               placeholder={sampleFormat}
-              className="w-full h-64 p-4 font-mono text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#C4A77D] focus:border-[#C4A77D] transition-all resize-none"
+              className="w-full h-64 p-4 font-mono text-sm border border-border rounded-xl focus:ring-2 focus:ring-secondary focus:border-secondary transition-all resize-none bg-surface text-content placeholder:text-content-muted"
             />
           </div>
 
@@ -206,24 +206,24 @@ export default function ImportPage() {
           <button
             onClick={handleImport}
             disabled={!jsonInput.trim() || isProcessing}
-            className="w-full py-3 px-4 bg-gradient-to-r from-[#C4A77D] to-[#A89070] hover:from-[#A89070] hover:to-[#8B7355] disabled:from-slate-300 disabled:to-slate-400 text-white font-semibold rounded-xl shadow-lg shadow-[#C4A77D]/25 disabled:shadow-none transition-all disabled:cursor-not-allowed"
+            className="w-full py-3 px-4 bg-gradient-to-r from-sand-500 to-sand-600 hover:from-sand-600 hover:to-sand-700 disabled:from-gray-300 disabled:to-gray-400 text-white font-semibold rounded-xl shadow-lg shadow-sand-500/25 disabled:shadow-none transition-all disabled:cursor-not-allowed"
           >
             {isProcessing ? 'Importing...' : 'Import Cards'}
           </button>
 
           {/* Format Help */}
           <details className="mt-8">
-            <summary className="cursor-pointer text-slate-600 hover:text-slate-900 font-medium">
-              📋 JSON Format Reference
+            <summary className="cursor-pointer text-content-muted hover:text-content font-medium">
+              JSON Format Reference
             </summary>
-            <div className="mt-4 p-4 bg-slate-50 rounded-xl">
-              <pre className="text-sm text-slate-700 overflow-x-auto">{sampleFormat}</pre>
-              <div className="mt-4 text-sm text-slate-600">
+            <div className="mt-4 p-4 bg-surface-muted rounded-xl">
+              <pre className="text-sm text-content-secondary overflow-x-auto">{sampleFormat}</pre>
+              <div className="mt-4 text-sm text-content-muted">
                 <p className="font-medium mb-2">Valid systems:</p>
                 <p className="text-xs">
-                  Cardiology, Pulmonology, Gastroenterology, Nephrology, Neurology, 
-                  Endocrinology, Hematology/Oncology, Infectious Disease, Rheumatology, 
-                  Dermatology, Psychiatry, OB/GYN, Pediatrics, Surgery, Emergency Medicine, 
+                  Cardiology, Pulmonology, Gastroenterology, Nephrology, Neurology,
+                  Endocrinology, Hematology/Oncology, Infectious Disease, Rheumatology,
+                  Dermatology, Psychiatry, OB/GYN, Pediatrics, Surgery, Emergency Medicine,
                   Preventive Medicine, General
                 </p>
               </div>
