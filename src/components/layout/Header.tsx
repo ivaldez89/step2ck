@@ -182,7 +182,7 @@ const studyDropdownItems: DropdownItem[] = [
   { label: 'Study Rooms', href: '/progress/rooms', description: 'Collaborative study with chat & timers' },
   { label: 'Clinical Cases', href: '/cases', description: 'Interactive patient scenarios' },
   { label: 'AI Generator', href: '/generate', description: 'Create flashcards with AI' },
-  { label: 'Rapid Review', href: '/progress/rapid-review', description: 'Quick concept review' },
+  { label: 'QBank', href: '/qbank', description: 'Practice question bank' },
   { label: 'Card Library', href: '/library', description: 'QBank-linked cards' },
   { label: 'Resources', href: '/resources', description: 'Visual guides & infographics' },
 ];
