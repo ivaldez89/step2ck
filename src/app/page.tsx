@@ -246,10 +246,10 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-900">
       <Header />
 
-      <main>
+      <main className="flex-1">
         {/* Hero Section - Clean White */}
         <section className="bg-white dark:bg-slate-900 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 text-center">

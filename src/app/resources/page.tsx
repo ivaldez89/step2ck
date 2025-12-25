@@ -153,10 +153,10 @@ export default function ResourcesPage() {
     : INFOGRAPHICS.filter(i => i.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] dark:bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-[#F5F0E8] dark:bg-slate-900">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {/* Hero Section */}
         <section className="mb-8 animate-fade-in-up">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#5B7B6D] via-[#8B7355] to-[#A89070] p-8 md:p-10 shadow-2xl">

@@ -5,21 +5,37 @@
 /* =============================================================================
    FOREST THEME - Design Tokens (CSS Variables)
 
+   🔒 LOCKED PALETTE - Do not add new colors without design review.
+
    This is the SINGLE SOURCE OF TRUTH for theme colors.
    All Tailwind semantic classes reference these variables.
 
    Architecture:
    - Light mode: :root defines Forest Theme light mode
    - Dark mode: .dark defines Forest Theme dark mode
-   - Future themes: Add [data-theme="new-theme"] blocks
 
-   Color Palette (from logo):
-   - Forest greens: #3D5A4C, #5B7B6D, #6B8B7D
-   - Earth/terracotta: #A65D4D, #8B4A3D
-   - Burgundy: #8B3A3A, #4A1F1F
-   - Teal: #2D4A5A, #4A8A96
-   - Sand/bark: #C4A77D, #8B7355, #6B5344
-   - Sage: #5DB075 (brand green)
+   APPROVED FOREST THEME PALETTE (FINAL):
+   ──────────────────────────────────────
+   Brand / Structure (Greens):
+     primary-strong  → #405549
+     primary         → #556B5E
+     primary-soft    → #6E847D
+
+   Surfaces:
+     background      → #F2F0EC
+     surface         → #FEFDFD
+
+   Secondary / Earth:
+     secondary       → #B2ADA7
+     secondary-strong→ #786551
+
+   Status:
+     danger          → #924A48
+
+   Text / Utility:
+     text-primary    → #2F3A35
+     text-muted      → #8C9499
+     border          → #DADBDB
    ============================================================================= */
 
 :root {
@@ -29,156 +45,152 @@
 
   /* ==========================================================================
      SURFACES - Cards, inputs, containers
-     White is used for surfaces in light mode (per requirements)
      ========================================================================== */
-  --surface-default: #FFFFFF;
-  --surface-elevated: #FFFFFF;
-  --surface-muted: #F9F6F2;      /* sand-100 */
-  --surface-subtle: #FDFCFA;     /* sand-50 */
+  --surface-default: #FEFDFD;    /* surface - pure white */
+  --surface-elevated: #FEFDFD;   /* surface - elevated cards */
+  --surface-muted: #F2F0EC;      /* background - for muted surfaces */
+  --surface-subtle: #F2F0EC;     /* background - subtle backgrounds */
 
   /* ==========================================================================
      BACKGROUNDS - Page-level backgrounds
      ========================================================================== */
-  --bg-primary: #FDFCFA;         /* sand-50 - warm off-white */
-  --bg-secondary: #F9F6F2;       /* sand-100 */
+  --bg-primary: #F2F0EC;         /* background - warm off-white */
+  --bg-secondary: #F2F0EC;       /* background - same as primary */
 
   /* ==========================================================================
      PRIMARY - Main brand color (CTAs, active states)
-     Forest green from logo
+     Forest green
      ========================================================================== */
-  --primary: #3D5A4C;            /* forest-600 */
-  --primary-hover: #2D4A3C;      /* forest-700 */
-  --primary-light: #E8EFE9;      /* forest-100 */
-  --primary-foreground: #FFFFFF;
+  --primary: #556B5E;            /* primary */
+  --primary-hover: #405549;      /* primary-strong */
+  --primary-light: #6E847D;      /* primary-soft */
+  --primary-foreground: #FEFDFD;
 
   /* ==========================================================================
      SECONDARY - Supporting brand color
-     Sand/bark tones from logo
+     Earth tones
      ========================================================================== */
-  --secondary: #A89070;          /* sand-600 */
-  --secondary-hover: #8B7355;    /* sand-700 */
-  --secondary-light: #F9F6F2;    /* sand-100 */
-  --secondary-foreground: #FFFFFF;
+  --secondary: #786551;          /* secondary-strong */
+  --secondary-hover: #786551;    /* secondary-strong */
+  --secondary-light: #B2ADA7;    /* secondary */
+  --secondary-foreground: #FEFDFD;
 
   /* ==========================================================================
-     ACCENT - Highlights, emphasis
-     Terracotta/earth from logo
+     ACCENT - Highlights, emphasis (uses secondary-strong)
      ========================================================================== */
-  --accent: #A65D4D;             /* earth-500 */
-  --accent-hover: #8B4A3D;       /* earth-600 */
-  --accent-light: #F5E8E6;       /* earth-100 */
-  --accent-foreground: #FFFFFF;
+  --accent: #786551;             /* secondary-strong */
+  --accent-hover: #786551;       /* secondary-strong */
+  --accent-light: #B2ADA7;       /* secondary */
+  --accent-foreground: #FEFDFD;
 
   /* ==========================================================================
      TEXT COLORS
      ========================================================================== */
-  --text-primary: #152E22;       /* forest-900 */
-  --text-secondary: #2D4A3C;     /* forest-700 */
-  --text-muted: #5B7B6D;         /* forest-500 */
-  --text-inverse: #FFFFFF;
+  --text-primary: #2F3A35;       /* text-primary */
+  --text-secondary: #2F3A35;     /* text-primary */
+  --text-muted: #8C9499;         /* text-muted */
+  --text-inverse: #FEFDFD;
 
   /* ==========================================================================
      BORDERS
      ========================================================================== */
-  --border: #E4D8C9;             /* sand-300 */
-  --border-light: #F0E9E0;       /* sand-200 */
-  --border-focus: #5B7B6D;       /* forest-500 */
+  --border: #DADBDB;             /* border */
+  --border-light: #DADBDB;       /* border */
+  --border-focus: #556B5E;       /* primary */
 
   /* ==========================================================================
      STATUS COLORS
      ========================================================================== */
-  --success: #5DB075;            /* sage-500 */
-  --success-light: #E6F2EC;      /* sage-100 */
+  --success: #556B5E;            /* primary - success uses green */
+  --success-light: #6E847D;      /* primary-soft */
 
-  --warning: #C4A77D;            /* sand-500 */
-  --warning-light: #F9F6F2;      /* sand-100 */
+  --warning: #786551;            /* secondary-strong */
+  --warning-light: #B2ADA7;      /* secondary */
 
-  --error: #8B3A3A;              /* burgundy-500 */
-  --error-light: #F5E6E6;        /* burgundy-100 */
+  --error: #924A48;              /* danger */
+  --error-light: #B2ADA7;        /* secondary (muted) */
 
-  --info: #4A8A96;               /* teal-500 */
-  --info-light: #E4EEF0;         /* teal-100 */
+  --info: #556B5E;               /* primary */
+  --info-light: #6E847D;         /* primary-soft */
 
   /* ==========================================================================
-     GRADIENTS - Pre-defined gradient stops for bg-gradient-to-*
+     GRADIENTS - Pre-defined gradient stops
      ========================================================================== */
-  --gradient-primary-from: #3D5A4C;
-  --gradient-primary-to: #2D4A3C;
-  --gradient-secondary-from: #A89070;
-  --gradient-secondary-to: #8B7355;
-  --gradient-accent-from: #A65D4D;
-  --gradient-accent-to: #8B4A3D;
+  --gradient-primary-from: #556B5E;
+  --gradient-primary-to: #405549;
+  --gradient-secondary-from: #786551;
+  --gradient-secondary-to: #786551;
+  --gradient-accent-from: #786551;
+  --gradient-accent-to: #786551;
 }
 
 /* =============================================================================
    DARK MODE - Forest Theme
 
-   Background Strategy:
-   - Page backgrounds use slate/navy tones for better readability during
-     long study sessions (aligned with Home page dark:bg-slate-900)
-   - Surfaces, accents, and gradients retain Forest palette colors
+   🔒 LOCKED PALETTE - Uses inverted/adjusted values from approved palette.
+   No new colors introduced - only adjustments for dark mode readability.
    ============================================================================= */
 
 .dark {
-  /* Surfaces - slate-tinted for cards/containers */
-  --surface-default: #1e293b;    /* slate-800 - card backgrounds */
-  --surface-elevated: #334155;   /* slate-700 - elevated cards */
-  --surface-muted: #1e293b;      /* slate-800 - muted surfaces */
-  --surface-subtle: #0f172a;     /* slate-900 - subtle backgrounds */
+  /* Surfaces - dark versions */
+  --surface-default: #2F3A35;    /* text-primary inverted as surface */
+  --surface-elevated: #3A453F;   /* slightly elevated */
+  --surface-muted: #252E2A;      /* darker muted */
+  --surface-subtle: #1F2723;     /* darkest subtle */
 
-  /* Backgrounds - slate/navy for calm, readable dark mode */
-  --bg-primary: #0f172a;         /* slate-900 - main page background */
-  --bg-secondary: #1e293b;       /* slate-800 - secondary backgrounds */
+  /* Backgrounds - dark versions */
+  --bg-primary: #1F2723;         /* dark background */
+  --bg-secondary: #252E2A;       /* secondary dark */
 
-  /* Primary - Forest green tones for brand identity */
-  --primary: #6B8B7D;            /* forest-400 - lighter for dark mode */
-  --primary-hover: #9BBAA1;      /* forest-300 */
-  --primary-light: #1e3a2f;      /* forest-tinted slate for subtle bg */
-  --primary-foreground: #0f172a;
+  /* Primary - lightened greens for dark mode visibility */
+  --primary: #6E847D;            /* primary-soft */
+  --primary-hover: #556B5E;      /* primary */
+  --primary-light: #405549;      /* primary-strong */
+  --primary-foreground: #1F2723;
 
-  /* Secondary - Sand/bark tones */
-  --secondary: #C4A77D;          /* sand-500 */
-  --secondary-hover: #D4C4B0;    /* sand-400 */
-  --secondary-light: #3d3428;    /* sand-tinted dark */
-  --secondary-foreground: #0f172a;
+  /* Secondary - lightened earth tones */
+  --secondary: #B2ADA7;          /* secondary */
+  --secondary-hover: #B2ADA7;    /* secondary */
+  --secondary-light: #786551;    /* secondary-strong */
+  --secondary-foreground: #1F2723;
 
-  /* Accent - Earth/terracotta tones */
-  --accent: #B87D73;             /* earth-400 */
-  --accent-hover: #D4ADA5;       /* earth-300 */
-  --accent-light: #3d2820;       /* earth-tinted dark */
-  --accent-foreground: #0f172a;
+  /* Accent */
+  --accent: #B2ADA7;             /* secondary */
+  --accent-hover: #B2ADA7;       /* secondary */
+  --accent-light: #786551;       /* secondary-strong */
+  --accent-foreground: #1F2723;
 
-  /* Text */
-  --text-primary: #FDFCFA;       /* sand-50 */
-  --text-secondary: #F0E9E0;     /* sand-200 */
-  --text-muted: #D4C4B0;         /* sand-400 */
-  --text-inverse: #152E22;       /* forest-900 */
+  /* Text - light text on dark background */
+  --text-primary: #FEFDFD;       /* surface */
+  --text-secondary: #F2F0EC;     /* background */
+  --text-muted: #8C9499;         /* text-muted (same) */
+  --text-inverse: #2F3A35;       /* text-primary */
 
-  /* Borders - slate-based to complement backgrounds */
-  --border: #334155;             /* slate-700 */
-  --border-light: #1e293b;       /* slate-800 */
-  --border-focus: #6B8B7D;       /* forest-400 - keeps Forest accent */
+  /* Borders */
+  --border: #3A453F;             /* elevated surface tone */
+  --border-light: #2F3A35;       /* surface tone */
+  --border-focus: #6E847D;       /* primary-soft */
 
-  /* Status (slightly lighter for dark mode) */
-  --success: #73B89A;            /* sage-400 */
-  --success-light: #2C5338;      /* sage-900 */
+  /* Status (adjusted for dark mode) */
+  --success: #6E847D;            /* primary-soft */
+  --success-light: #405549;      /* primary-strong */
 
-  --warning: #D4C4B0;            /* sand-400 */
-  --warning-light: #4A3A30;      /* sand-900 */
+  --warning: #B2ADA7;            /* secondary */
+  --warning-light: #786551;      /* secondary-strong */
 
-  --error: #B87373;              /* burgundy-400 */
-  --error-light: #3A1818;        /* burgundy-900 */
+  --error: #924A48;              /* danger (same) */
+  --error-light: #5A3534;        /* danger darkened */
 
-  --info: #6BA3AD;               /* teal-400 */
-  --info-light: #1E3D47;         /* teal-900 */
+  --info: #6E847D;               /* primary-soft */
+  --info-light: #405549;         /* primary-strong */
 
   /* Gradients */
-  --gradient-primary-from: #5B7B6D;
-  --gradient-primary-to: #3D5A4C;
-  --gradient-secondary-from: #C4A77D;
-  --gradient-secondary-to: #A89070;
-  --gradient-accent-from: #B87D73;
-  --gradient-accent-to: #A65D4D;
+  --gradient-primary-from: #6E847D;
+  --gradient-primary-to: #556B5E;
+  --gradient-secondary-from: #B2ADA7;
+  --gradient-secondary-to: #786551;
+  --gradient-accent-from: #B2ADA7;
+  --gradient-accent-to: #786551;
 }
 
 /* =============================================================================

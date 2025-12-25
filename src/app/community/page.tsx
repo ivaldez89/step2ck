@@ -35,10 +35,10 @@ export default function CommunityPage() {
   const totalTribePoints = userTribes.reduce((sum, t) => sum + (t.totalPoints || 0), 0);
 
   return (
-    <div className="min-h-screen bg-[#E8DFD0] dark:bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-[#E8DFD0] dark:bg-slate-900">
       <Header />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {/* Hero Banner */}
         <section className="mb-8 animate-fade-in-up">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#5B7B6D] via-[#6B8B7D] to-[#7FA08F] p-8 md:p-10 shadow-2xl">

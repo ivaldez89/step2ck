@@ -70,10 +70,10 @@ export default function PartnersPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-900">
       <Header />
 
-      <main>
+      <main className="flex-1">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-[#5B7B6D] to-[#2D5A4A] text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">

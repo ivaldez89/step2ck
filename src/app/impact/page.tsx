@@ -82,10 +82,10 @@ export default function ImpactPage() {
   const pointsToDollars = (points: number) => (points / 1000).toFixed(2);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900">
       <Header />
 
-      <main>
+      <main className="flex-1">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-br from-[#5B7B6D] via-[#6B8B7D] to-[#7FA08F] py-20">
           <div className="absolute inset-0 overflow-hidden">

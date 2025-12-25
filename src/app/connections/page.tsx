@@ -68,9 +68,9 @@ export default function ConnectionsPage() {
 
   if (!villageId) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+      <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900">
         <Header />
-        <main className="pt-4 pb-20 md:pb-8">
+        <main className="flex-1 pt-4 pb-20 md:pb-8">
           <div className="max-w-4xl mx-auto px-4 py-8">
             <div className="text-center py-12">
               <div className="w-20 h-20 mx-auto mb-4 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
@@ -99,9 +99,9 @@ export default function ConnectionsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900">
       <Header />
-      <main className="pt-4 pb-20 md:pb-8">
+      <main className="flex-1 pt-4 pb-20 md:pb-8">
         <div className="max-w-4xl mx-auto px-4 py-6">
           {/* Header */}
           <div className="mb-6">

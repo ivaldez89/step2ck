@@ -6,10 +6,10 @@ import Link from 'next/link';
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-[#F5F0E8] dark:bg-[#2D5A4A]">
+    <div className="min-h-screen flex flex-col bg-[#F5F0E8] dark:bg-[#2D5A4A]">
       <Header />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
         <div className="mb-8">
           <Link href="/" className="inline-flex items-center gap-2 text-[#8B7355] dark:text-[#C4A77D] hover:text-[#5B7B6D] dark:hover:text-[#E8E0D5] mb-4">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

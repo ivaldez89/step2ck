@@ -38,9 +38,9 @@ export default function MyImpactPage() {
   const nextGlobal = getNextMilestone(globalStats.totalPoints, GLOBAL_MILESTONES);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900">
       <Header />
-      <main className="pt-4 pb-20 md:pb-8">
+      <main className="flex-1 pt-4 pb-20 md:pb-8">
         <div className="max-w-4xl mx-auto px-4 py-6">
           {/* Header */}
           <div className="text-center mb-8">

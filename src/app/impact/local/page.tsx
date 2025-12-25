@@ -176,10 +176,10 @@ export default function LocalCharitiesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900">
       <Header />
 
-      <main>
+      <main className="flex-1">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-br from-[#5B7B6D] via-[#2D5A4A] to-[#8B7355] py-16">
           <div className="absolute inset-0 overflow-hidden">

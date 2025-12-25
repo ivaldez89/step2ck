@@ -46,10 +46,10 @@ export default function SupportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8] dark:bg-slate-900">
+    <div className="min-h-screen flex flex-col bg-[#F5F0E8] dark:bg-slate-900">
       <Header />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
         <div className="mb-8">
           <Link href="/" className="inline-flex items-center gap-2 text-[#8B7355] dark:text-[#C4A77D] hover:text-[#A89070] dark:hover:text-white mb-4">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
