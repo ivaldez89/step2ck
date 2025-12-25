@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { TimerMode, TIMER_MODE_LABELS } from '@/types/studyRoom';
+import { FireIcon } from '@/components/icons/MedicalIcons';
 
 interface SharedPomodoroTimerProps {
   mode: TimerMode;
@@ -334,7 +335,7 @@ export function SharedPomodoroTimer({
       {/* Session Counter & Settings */}
       <div className="flex items-center justify-center gap-3">
         <span className="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-full text-sm">
-          <span>🍅</span>
+          <FireIcon className="w-4 h-4" />
           <span>{sessionsCompleted} Pomodoro{sessionsCompleted !== 1 ? 's' : ''}</span>
         </span>
 

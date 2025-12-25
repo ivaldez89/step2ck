@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useFlashcards } from '@/hooks/useFlashcards';
 import { BackgroundSelector, useStudyBackground, getBackgroundUrl } from '@/components/study/BackgroundSelector';
+import { BoltIcon, CalendarIcon, TrophyIcon, FireIcon, LightbulbIcon } from '@/components/icons/MedicalIcons';
 
 // Rapid review stats type
 interface RapidReviewStats {
@@ -444,19 +445,19 @@ export default function RapidReviewPage() {
       <div className="border-b border-[#D4C4B0] bg-gradient-to-r from-[#5B7B6D]/10 to-[#C4A77D]/10">
         <div className="max-w-5xl mx-auto px-4 py-2 flex items-center justify-center gap-6 text-sm">
           <div className="flex items-center gap-2">
-            <span className="text-[#C4A77D]">⚡</span>
+            <BoltIcon className="w-4 h-4 text-[#C4A77D]" />
             <span className="text-[#A89070]">This session:</span>
             <span className="font-bold text-[#8B7355]">{cardsReviewedThisSession}</span>
           </div>
           <div className="w-px h-4 bg-[#D4C4B0]" />
           <div className="flex items-center gap-2">
-            <span className="text-[#C4A77D]">📅</span>
+            <CalendarIcon className="w-4 h-4 text-[#C4A77D]" />
             <span className="text-[#A89070]">Today:</span>
             <span className="font-bold text-[#8B7355]">{rapidStats.todayCardsReviewed}</span>
           </div>
           <div className="w-px h-4 bg-[#D4C4B0]" />
           <div className="flex items-center gap-2">
-            <span className="text-[#C4A77D]">🏆</span>
+            <TrophyIcon className="w-4 h-4 text-[#C4A77D]" />
             <span className="text-[#A89070]">Total:</span>
             <span className="font-bold text-[#8B7355]">{rapidStats.totalCardsReviewed}</span>
           </div>
@@ -464,7 +465,7 @@ export default function RapidReviewPage() {
             <>
               <div className="w-px h-4 bg-[#D4C4B0]" />
               <div className="flex items-center gap-2">
-                <span className="text-[#5B7B6D]">🔥</span>
+                <FireIcon className="w-4 h-4 text-[#5B7B6D]" />
                 <span className="font-bold text-[#5B7B6D]">{rapidStats.streak} day streak!</span>
               </div>
             </>
@@ -493,7 +494,7 @@ export default function RapidReviewPage() {
                             : 'bg-[#D4C4B0] text-[#8B7355] hover:bg-[#C4A77D]/30'
                         }`}
                       >
-                        {filter === 'all' ? '👥 All' : filter === 'female' ? '👩 Female' : '👨 Male'}
+                        {filter}
                       </button>
                     ))}
                   </div>
@@ -512,13 +513,11 @@ export default function RapidReviewPage() {
                     >
                       {filteredVoices.map((voice, idx) => {
                         const originalIdx = voices.indexOf(voice);
-                        const gender = getVoiceGender(voice);
-                        const genderIcon = gender === 'female' ? '👩' : gender === 'male' ? '👨' : '🔊';
                         const qualityBadge = voice.name.includes('Premium') || voice.name.includes('Enhanced') || voice.name.includes('Siri')
-                          ? ' ⭐' : '';
+                          ? ' *' : '';
                         return (
                           <option key={originalIdx} value={originalIdx}>
-                            {genderIcon} {voice.name}{qualityBadge} ({voice.lang})
+                            {voice.name}{qualityBadge} ({voice.lang})
                           </option>
                         );
                       })}
@@ -562,7 +561,7 @@ export default function RapidReviewPage() {
                         : 'bg-[#D4C4B0] text-[#8B7355] hover:bg-[#C4A77D]/30'
                     }`}
                   >
-                    {autoAdvance ? '✓ Auto-advance On' : 'Auto-advance Off'}
+                    {autoAdvance ? 'Auto-advance On' : 'Auto-advance Off'}
                   </button>
                 </div>
 
@@ -585,8 +584,9 @@ export default function RapidReviewPage() {
               </div>
 
               {/* Voice tip */}
-              <p className="text-xs text-[#A89070]">
-                💡 Tip: On Mac, go to System Settings → Accessibility → Spoken Content → System Voice → Manage Voices to download premium voices like "Siri Voice 1" for the most natural sound.
+              <p className="text-xs text-[#A89070] flex items-start gap-1.5">
+                <LightbulbIcon className="w-4 h-4 flex-shrink-0 text-[#F5D76E]" />
+                <span>Tip: On Mac, go to System Settings → Accessibility → Spoken Content → System Voice → Manage Voices to download premium voices like "Siri Voice 1" for the most natural sound.</span>
               </p>
             </div>
           </div>
@@ -667,8 +667,9 @@ export default function RapidReviewPage() {
 
                   {currentCard.content.explanation && (
                     <div className="mt-6 p-4 bg-white/50 rounded-xl border border-[#D4C4B0]">
-                      <p className="text-sm text-[#8B7355] leading-relaxed">
-                        💡 {currentCard.content.explanation}
+                      <p className="text-sm text-[#8B7355] leading-relaxed flex items-start gap-2">
+                        <LightbulbIcon className="w-4 h-4 flex-shrink-0 text-[#F5D76E]" />
+                        <span>{currentCard.content.explanation}</span>
                       </p>
                     </div>
                   )}
@@ -757,8 +758,11 @@ export default function RapidReviewPage() {
         {/* Current voice indicator */}
         {voices[selectedVoiceIndex] && (
           <div className="mt-4 text-center">
-            <span className="text-xs text-[#A89070]">
-              🔊 {voices[selectedVoiceIndex].name} @ {speechRate}x speed
+            <span className="text-xs text-[#A89070] flex items-center justify-center gap-1.5">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+              </svg>
+              {voices[selectedVoiceIndex].name} @ {speechRate}x speed
             </span>
           </div>
         )}

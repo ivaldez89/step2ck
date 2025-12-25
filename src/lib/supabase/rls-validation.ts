@@ -418,12 +418,12 @@ export function logRLSReport(report: RLSValidationReport): void {
   console.group('RLS Validation Report');
   console.log(`User: ${report.userId}`);
   console.log(`Time: ${report.timestamp}`);
-  console.log(`Status: ${report.allPassed ? '✅ PASSED' : '❌ FAILED'}`);
+  console.log(`Status: ${report.allPassed ? 'PASSED' : 'FAILED'}`);
   console.log(`Summary: ${report.summary.passed}/${report.summary.total} tests passed`);
 
   console.group('Results:');
   for (const result of report.results) {
-    const icon = result.passed ? '✅' : '❌';
+    const icon = result.passed ? '[PASS]' : '[FAIL]';
     console.log(`${icon} ${result.table} (${result.operation}): ${result.message}`);
     if (result.details) {
       console.log('   Details:', result.details);

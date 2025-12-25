@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ClinicalVignette, DecisionNode, Choice } from '@/types';
 import { ChoiceButtons } from './ChoiceButtons';
+import { SparklesIcon } from '@/components/icons/MedicalIcons';
 
 // History entry for progressive display
 interface HistoryEntry {
@@ -88,7 +89,7 @@ function CollapsibleHistoryCard({ entry, index }: { entry: HistoryEntry; index: 
                 : 'bg-red-100 text-red-700'
             }
           `}>
-            {isOptimal ? '✓ Optimal' : isAcceptable ? '~ Acceptable' : '✗ Suboptimal'}
+            {isOptimal ? 'Optimal' : isAcceptable ? 'Acceptable' : 'Suboptimal'}
           </span>
           <svg
             className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
@@ -140,7 +141,7 @@ function CollapsibleHistoryCard({ entry, index }: { entry: HistoryEntry; index: 
           {/* Clinical pearl */}
           {entry.node.clinicalPearl && (
             <div className="flex items-start gap-2 p-3 bg-indigo-50 rounded-lg">
-              <span className="text-sm">💡</span>
+              <SparklesIcon className="w-4 h-4 text-indigo-600 flex-shrink-0 mt-0.5" />
               <p className="text-xs text-indigo-800 leading-relaxed">
                 {entry.node.clinicalPearl}
               </p>
@@ -453,7 +454,7 @@ export function VignetteViewer({
               <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl mb-6">
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center flex-shrink-0">
-                    <span className="text-white text-sm">💡</span>
+                    <SparklesIcon className="w-4 h-4 text-white" />
                   </div>
                   <div>
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">Clinical Pearl</h5>

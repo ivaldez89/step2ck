@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { DecisionNode, Choice, DecisionNodeType } from '@/types';
+import { InformationCircleIcon, CheckCircleIcon, BoltIcon } from '@/components/icons/MedicalIcons';
 
 interface NodeEditorProps {
   node: DecisionNode;
@@ -57,9 +58,9 @@ export function NodeEditor({
   };
 
   const nodeTypeIcons = {
-    decision: '🔀',
-    outcome: '🏁',
-    information: 'ℹ️'
+    decision: <BoltIcon className="w-5 h-5" />,
+    outcome: <CheckCircleIcon className="w-5 h-5" />,
+    information: <InformationCircleIcon className="w-5 h-5" />
   };
 
   return (
@@ -70,7 +71,7 @@ export function NodeEditor({
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center gap-3">
-          <span className="text-lg">{nodeTypeIcons[node.type]}</span>
+          <span>{nodeTypeIcons[node.type]}</span>
           <div>
             <span className="font-medium text-slate-800">
               {node.id}

@@ -2,6 +2,14 @@
 
 import Link from 'next/link';
 import type { ClinicalVignette, VignetteProgress } from '@/types';
+import {
+  CalendarIcon,
+  BookOpenIcon,
+  DocumentTextIcon,
+  BoltIcon,
+  CheckCircleIcon,
+  ExclamationTriangleIcon
+} from '@/components/icons/MedicalIcons';
 
 interface VignetteCardProps {
   vignette: ClinicalVignette;
@@ -48,25 +56,18 @@ export function VignetteCard({ vignette, progress }: VignetteCardProps) {
     return `${Math.floor(diffDays / 30)} months ago`;
   };
 
-  // System icons (simplified)
-  const systemIcons: Record<string, string> = {
-    Cardiology: '❤️',
-    Neurology: '🧠',
-    Pulmonology: '🫁',
-    Gastroenterology: '🔥',
-    Nephrology: '💧',
-    Endocrinology: '⚡',
-    'Hematology/Oncology': '🩸',
-    'Infectious Disease': '🦠',
-    Rheumatology: '🦴',
-    Dermatology: '🌡️',
-    Psychiatry: '🧘',
-    'OB/GYN': '👶',
-    Pediatrics: '🧒',
-    Surgery: '🔪',
-    'Emergency Medicine': '🚨',
-    'Preventive Medicine': '🛡️',
-    General: '🏥'
+  // System icons - using consistent icon components
+  const getSystemIcon = (system: string) => {
+    const iconClass = "w-5 h-5";
+    switch(system) {
+      case 'Emergency Medicine':
+        return <ExclamationTriangleIcon className={iconClass} />;
+      case 'Surgery':
+      case 'Cardiology':
+        return <BoltIcon className={iconClass} />;
+      default:
+        return <DocumentTextIcon className={iconClass} />;
+    }
   };
 
   return (
@@ -76,7 +77,7 @@ export function VignetteCard({ vignette, progress }: VignetteCardProps) {
         <div className="px-4 py-3 bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-lg">{systemIcons[vignette.metadata.system] || '🏥'}</span>
+              {getSystemIcon(vignette.metadata.system)}
               <span className="text-sm font-medium text-slate-700">
                 {vignette.metadata.system}
               </span>

@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { PARTNER_CHARITIES } from '@/data/charities';
 import { VillageLeaderboard } from '@/components/village/VillageLeaderboard';
+import { BookOpenIcon, UsersIcon, HeartIcon } from '@/components/icons/MedicalIcons';
 
 // Point conversion rates
 const POINT_CONVERSIONS = {
@@ -212,7 +213,9 @@ export default function ImpactPage() {
 
             <div className="mt-8 p-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl">
               <div className="flex items-start gap-4">
-                <span className="text-2xl">💡</span>
+                <svg className="w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+                </svg>
                 <div>
                   <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-1">Why Different Tiers?</h4>
                   <p className="text-sm text-amber-700 dark:text-amber-300">
@@ -241,9 +244,9 @@ export default function ImpactPage() {
             {/* Category Tabs */}
             <div className="flex justify-center gap-2 mb-8">
               {[
-                { key: 'study', label: 'Study', icon: '📚' },
-                { key: 'wellness', label: 'Wellness', icon: '🧘' },
-                { key: 'social', label: 'Social', icon: '👥' }
+                { key: 'study', label: 'Study', icon: <BookOpenIcon className="w-5 h-5" /> },
+                { key: 'wellness', label: 'Wellness', icon: <HeartIcon className="w-5 h-5" /> },
+                { key: 'social', label: 'Social', icon: <UsersIcon className="w-5 h-5" /> }
               ].map((cat) => (
                 <button
                   key={cat.key}
@@ -254,7 +257,7 @@ export default function ImpactPage() {
                       : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
                   }`}
                 >
-                  <span>{cat.icon}</span>
+                  {cat.icon}
                   {cat.label}
                 </button>
               ))}

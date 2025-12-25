@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { TribeMember } from '@/types/tribes';
+import { TrophyIcon } from '@/components/icons/MedicalIcons';
 
 interface TribeLeaderboardProps {
   members: TribeMember[];
@@ -28,10 +29,10 @@ export function TribeLeaderboard({ members, currentUserId = 'current-user' }: Tr
   const maxPoints = sortedMembers.length > 0 ? getPoints(sortedMembers[0]) : 0;
 
   const getRankBadge = (index: number) => {
-    if (index === 0) return { emoji: '🥇', bg: 'bg-[#C4A77D]/20', text: 'text-[#8B7355]' };
-    if (index === 1) return { emoji: '🥈', bg: 'bg-[#D4C4B0]/50', text: 'text-[#6B5344]' };
-    if (index === 2) return { emoji: '🥉', bg: 'bg-[#E8DFD0]', text: 'text-[#8B7355]' };
-    return { emoji: `${index + 1}`, bg: 'bg-[#F5EFE6] dark:bg-slate-700', text: 'text-[#6B5344] dark:text-slate-400' };
+    if (index === 0) return { content: <span className="text-xl">1</span>, bg: 'bg-[#C4A77D]/20', text: 'text-[#8B7355]' };
+    if (index === 1) return { content: <span className="text-xl">2</span>, bg: 'bg-[#D4C4B0]/50', text: 'text-[#6B5344]' };
+    if (index === 2) return { content: <span className="text-xl">3</span>, bg: 'bg-[#E8DFD0]', text: 'text-[#8B7355]' };
+    return { content: <span>{index + 1}</span>, bg: 'bg-[#F5EFE6] dark:bg-slate-700', text: 'text-[#6B5344] dark:text-slate-400' };
   };
 
   const getInitials = (firstName: string, lastName: string) => {
@@ -47,7 +48,7 @@ export function TribeLeaderboard({ members, currentUserId = 'current-user' }: Tr
       <div className="px-4 py-3 border-b border-[#D4C4B0]/50 dark:border-slate-700 bg-gradient-to-r from-[#8B7355] to-[#A89070]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🏆</span>
+            <TrophyIcon className="w-5 h-5 text-white" />
             <h3 className="font-semibold text-white">Leaderboard</h3>
           </div>
           <div className="flex bg-white/20 backdrop-blur rounded-lg p-1">
@@ -105,7 +106,7 @@ export function TribeLeaderboard({ members, currentUserId = 'current-user' }: Tr
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${rank.bg} ${rank.text}`}
                 >
-                  {index < 3 ? rank.emoji : rank.emoji}
+                  {rank.content}
                 </div>
 
                 {/* Avatar */}

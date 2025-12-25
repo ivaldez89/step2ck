@@ -9,6 +9,7 @@ import { getUserTribes } from '@/lib/storage/tribeStorage';
 import { signOut as legacySignOut } from '@/hooks/useAuth';
 import { signOut as supabaseSignOut } from '@/lib/supabase/auth';
 import type { Tribe } from '@/types/tribes';
+import { FireIcon, SparklesIcon } from '@/components/icons/MedicalIcons';
 
 interface ProfileDropdownProps {
   className?: string;
@@ -183,7 +184,7 @@ export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
                   className="flex items-center gap-2 p-2 rounded-lg bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border border-orange-100 dark:border-orange-800/50 hover:from-orange-100 hover:to-amber-100 dark:hover:from-orange-900/30 dark:hover:to-amber-900/30 transition-colors"
                 >
                   <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${userTribes[0]?.color || 'from-orange-400 to-amber-500'} flex items-center justify-center text-white text-sm`}>
-                    {userTribes[0]?.icon || '🔥'}
+                    {userTribes[0]?.icon || <FireIcon className="w-4 h-4" />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
@@ -205,7 +206,7 @@ export function ProfileDropdown({ className = '' }: ProfileDropdownProps) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full bg-tribe-sage-100 dark:bg-tribe-sage-900/50 flex items-center justify-center">
-                        <span className="text-xs">✨</span>
+                        <SparklesIcon className="w-3.5 h-3.5 text-tribe-sage-600 dark:text-tribe-sage-400" />
                       </div>
                       <div>
                         <p className="text-xs font-medium text-slate-700 dark:text-slate-300">Tribe Impact</p>

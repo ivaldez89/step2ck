@@ -22,22 +22,22 @@ import type { Rating, Flashcard } from '@/types';
 
 // Ambient sound definitions
 const AMBIENT_SOUNDS = [
-  { id: 'whitenoise', name: 'White Noise', emoji: '📻' },
-  { id: 'pinknoise', name: 'Pink Noise', emoji: '🩷' },
-  { id: 'brownnoise', name: 'Brown Noise', emoji: '🟤' },
-  { id: 'rain', name: 'Rain', emoji: '🌧️' },
-  { id: 'wind', name: 'Wind', emoji: '💨' },
-  { id: 'binaural', name: 'Focus 40Hz', emoji: '🧠' },
+  { id: 'whitenoise', name: 'White Noise', icon: 'radio' },
+  { id: 'pinknoise', name: 'Pink Noise', icon: 'wave' },
+  { id: 'brownnoise', name: 'Brown Noise', icon: 'wave-alt' },
+  { id: 'rain', name: 'Rain', icon: 'cloud-rain' },
+  { id: 'wind', name: 'Wind', icon: 'wind' },
+  { id: 'binaural', name: 'Focus 40Hz', icon: 'brain' },
 ];
 
 // Music streams
 const MUSIC_STREAMS = [
-  { id: 'lofi', name: 'Lofi Beats', emoji: '🎧', url: 'https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/' },
-  { id: 'classical', name: 'Classical', emoji: '🎻', url: 'https://live.musopen.org:8085/streamvbr0' },
-  { id: 'piano', name: 'Piano', emoji: '🎹', url: 'https://pianosolo.streamguys1.com/live' },
-  { id: 'jazz', name: 'Jazz', emoji: '🎷', url: 'https://jazzradio.ice.infomaniak.ch/jazzradio-high.mp3' },
-  { id: 'nature', name: 'Nature Sounds', emoji: '🌿', url: 'https://ice5.somafm.com/dronezone-128-mp3' },
-  { id: 'focus', name: 'Deep Focus', emoji: '🧠', url: 'https://ice5.somafm.com/deepspaceone-128-mp3' },
+  { id: 'lofi', name: 'Lofi Beats', icon: 'headphones', url: 'https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/' },
+  { id: 'classical', name: 'Classical', icon: 'music-note', url: 'https://live.musopen.org:8085/streamvbr0' },
+  { id: 'piano', name: 'Piano', icon: 'music', url: 'https://pianosolo.streamguys1.com/live' },
+  { id: 'jazz', name: 'Jazz', icon: 'music-alt', url: 'https://jazzradio.ice.infomaniak.ch/jazzradio-high.mp3' },
+  { id: 'nature', name: 'Nature Sounds', icon: 'leaf', url: 'https://ice5.somafm.com/dronezone-128-mp3' },
+  { id: 'focus', name: 'Deep Focus', icon: 'brain', url: 'https://ice5.somafm.com/deepspaceone-128-mp3' },
 ];
 
 // Noise generator using Web Audio API
@@ -618,19 +618,9 @@ function LibraryStudyContent() {
                     : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
                 }`}
               >
-                {isPlaying || isMusicPlaying ? (
-                  <span className="flex items-center gap-1">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
-                    {isPlaying
-                      ? AMBIENT_SOUNDS.find(s => s.id === currentSound)?.emoji
-                      : MUSIC_STREAMS.find(s => s.id === currentMusic)?.emoji
-                    }
-                  </span>
-                ) : (
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                  </svg>
-                )}
+                <svg className={`w-4 h-4 ${isPlaying || isMusicPlaying ? 'animate-pulse' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                </svg>
                 Audio
               </button>
 
@@ -661,7 +651,9 @@ function LibraryStudyContent() {
                                   : 'bg-slate-50 dark:bg-slate-700 border-2 border-transparent hover:bg-slate-100'
                               }`}
                             >
-                              <span className="text-lg">{sound.emoji}</span>
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                              </svg>
                               <span className="text-[10px] truncate w-full text-center">{sound.name.split(' ')[0]}</span>
                             </button>
                           ))}
@@ -691,7 +683,9 @@ function LibraryStudyContent() {
                                   : 'bg-slate-50 dark:bg-slate-700 border-2 border-transparent hover:bg-slate-100'
                               }`}
                             >
-                              <span className="text-lg">{music.emoji}</span>
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                              </svg>
                               <span className="text-[10px] truncate w-full text-center">{music.name.split(' ')[0]}</span>
                             </button>
                           ))}

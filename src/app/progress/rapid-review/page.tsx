@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { useFlashcards } from '@/hooks/useFlashcards';
 import { Icons } from '@/components/ui/Icons';
+import { LightbulbIcon } from '@/components/icons/MedicalIcons';
 
 // Rapid review stats type
 interface RapidReviewStats {
@@ -573,7 +574,7 @@ export default function RapidReviewPage() {
                         {filteredVoices.map((voice, idx) => {
                           const originalIdx = voices.indexOf(voice);
                           const qualityBadge = voice.name.includes('Premium') || voice.name.includes('Enhanced') || voice.name.includes('Siri')
-                            ? ' ★' : '';
+                            ? ' [Premium]' : '';
                           return (
                             <option key={originalIdx} value={originalIdx}>
                               {voice.name}{qualityBadge} ({voice.lang})
@@ -620,7 +621,7 @@ export default function RapidReviewPage() {
                           : 'bg-[#F5EFE6] dark:bg-slate-700 text-[#6B5344] dark:text-slate-300 hover:bg-[#E8DFD0] dark:hover:bg-slate-600'
                       }`}
                     >
-                      {autoAdvance ? '✓ Auto-advance On' : 'Auto-advance Off'}
+                      {autoAdvance ? 'Auto-advance On' : 'Auto-advance Off'}
                     </button>
                   </div>
 
@@ -644,7 +645,7 @@ export default function RapidReviewPage() {
 
                 {/* Voice tip */}
                 <p className="text-xs text-[#6B5344]/70 dark:text-slate-400 flex items-start gap-1 pt-2 border-t border-[#D4C4B0]/30 dark:border-slate-700">
-                  <span className="w-4 h-4 flex-shrink-0"><Icons.Lightbulb /></span>
+                  <LightbulbIcon className="w-4 h-4 flex-shrink-0 text-[#F5D76E]" />
                   <span>Tip: On Mac, go to System Settings → Accessibility → Spoken Content → System Voice → Manage Voices to download premium voices like "Siri Voice 1" for the most natural sound.</span>
                 </p>
               </div>
@@ -724,7 +725,7 @@ export default function RapidReviewPage() {
                   {currentCard.content.explanation && (
                     <div className="mt-6 p-4 bg-white/60 dark:bg-slate-800/50 rounded-xl border border-[#D4C4B0]/50 dark:border-[#5B7B6D]">
                       <p className="text-sm text-[#6B5344] dark:text-slate-300 leading-relaxed flex items-start gap-2">
-                        <span className="w-4 h-4 flex-shrink-0"><Icons.Lightbulb /></span>
+                        <LightbulbIcon className="w-4 h-4 flex-shrink-0 text-[#F5D76E]" />
                         <span>{currentCard.content.explanation}</span>
                       </p>
                     </div>

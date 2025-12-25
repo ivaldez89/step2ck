@@ -9,6 +9,7 @@ import { HealthConnect } from '@/components/health/HealthConnect';
 import { WELLNESS_DOMAINS, CHARITABLE_CAUSES, type WellnessDomain, type CharitableCause } from '@/types/wellness';
 import { useTribes } from '@/hooks/useTribes';
 import { Icons } from '@/components/ui/Icons';
+import { SparklesIcon } from '@/components/icons/MedicalIcons';
 
 // Mood level arrays (1-5 scale)
 const MOOD_LEVELS = [1, 2, 3, 4, 5];
@@ -266,7 +267,7 @@ function WellnessPageContent() {
       {/* Tips */}
       <div className={CARD_STYLES.containerWithPadding}>
         <h3 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-          <span className="text-lg">💡</span>
+          <SparklesIcon className="w-5 h-5 text-amber-500" />
           Wellness Tips
         </h3>
         <div className="space-y-2">

@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import type { ClinicalVignette, DecisionNode, MedicalSystem, VignetteMetadata } from '@/types';
 import { NodeEditor } from './NodeEditor';
+import { BoltIcon } from '@/components/icons/MedicalIcons';
 
 interface VignetteEditorProps {
   vignette: ClinicalVignette;
@@ -295,7 +296,9 @@ export function VignetteEditor({
 
               {Object.keys(vignette.nodes).length === 0 && (
                 <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-xl">
-                  <div className="text-4xl mb-3">🔀</div>
+                  <div className="mb-3 flex justify-center">
+                    <BoltIcon className="w-16 h-16 text-slate-300" />
+                  </div>
                   <h3 className="text-lg font-medium text-slate-800 mb-1">No nodes yet</h3>
                   <p className="text-slate-500 mb-4">Add decision nodes to build your clinical case.</p>
                   <button

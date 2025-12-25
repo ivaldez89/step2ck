@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { CreateTribeData, TribeType, TribeVisibility, SocialCause } from '@/types/tribes';
+import { BookOpenIcon, BeakerIcon, HeartIcon, UsersIcon, LockClosedIcon } from '@/components/icons/MedicalIcons';
 
 interface CreateTribeModalProps {
   isOpen: boolean;
@@ -9,7 +10,7 @@ interface CreateTribeModalProps {
   onCreate: (data: CreateTribeData) => void;
 }
 
-const TRIBE_ICONS = ['🌊', '🔬', '🧘', '📚', '❤️', '🌱', '🎯', '💪', '🧠', '🌍', '🤝', '⭐'];
+const TRIBE_ICONS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
 const TRIBE_COLORS = [
   { value: 'from-[#3D5A4C] to-[#2D4A3C]', label: 'Deep Forest' },
@@ -37,7 +38,7 @@ export function CreateTribeModal({ isOpen, onClose, onCreate }: CreateTribeModal
     mission: '',
     type: 'study',
     visibility: 'public',
-    icon: '🌊',
+    icon: '',
     color: 'from-[#5B7B6D] to-[#3D5A4C]',
   });
   const [includeGoal, setIncludeGoal] = useState(false);
@@ -55,7 +56,7 @@ export function CreateTribeModal({ isOpen, onClose, onCreate }: CreateTribeModal
       mission: '',
       type: 'study',
       visibility: 'public',
-      icon: '🌊',
+      icon: '',
       color: 'from-[#5B7B6D] to-[#3D5A4C]',
     });
     setIncludeGoal(false);
@@ -141,16 +142,16 @@ export function CreateTribeModal({ isOpen, onClose, onCreate }: CreateTribeModal
                       key={type}
                       type="button"
                       onClick={() => setFormData({ ...formData, type })}
-                      className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
+                      className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center gap-1.5 ${
                         formData.type === type
                           ? 'border-tribe-sage-500 bg-tribe-sage-50 text-tribe-sage-700'
                           : 'border-slate-200 hover:border-slate-300'
                       }`}
                     >
-                      {type === 'study' && '📚 Study Group'}
-                      {type === 'specialty' && '🔬 Specialty'}
-                      {type === 'wellness' && '🧘 Wellness'}
-                      {type === 'cause' && '🌍 Social Cause'}
+                      {type === 'study' && <><BookOpenIcon className="w-4 h-4" /> Study Group</>}
+                      {type === 'specialty' && <><BeakerIcon className="w-4 h-4" /> Specialty</>}
+                      {type === 'wellness' && <><HeartIcon className="w-4 h-4" /> Wellness</>}
+                      {type === 'cause' && <><UsersIcon className="w-4 h-4" /> Social Cause</>}
                     </button>
                   ))}
                 </div>
@@ -166,13 +167,13 @@ export function CreateTribeModal({ isOpen, onClose, onCreate }: CreateTribeModal
                       key={vis}
                       type="button"
                       onClick={() => setFormData({ ...formData, visibility: vis })}
-                      className={`flex-1 px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
+                      className={`flex-1 px-4 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center gap-1.5 ${
                         formData.visibility === vis
                           ? 'border-tribe-sage-500 bg-tribe-sage-50 text-tribe-sage-700'
                           : 'border-slate-200 hover:border-slate-300'
                       }`}
                     >
-                      {vis === 'public' ? '🌐 Public' : '🔒 Private'}
+                      {vis === 'public' ? <><UsersIcon className="w-4 h-4" /> Public</> : <><LockClosedIcon className="w-4 h-4" /> Private</>}
                     </button>
                   ))}
                 </div>

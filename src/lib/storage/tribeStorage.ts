@@ -672,7 +672,7 @@ function createDemoTribes(): Tribe[] {
       mission: 'Organize beach cleanups and raise awareness about ocean health among the medical community.',
       type: 'cause',
       visibility: 'public',
-      icon: '🌊',
+      icon: '',
       color: 'from-[#5B7B6D] to-[#3D5A4C]',
       currentGoal: {
         id: 'goal-beach-cleanup',
@@ -700,7 +700,7 @@ function createDemoTribes(): Tribe[] {
       mission: 'Build a supportive community for surgery-bound medical students and mentor the next generation.',
       type: 'specialty',
       visibility: 'public',
-      icon: '🔪',
+      icon: '',
       color: 'from-[#8B7355] to-[#6B5344]',
       currentGoal: {
         id: 'goal-tutoring',
@@ -728,7 +728,7 @@ function createDemoTribes(): Tribe[] {
       mission: 'Reduce burnout and promote wellness practices among medical students and residents.',
       type: 'wellness',
       visibility: 'public',
-      icon: '🧘',
+      icon: '',
       color: 'from-[#6B8B7D] to-[#5B7B6D]',
       currentGoal: {
         id: 'goal-community-garden',
@@ -756,7 +756,7 @@ function createDemoTribes(): Tribe[] {
       mission: 'Collaborative learning and peer support for mastering internal medicine.',
       type: 'study',
       visibility: 'public',
-      icon: '📚',
+      icon: '',
       color: 'from-[#A89070] to-[#8B7355]',
       currentGoal: {
         id: 'goal-red-cross',
@@ -784,7 +784,7 @@ function createDemoTribes(): Tribe[] {
       mission: 'Create a safe space for discussing pediatric cases and supporting each other.',
       type: 'specialty',
       visibility: 'private',
-      icon: '👶',
+      icon: '',
       color: 'from-[#C4A77D] to-[#A89070]',
       currentGoal: {
         id: 'goal-animal-shelter',

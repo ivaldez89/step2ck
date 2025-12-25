@@ -12,6 +12,7 @@ import { VillagePostCard } from '@/components/village/VillagePostCard';
 import { VillageMemberCard } from '@/components/village/VillageMemberCard';
 import { DirectMessages } from '@/components/village/DirectMessages';
 import type { VillagePost, VillageMemberProfile } from '@/types/community';
+import { SparklesIcon } from '@/components/icons/MedicalIcons';
 
 export default function VillageCommunityPage() {
   const params = useParams();
@@ -333,7 +334,7 @@ export default function VillageCommunityPage() {
       {/* How Points Work */}
       <div className={CARD_STYLES.containerWithPadding}>
         <h3 className="font-semibold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
-          <span className="text-lg">💡</span>
+          <SparklesIcon className="w-5 h-5 text-amber-500" />
           Points to Donations
         </h3>
         <p className="text-sm text-slate-600 dark:text-slate-400">

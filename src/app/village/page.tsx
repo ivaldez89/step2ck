@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ThreeColumnLayout, CARD_STYLES, ThreeColumnLayoutSkeleton } from '@/components/layout/ThreeColumnLayout';
 import { getCurrentVillageId } from '@/lib/storage/profileStorage';
 import { PARTNER_CHARITIES } from '@/data/charities';
+import { SparklesIcon } from '@/components/icons/MedicalIcons';
 
 export default function VillageRedirectPage() {
   const router = useRouter();
@@ -62,7 +63,7 @@ export default function VillageRedirectPage() {
         {/* How It Works */}
         <div className={CARD_STYLES.containerWithPadding}>
           <h3 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-            <span className="text-lg">💡</span>
+            <SparklesIcon className="w-5 h-5 text-amber-500" />
             How It Works
           </h3>
           <div className="space-y-3">

@@ -21,6 +21,7 @@ import {
   type DemoUser
 } from '@/lib/storage/chatStorage';
 import { getCharityById } from '@/data/charities';
+import { ChatBubbleIcon } from '@/components/icons/MedicalIcons';
 
 // Reflection type for My Journey
 interface Reflection {
@@ -446,7 +447,7 @@ export default function HomePage() {
                 className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
               >
                 <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tribe.color || 'from-orange-400 to-amber-500'} flex items-center justify-center text-lg`}>
-                  {tribe.icon || '👥'}
+                  <span className="text-lg">{tribe.icon || ''}</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-slate-700 dark:text-slate-200 truncate">{tribe.name}</p>
@@ -483,7 +484,7 @@ export default function HomePage() {
       {/* Daily Prompt */}
       <div className={CARD_STYLES.containerWithPadding}>
         <h3 className="font-semibold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
-          <span className="text-lg">💭</span>
+          <ChatBubbleIcon className="w-5 h-5 text-[#5B7B6D]" />
           Daily Prompt
         </h3>
         <p className="text-sm text-slate-600 dark:text-slate-400 italic">

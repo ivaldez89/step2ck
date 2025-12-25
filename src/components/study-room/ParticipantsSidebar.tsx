@@ -1,6 +1,7 @@
 'use client';
 
 import { SessionParticipant } from '@/types/studyRoom';
+import { FireIcon } from '@/components/icons/MedicalIcons';
 
 interface ParticipantsSidebarProps {
   participants: SessionParticipant[];
@@ -131,7 +132,7 @@ export function ParticipantsSidebar({
                   <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                     {participant.pomodorosCompleted > 0 && (
                       <span className="flex items-center gap-0.5">
-                        <span>🍅</span>
+                        <FireIcon className="w-3 h-3" />
                         <span>{participant.pomodorosCompleted}</span>
                       </span>
                     )}

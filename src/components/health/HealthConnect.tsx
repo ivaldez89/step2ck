@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useHealthData } from '@/hooks/useHealthData';
+import { HeartIcon } from '@/components/icons/MedicalIcons';
 
 interface HealthConnectProps {
   variant?: 'full' | 'compact';
@@ -12,7 +13,6 @@ const HEALTH_PROVIDERS = [
   {
     id: 'apple_health' as const,
     name: 'Apple Health',
-    icon: '❤️',
     color: 'from-red-500 to-pink-500',
     description: 'Sync steps, workouts, and sleep from your iPhone',
     available: true
@@ -20,7 +20,6 @@ const HEALTH_PROVIDERS = [
   {
     id: 'google_fit' as const,
     name: 'Google Fit',
-    icon: '💚',
     color: 'from-green-500 to-tribe-sage-500',
     description: 'Connect your Android fitness data',
     available: true
@@ -28,7 +27,6 @@ const HEALTH_PROVIDERS = [
   {
     id: 'fitbit' as const,
     name: 'Fitbit',
-    icon: '💙',
     color: 'from-blue-500 to-cyan-500',
     description: 'Sync from your Fitbit device',
     available: false // Coming soon
@@ -36,7 +34,6 @@ const HEALTH_PROVIDERS = [
   {
     id: 'garmin' as const,
     name: 'Garmin',
-    icon: '🖤',
     color: 'from-slate-600 to-slate-800',
     description: 'Connect your Garmin watch',
     available: false // Coming soon
@@ -122,7 +119,7 @@ export function HealthConnect({ variant = 'full', onPointsEarned }: HealthConnec
           </div>
           {syncStatus?.isConnected ? (
             <span className="px-2 py-1 bg-tribe-sage-100 dark:bg-tribe-sage-900/50 text-tribe-sage-700 dark:text-tribe-sage-300 text-xs font-medium rounded-full">
-              ✓ Synced
+              Synced
             </span>
           ) : (
             <button
@@ -182,8 +179,8 @@ export function HealthConnect({ variant = 'full', onPointsEarned }: HealthConnec
                 </span>
               )}
               <div className="flex items-start gap-4">
-                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${provider.color} flex items-center justify-center text-2xl shadow-lg`}>
-                  {provider.icon}
+                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${provider.color} flex items-center justify-center shadow-lg`}>
+                  <HeartIcon className="w-7 h-7 text-white" />
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-slate-900 dark:text-white">{provider.name}</h3>
@@ -268,7 +265,7 @@ export function HealthConnect({ variant = 'full', onPointsEarned }: HealthConnec
                 )}
               </div>
               <div className="text-center">
-                <div className="text-3xl mb-1">🧘</div>
+                <div className="mb-1"><HeartIcon className="w-8 h-8 text-[#5B7B6D] mx-auto" /></div>
                 <p className="text-2xl font-bold text-slate-900 dark:text-white">
                   {todaySummary?.mindfulMinutes || 0}
                 </p>
@@ -379,10 +376,10 @@ export function HealthConnect({ variant = 'full', onPointsEarned }: HealthConnec
               </label>
               <div className="grid grid-cols-4 gap-2">
                 {[
-                  { id: 'steps', label: 'Steps', icon: '👟' },
-                  { id: 'workout', label: 'Workout', icon: '🏃' },
-                  { id: 'sleep', label: 'Sleep', icon: '😴' },
-                  { id: 'mindful_minutes', label: 'Mindful', icon: '🧘' }
+                  { id: 'steps', label: 'Steps', icon: '' },
+                  { id: 'workout', label: 'Workout', icon: '' },
+                  { id: 'sleep', label: 'Sleep', icon: '' },
+                  { id: 'mindful_minutes', label: 'Mindful', icon: '' }
                 ].map((type) => (
                   <button
                     key={type.id}
@@ -431,7 +428,9 @@ export function HealthConnect({ variant = 'full', onPointsEarned }: HealthConnec
       {/* Benefits Info */}
       <div className="p-5 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl border border-amber-200 dark:border-amber-800">
         <div className="flex items-start gap-4">
-          <span className="text-2xl">💡</span>
+          <svg className="w-6 h-6 text-amber-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+            </svg>
           <div>
             <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-1">Why Connect?</h4>
             <ul className="text-sm text-amber-700 dark:text-amber-300 space-y-1">

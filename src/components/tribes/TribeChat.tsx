@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import type { TribeMessage } from '@/types/tribes';
 import { formatTribeTime } from '@/lib/storage/tribeStorage';
+import { TrophyIcon, ChatBubbleIcon } from '@/components/icons/MedicalIcons';
 
 interface TribeChatProps {
   messages: TribeMessage[];
@@ -46,13 +47,13 @@ export function TribeChat({
       return (
         <div key={message.id} className="flex justify-center my-3">
           <div
-            className={`px-4 py-2 rounded-full text-sm ${
+            className={`px-4 py-2 rounded-full text-sm flex items-center gap-1 ${
               message.type === 'achievement'
                 ? 'bg-gradient-to-r from-[#C4A77D]/20 to-[#A89070]/20 text-[#8B7355] border border-[#C4A77D]/30'
                 : 'bg-[#F5EFE6] dark:bg-slate-700 text-[#6B5344] dark:text-slate-300'
             }`}
           >
-            {message.type === 'achievement' && <span className="mr-1">🏆</span>}
+            {message.type === 'achievement' && <TrophyIcon className="w-4 h-4" />}
             {message.content}
           </div>
         </div>
@@ -115,7 +116,9 @@ export function TribeChat({
         ) : (
           <div className="h-full flex items-center justify-center text-[#6B5344]/70 dark:text-slate-400">
             <div className="text-center">
-              <span className="text-3xl mb-2 block">💬</span>
+              <div className="mb-2 flex justify-center">
+                <ChatBubbleIcon className="w-12 h-12" />
+              </div>
               <p>No messages yet</p>
               <p className="text-sm">Be the first to say hello!</p>
             </div>

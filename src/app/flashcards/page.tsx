@@ -5,37 +5,38 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ThreeColumnLayout, CARD_STYLES } from '@/components/layout/ThreeColumnLayout';
 import { useFlashcards } from '@/hooks/useFlashcards';
+import { getShelfIcon, getSystemIcon } from '@/components/icons/MedicalIcons';
 import type { Rotation, MedicalSystem } from '@/types';
 
 // Shelf categories for browsing
-const SHELF_CATEGORIES: { id: Rotation; name: string; icon: string; color: string }[] = [
-  { id: 'Internal Medicine', name: 'Internal Medicine', icon: '🩺', color: 'from-[#5B7B6D] to-[#7FA08F]' },
-  { id: 'Surgery', name: 'Surgery', icon: '🔪', color: 'from-[#8B7355] to-[#A89070]' },
-  { id: 'Pediatrics', name: 'Pediatrics', icon: '👶', color: 'from-[#7FA08F] to-[#9FBFAF]' },
-  { id: 'OB/GYN', name: 'OB/GYN', icon: '🤰', color: 'from-[#C4A77D] to-[#D4B78D]' },
-  { id: 'Psychiatry', name: 'Psychiatry', icon: '🧠', color: 'from-[#6B8B7D] to-[#8BA89A]' },
-  { id: 'Family Medicine', name: 'Family Medicine', icon: '👨‍👩‍👧', color: 'from-[#5B7B6D] to-[#7FA08F]' },
-  { id: 'Neurology', name: 'Neurology', icon: '⚡', color: 'from-[#8B7355] to-[#C4A77D]' },
-  { id: 'Emergency Medicine', name: 'Emergency Medicine', icon: '🚨', color: 'from-[#C4A77D] to-[#8B7355]' },
+const SHELF_CATEGORIES: { id: Rotation; name: string; color: string }[] = [
+  { id: 'Internal Medicine', name: 'Internal Medicine', color: 'from-[#5B7B6D] to-[#7FA08F]' },
+  { id: 'Surgery', name: 'Surgery', color: 'from-[#8B7355] to-[#A89070]' },
+  { id: 'Pediatrics', name: 'Pediatrics', color: 'from-[#7FA08F] to-[#9FBFAF]' },
+  { id: 'OB/GYN', name: 'OB/GYN', color: 'from-[#C4A77D] to-[#D4B78D]' },
+  { id: 'Psychiatry', name: 'Psychiatry', color: 'from-[#6B8B7D] to-[#8BA89A]' },
+  { id: 'Family Medicine', name: 'Family Medicine', color: 'from-[#5B7B6D] to-[#7FA08F]' },
+  { id: 'Neurology', name: 'Neurology', color: 'from-[#8B7355] to-[#C4A77D]' },
+  { id: 'Emergency Medicine', name: 'Emergency Medicine', color: 'from-[#C4A77D] to-[#8B7355]' },
 ];
 
 // System categories for browsing
-const SYSTEM_CATEGORIES: { id: MedicalSystem; name: string; icon: string }[] = [
-  { id: 'Cardiology', name: 'Cardiology', icon: '❤️' },
-  { id: 'Pulmonology', name: 'Pulmonology', icon: '🫁' },
-  { id: 'Gastroenterology', name: 'Gastroenterology', icon: '🫃' },
-  { id: 'Neurology', name: 'Neurology', icon: '🧠' },
-  { id: 'Endocrinology', name: 'Endocrinology', icon: '🦋' },
-  { id: 'Nephrology', name: 'Nephrology', icon: '🫘' },
-  { id: 'Rheumatology', name: 'Rheumatology', icon: '🦴' },
-  { id: 'Hematology/Oncology', name: 'Hematology/Oncology', icon: '🩸' },
-  { id: 'Infectious Disease', name: 'Infectious Disease', icon: '🦠' },
-  { id: 'Dermatology', name: 'Dermatology', icon: '🧴' },
-  { id: 'Psychiatry', name: 'Psychiatry', icon: '💭' },
-  { id: 'Pediatrics', name: 'Pediatrics', icon: '👶' },
-  { id: 'OB/GYN', name: 'OB/GYN', icon: '🤰' },
-  { id: 'Surgery', name: 'Surgery', icon: '🔪' },
-  { id: 'Emergency Medicine', name: 'Emergency Medicine', icon: '🚨' },
+const SYSTEM_CATEGORIES: { id: MedicalSystem; name: string }[] = [
+  { id: 'Cardiology', name: 'Cardiology' },
+  { id: 'Pulmonology', name: 'Pulmonology' },
+  { id: 'Gastroenterology', name: 'Gastroenterology' },
+  { id: 'Neurology', name: 'Neurology' },
+  { id: 'Endocrinology', name: 'Endocrinology' },
+  { id: 'Nephrology', name: 'Nephrology' },
+  { id: 'Rheumatology', name: 'Rheumatology' },
+  { id: 'Hematology/Oncology', name: 'Hematology/Oncology' },
+  { id: 'Infectious Disease', name: 'Infectious Disease' },
+  { id: 'Dermatology', name: 'Dermatology' },
+  { id: 'Psychiatry', name: 'Psychiatry' },
+  { id: 'Pediatrics', name: 'Pediatrics' },
+  { id: 'OB/GYN', name: 'OB/GYN' },
+  { id: 'Surgery', name: 'Surgery' },
+  { id: 'Emergency Medicine', name: 'Emergency Medicine' },
 ];
 
 export default function FlashcardsPage() {
@@ -269,7 +270,9 @@ export default function FlashcardsPage() {
       {/* Study Tips */}
       <div className={CARD_STYLES.containerWithPadding}>
         <h3 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-          <span className="text-lg">💡</span>
+          <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+          </svg>
           Study Tips
         </h3>
         <div className="space-y-3">
@@ -376,7 +379,7 @@ export default function FlashcardsPage() {
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <span className="text-lg">{shelf.icon}</span>
+                          {(() => { const Icon = getShelfIcon(shelf.id); return <Icon className="w-5 h-5" />; })()}
                           <span className="text-sm font-medium">{shelf.name}</span>
                         </div>
                         <span className={`text-xs px-2 py-0.5 rounded-full ${
@@ -431,7 +434,7 @@ export default function FlashcardsPage() {
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <span className="text-lg">{sys.icon}</span>
+                          {(() => { const Icon = getSystemIcon(sys.id); return <Icon className="w-5 h-5" />; })()}
                           <span className="text-sm font-medium">{sys.name}</span>
                         </div>
                         <span className={`text-xs px-2 py-0.5 rounded-full ${
@@ -475,8 +478,8 @@ export default function FlashcardsPage() {
                 }`}
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${shelf.color} flex items-center justify-center text-xl`}>
-                    {shelf.icon}
+                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${shelf.color} flex items-center justify-center`}>
+                    {(() => { const Icon = getShelfIcon(shelf.id); return <Icon className="w-5 h-5 text-white" />; })()}
                   </div>
                   {dueCount > 0 && (
                     <span className="px-2 py-0.5 bg-[#C4A77D]/20 text-[#8B7355] text-xs font-medium rounded-full">
@@ -520,7 +523,9 @@ export default function FlashcardsPage() {
                 }`}
               >
                 <div className="relative inline-block mb-1">
-                  <span className="text-2xl">{sys.icon}</span>
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#C4A77D]/20 to-[#D4B78D]/20 flex items-center justify-center mx-auto">
+                    {(() => { const Icon = getSystemIcon(sys.id); return <Icon className="w-4 h-4 text-[#8B7355]" />; })()}
+                  </div>
                   {dueCount > 0 && (
                     <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#C4A77D] rounded-full" />
                   )}

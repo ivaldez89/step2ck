@@ -789,7 +789,7 @@ CT head is negative for hemorrhage.
 - Neurosurgical consultation
 
 **Headache Red Flags (SNOOP):**
-- Sudden onset (thunderclap) ✓
+- Sudden onset (thunderclap) [present]
 - Neurologic signs
 - Older age with new headache
 - Other (exertional, positional, pregnancy)
@@ -970,10 +970,10 @@ Gram stain shows gram-positive diplococci.
       back: `**Diagnosis: Preeclampsia with Severe Features**
 
 **Severe features present:**
-- BP ≥ 160/110 ✓ (165/105)
-- Platelets < 100,000 ✓ (85K)
-- Liver transaminases > 2x normal ✓ (AST 180)
-- Symptoms (headache) ✓
+- BP ≥ 160/110 [present] (165/105)
+- Platelets < 100,000 [present] (85K)
+- Liver transaminases > 2x normal [present] (AST 180)
+- Symptoms (headache) [present]
 
 **Immediate Management:**
 1. **Magnesium sulfate** - seizure prophylaxis (4-6g IV bolus, then 1-2g/hr)
@@ -1037,10 +1037,10 @@ Gram stain shows gram-positive diplococci.
 **Methotrexate Eligibility Criteria (she meets all):**
 | Criterion | Her Value | Requirement |
 |-----------|-----------|-------------|
-| Hemodynamic stability | Stable | ✓ Must be stable |
-| Beta-hCG | 3,200 | ✓ < 5,000 |
-| Mass size | 2.5 cm | ✓ < 3.5 cm |
-| Fetal cardiac activity | None | ✓ Must be absent |
+| Hemodynamic stability | Stable | Must be stable |
+| Beta-hCG | 3,200 | < 5,000 |
+| Mass size | 2.5 cm | < 3.5 cm |
+| Fetal cardiac activity | None | Must be absent |
 
 **Absolute Contraindications to MTX:**
 - Hemodynamically unstable/ruptured ectopic

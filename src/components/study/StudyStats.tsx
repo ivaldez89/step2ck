@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { ChartBarIcon, FireIcon, TrophyIcon, CheckCircleIcon } from '@/components/icons/MedicalIcons';
 
 // Types
 interface StudyStats {
@@ -28,30 +29,30 @@ interface Achievement {
 
 const ACHIEVEMENTS: Omit<Achievement, 'unlockedAt'>[] = [
   // Card milestones
-  { id: 'cards_10', name: 'Getting Started', description: 'Review 10 cards', emoji: '🌱', requirement: 10, type: 'cards' },
-  { id: 'cards_50', name: 'Warming Up', description: 'Review 50 cards', emoji: '🔥', requirement: 50, type: 'cards' },
-  { id: 'cards_100', name: 'Century Club', description: 'Review 100 cards', emoji: '💯', requirement: 100, type: 'cards' },
-  { id: 'cards_250', name: 'Dedicated Learner', description: 'Review 250 cards', emoji: '📚', requirement: 250, type: 'cards' },
-  { id: 'cards_500', name: 'Knowledge Seeker', description: 'Review 500 cards', emoji: '🎓', requirement: 500, type: 'cards' },
-  { id: 'cards_1000', name: 'Card Master', description: 'Review 1,000 cards', emoji: '👑', requirement: 1000, type: 'cards' },
-  { id: 'cards_2500', name: 'Legend', description: 'Review 2,500 cards', emoji: '🏆', requirement: 2500, type: 'cards' },
+  { id: 'cards_10', name: 'Getting Started', description: 'Review 10 cards', emoji: '', requirement: 10, type: 'cards' },
+  { id: 'cards_50', name: 'Warming Up', description: 'Review 50 cards', emoji: '', requirement: 50, type: 'cards' },
+  { id: 'cards_100', name: 'Century Club', description: 'Review 100 cards', emoji: '', requirement: 100, type: 'cards' },
+  { id: 'cards_250', name: 'Dedicated Learner', description: 'Review 250 cards', emoji: '', requirement: 250, type: 'cards' },
+  { id: 'cards_500', name: 'Knowledge Seeker', description: 'Review 500 cards', emoji: '', requirement: 500, type: 'cards' },
+  { id: 'cards_1000', name: 'Card Master', description: 'Review 1,000 cards', emoji: '', requirement: 1000, type: 'cards' },
+  { id: 'cards_2500', name: 'Legend', description: 'Review 2,500 cards', emoji: '', requirement: 2500, type: 'cards' },
   
   // Streak milestones
-  { id: 'streak_3', name: 'Three-peat', description: '3 day streak', emoji: '🔥', requirement: 3, type: 'streak' },
-  { id: 'streak_7', name: 'Week Warrior', description: '7 day streak', emoji: '⚡', requirement: 7, type: 'streak' },
-  { id: 'streak_14', name: 'Fortnight Focus', description: '14 day streak', emoji: '💪', requirement: 14, type: 'streak' },
-  { id: 'streak_30', name: 'Monthly Master', description: '30 day streak', emoji: '🌟', requirement: 30, type: 'streak' },
-  { id: 'streak_60', name: 'Unstoppable', description: '60 day streak', emoji: '🚀', requirement: 60, type: 'streak' },
-  { id: 'streak_100', name: 'Centurion', description: '100 day streak', emoji: '👑', requirement: 100, type: 'streak' },
+  { id: 'streak_3', name: 'Three-peat', description: '3 day streak', emoji: '', requirement: 3, type: 'streak' },
+  { id: 'streak_7', name: 'Week Warrior', description: '7 day streak', emoji: '', requirement: 7, type: 'streak' },
+  { id: 'streak_14', name: 'Fortnight Focus', description: '14 day streak', emoji: '', requirement: 14, type: 'streak' },
+  { id: 'streak_30', name: 'Monthly Master', description: '30 day streak', emoji: '', requirement: 30, type: 'streak' },
+  { id: 'streak_60', name: 'Unstoppable', description: '60 day streak', emoji: '', requirement: 60, type: 'streak' },
+  { id: 'streak_100', name: 'Centurion', description: '100 day streak', emoji: '', requirement: 100, type: 'streak' },
   
   // Study days
-  { id: 'days_7', name: 'First Week', description: 'Study 7 total days', emoji: '📅', requirement: 7, type: 'days' },
-  { id: 'days_30', name: 'Monthly Habit', description: 'Study 30 total days', emoji: '🗓️', requirement: 30, type: 'days' },
+  { id: 'days_7', name: 'First Week', description: 'Study 7 total days', emoji: '', requirement: 7, type: 'days' },
+  { id: 'days_30', name: 'Monthly Habit', description: 'Study 30 total days', emoji: '', requirement: 30, type: 'days' },
   
   // Pomodoro
-  { id: 'pomo_1', name: 'Focused', description: 'Complete 1 pomodoro', emoji: '🍅', requirement: 1, type: 'pomodoro' },
-  { id: 'pomo_10', name: 'Deep Work', description: 'Complete 10 pomodoros', emoji: '🧠', requirement: 10, type: 'pomodoro' },
-  { id: 'pomo_50', name: 'Flow State', description: 'Complete 50 pomodoros', emoji: '🌊', requirement: 50, type: 'pomodoro' },
+  { id: 'pomo_1', name: 'Focused', description: 'Complete 1 pomodoro', emoji: '', requirement: 1, type: 'pomodoro' },
+  { id: 'pomo_10', name: 'Deep Work', description: 'Complete 10 pomodoros', emoji: '', requirement: 10, type: 'pomodoro' },
+  { id: 'pomo_50', name: 'Flow State', description: 'Complete 50 pomodoros', emoji: '', requirement: 50, type: 'pomodoro' },
 ];
 
 const XP_PER_CARD = 10;
@@ -230,7 +231,8 @@ export function StudyStatsDisplay() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="font-semibold text-slate-900 flex items-center gap-2">
-            📊 Your Progress
+            <ChartBarIcon className="w-5 h-5 text-indigo-600" />
+            <span>Your Progress</span>
           </h3>
           <p className="text-sm text-slate-500">Keep up the great work!</p>
         </div>
@@ -262,9 +264,9 @@ export function StudyStatsDisplay() {
       {/* Stats grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
         <div className="text-center p-3 bg-orange-50 rounded-xl">
-          <p className="text-2xl font-bold text-orange-600">
-            {stats.currentStreak}
-            {stats.currentStreak > 0 && <span className="text-base ml-1">🔥</span>}
+          <p className="text-2xl font-bold text-orange-600 flex items-center justify-center gap-1">
+            <span>{stats.currentStreak}</span>
+            {stats.currentStreak > 0 && <FireIcon className="w-5 h-5" />}
           </p>
           <p className="text-xs text-slate-600">Day Streak</p>
         </div>
@@ -332,10 +334,11 @@ export function StudyStatsDisplay() {
           {unlockedAchievements.map(achievement => (
             <div
               key={achievement.id}
-              className="group relative px-3 py-1.5 bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 rounded-full text-sm"
+              className="group relative px-3 py-1.5 bg-gradient-to-r from-amber-100 to-yellow-100 border border-amber-200 rounded-full text-sm flex items-center gap-1.5"
               title={achievement.description}
             >
-              <span>{achievement.emoji} {achievement.name}</span>
+              <span>{achievement.emoji}</span>
+              <span>{achievement.name}</span>
               
               {/* Tooltip */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
@@ -352,10 +355,13 @@ export function StudyStatsDisplay() {
             {lockedAchievements.map(achievement => (
               <div
                 key={achievement.id}
-                className="group relative px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-sm text-slate-400"
+                className="group relative px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-sm text-slate-400 flex items-center gap-1.5"
                 title={achievement.description}
               >
-                <span>🔒 {achievement.name}</span>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <span>{achievement.name}</span>
                 
                 {/* Tooltip */}
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
@@ -388,7 +394,9 @@ export function AchievementNotification({ achievement, onClose }: { achievement:
           <p className="text-xs opacity-75">{achievement.description}</p>
         </div>
         <button onClick={onClose} className="ml-2 opacity-50 hover:opacity-100">
-          ✕
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
       </div>
     </div>

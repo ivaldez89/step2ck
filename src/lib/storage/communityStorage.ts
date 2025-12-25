@@ -433,7 +433,7 @@ function getSamplePosts(villageId: string): VillagePost[] {
       authorId: 'sample-user-1',
       authorName: 'Sarah M.',
       authorRole: 'MS3',
-      content: "Just hit my 30-day wellness streak! The mindfulness exercises have really helped during rotations. Keep pushing everyone! 💪",
+      content: "Just hit my 30-day wellness streak! The mindfulness exercises have really helped during rotations. Keep pushing everyone!",
       createdAt: yesterday.toISOString(),
       updatedAt: yesterday.toISOString(),
       reactions: [

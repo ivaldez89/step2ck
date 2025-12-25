@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { SparklesIcon, BookOpenIcon, ClockIcon } from '@/components/icons/MedicalIcons';
 
 // Beautiful high-resolution background images from Unsplash
 export const STUDY_BACKGROUNDS = [
@@ -9,7 +10,7 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'library',
     name: 'Study Library',
-    emoji: '📚',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1920&q=80',
     category: 'medical',
     isDefault: true
@@ -17,14 +18,14 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'cozy-study',
     name: 'Cozy Desk',
-    emoji: '💡',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&q=80',
     category: 'medical'
   },
   {
     id: 'coffee-study',
     name: 'Coffee & Books',
-    emoji: '☕',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1920&q=80',
     category: 'medical'
   },
@@ -32,7 +33,7 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'none',
     name: 'None',
-    emoji: '⬜',
+    emoji: '',
     url: null,
     category: 'default'
   },
@@ -40,7 +41,7 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'custom',
     name: 'Upload',
-    emoji: '📷',
+    emoji: '',
     url: null,
     category: 'custom'
   },
@@ -48,35 +49,35 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'beach-sunset',
     name: 'Beach Sunset',
-    emoji: '🏖️',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&q=80',
     category: 'beach'
   },
   {
     id: 'tropical-beach',
     name: 'Tropical',
-    emoji: '🌴',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1520454974749-611b7248ffdb?w=1920&q=80',
     category: 'beach'
   },
   {
     id: 'ocean-waves',
     name: 'Ocean Waves',
-    emoji: '🌊',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1920&q=80',
     category: 'beach'
   },
   {
     id: 'maldives',
     name: 'Maldives',
-    emoji: '🏝️',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=1920&q=80',
     category: 'beach'
   },
   {
     id: 'crystal-water',
     name: 'Crystal Water',
-    emoji: '💎',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=1920&q=80',
     category: 'beach'
   },
@@ -84,28 +85,28 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'underwater-coral',
     name: 'Coral Reef',
-    emoji: '🐠',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=1920&q=80',
     category: 'underwater'
   },
   {
     id: 'underwater-blue',
     name: 'Deep Blue',
-    emoji: '🐋',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1920&q=80',
     category: 'underwater'
   },
   {
     id: 'underwater-fish',
     name: 'Ocean Life',
-    emoji: '🐟',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1559825481-12a05cc00344?w=1920&q=80',
     category: 'underwater'
   },
   {
     id: 'jellyfish',
     name: 'Jellyfish',
-    emoji: '🪼',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1460518451285-97b6aa326961?w=1920&q=80',
     category: 'underwater'
   },
@@ -113,56 +114,56 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'galaxy',
     name: 'Galaxy',
-    emoji: '🌌',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1920&q=80',
     category: 'space'
   },
   {
     id: 'aurora',
     name: 'Aurora',
-    emoji: '🌠',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1483347756197-71ef80e95f73?w=1920&q=80',
     category: 'space'
   },
   {
     id: 'milky-way',
     name: 'Milky Way',
-    emoji: '✨',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=80',
     category: 'space'
   },
   {
     id: 'nebula',
     name: 'Nebula',
-    emoji: '🔮',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1464802686167-b939a6910659?w=1920&q=80',
     category: 'space'
   },
   {
     id: 'earth-space',
     name: 'Earth View',
-    emoji: '🌍',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80',
     category: 'space'
   },
   {
     id: 'moon-surface',
     name: 'Moon',
-    emoji: '🌙',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1446941611757-91d2c3bd3d45?w=1920&q=80',
     category: 'space'
   },
   {
     id: 'saturn-rings',
     name: 'Saturn',
-    emoji: '🪐',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1614732414444-096e5f1122d5?w=1920&q=80',
     category: 'space'
   },
   {
     id: 'starfield',
     name: 'Starfield',
-    emoji: '⭐',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=1920&q=80',
     category: 'space'
   },
@@ -170,49 +171,49 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'forest',
     name: 'Forest',
-    emoji: '🌲',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=1920&q=80',
     category: 'forest'
   },
   {
     id: 'autumn-forest',
     name: 'Autumn Forest',
-    emoji: '🍂',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80',
     category: 'forest'
   },
   {
     id: 'misty-forest',
     name: 'Misty Forest',
-    emoji: '🌫️',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=1920&q=80',
     category: 'forest'
   },
   {
     id: 'redwood',
     name: 'Redwood',
-    emoji: '🌳',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1920&q=80',
     category: 'forest'
   },
   {
     id: 'bamboo-forest',
     name: 'Bamboo',
-    emoji: '🎍',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1920&q=80',
     category: 'forest'
   },
   {
     id: 'spring-forest',
     name: 'Spring Woods',
-    emoji: '🌸',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1476231682828-37e571bc172f?w=1920&q=80',
     category: 'forest'
   },
   {
     id: 'snow-forest',
     name: 'Snowy Forest',
-    emoji: '🌨️',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1517299321609-52687d1bc55a?w=1920&q=80',
     category: 'forest'
   },
@@ -220,28 +221,28 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'jungle',
     name: 'Jungle',
-    emoji: '🦜',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1440342359743-84fcb8c21f21?w=1920&q=80',
     category: 'jungle'
   },
   {
     id: 'rainforest',
     name: 'Rainforest',
-    emoji: '🌿',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1536147116438-62679a5e01f2?w=1920&q=80',
     category: 'jungle'
   },
   {
     id: 'amazon',
     name: 'Amazon',
-    emoji: '🐆',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1920&q=80',
     category: 'jungle'
   },
   {
     id: 'tropical-plants',
     name: 'Tropical Leaves',
-    emoji: '🌺',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=1920&q=80',
     category: 'jungle'
   },
@@ -249,35 +250,35 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'mountains',
     name: 'Mountains',
-    emoji: '🏔️',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80',
     category: 'mountains'
   },
   {
     id: 'alps',
     name: 'Alpine',
-    emoji: '⛰️',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80',
     category: 'mountains'
   },
   {
     id: 'mountain-lake',
     name: 'Mountain Lake',
-    emoji: '🏞️',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1920&q=80',
     category: 'mountains'
   },
   {
     id: 'snowy-peaks',
     name: 'Snowy Peaks',
-    emoji: '🗻',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1920&q=80',
     category: 'mountains'
   },
   {
     id: 'mountain-sunset',
     name: 'Mountain Sunset',
-    emoji: '🌄',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&q=80',
     category: 'mountains'
   },
@@ -285,49 +286,49 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'waterfall',
     name: 'Waterfall',
-    emoji: '💧',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=1920&q=80',
     category: 'nature'
   },
   {
     id: 'japanese-garden',
     name: 'Zen Garden',
-    emoji: '🎋',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1920&q=80',
     category: 'nature'
   },
   {
     id: 'lavender-field',
     name: 'Lavender',
-    emoji: '💜',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1499002238440-d264edd596ec?w=1920&q=80',
     category: 'nature'
   },
   {
     id: 'sunflower-field',
     name: 'Sunflowers',
-    emoji: '🌻',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1470509037663-253afd7f0f51?w=1920&q=80',
     category: 'nature'
   },
   {
     id: 'cherry-blossom',
     name: 'Cherry Blossom',
-    emoji: '🌸',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1522383225653-ed111181a951?w=1920&q=80',
     category: 'nature'
   },
   {
     id: 'northern-lights',
     name: 'Northern Lights',
-    emoji: '💚',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=1920&q=80',
     category: 'nature'
   },
   {
     id: 'meadow',
     name: 'Meadow',
-    emoji: '🌾',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1473773508845-188df298d2d1?w=1920&q=80',
     category: 'nature'
   },
@@ -335,28 +336,28 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'desert-dunes',
     name: 'Desert Dunes',
-    emoji: '🏜️',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1920&q=80',
     category: 'desert'
   },
   {
     id: 'sahara',
     name: 'Sahara',
-    emoji: '🐪',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?w=1920&q=80',
     category: 'desert'
   },
   {
     id: 'savanna',
     name: 'Savanna',
-    emoji: '🦁',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1920&q=80',
     category: 'desert'
   },
   {
     id: 'desert-sunset',
     name: 'Desert Sunset',
-    emoji: '🌅',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=1920&q=80',
     category: 'desert'
   },
@@ -364,35 +365,35 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'rainy-window',
     name: 'Rainy Day',
-    emoji: '🌧️',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=1920&q=80',
     category: 'cozy'
   },
   {
     id: 'fireplace',
     name: 'Fireplace',
-    emoji: '🔥',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?w=1920&q=80',
     category: 'cozy'
   },
   {
     id: 'snowy-cabin',
     name: 'Snow Cabin',
-    emoji: '❄️',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1548777123-e216912df7d8?w=1920&q=80',
     category: 'cozy'
   },
   {
     id: 'cozy-rain',
     name: 'Cozy Rain',
-    emoji: '☔',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1428592953211-077101b2021b?w=1920&q=80',
     category: 'cozy'
   },
   {
     id: 'candle-light',
     name: 'Candlelight',
-    emoji: '🕯️',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80',
     category: 'cozy'
   },
@@ -400,28 +401,28 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'night-city',
     name: 'City Night',
-    emoji: '🌃',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1920&q=80',
     category: 'city'
   },
   {
     id: 'tokyo',
     name: 'Tokyo',
-    emoji: '🗼',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1920&q=80',
     category: 'city'
   },
   {
     id: 'new-york',
     name: 'New York',
-    emoji: '🗽',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=1920&q=80',
     category: 'city'
   },
   {
     id: 'paris',
     name: 'Paris',
-    emoji: '🗼',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1920&q=80',
     category: 'city'
   },
@@ -429,35 +430,35 @@ export const STUDY_BACKGROUNDS = [
   {
     id: 'great-wall',
     name: 'Great Wall',
-    emoji: '🏯',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=1920&q=80',
     category: 'world'
   },
   {
     id: 'machu-picchu',
     name: 'Machu Picchu',
-    emoji: '🏛️',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=1920&q=80',
     category: 'world'
   },
   {
     id: 'santorini',
     name: 'Santorini',
-    emoji: '🇬🇷',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1920&q=80',
     category: 'world'
   },
   {
     id: 'iceland',
     name: 'Iceland',
-    emoji: '🧊',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1504829857797-ddff29c27927?w=1920&q=80',
     category: 'world'
   },
   {
     id: 'norway-fjord',
     name: 'Norway Fjord',
-    emoji: '🇳🇴',
+    emoji: '',
     url: 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=1920&q=80',
     category: 'world'
   }
@@ -577,20 +578,20 @@ export function BackgroundOverlay({ backgroundId, opacity, className = '' }: Bac
 // Group backgrounds by category for organized display
 const CATEGORY_ORDER = ['medical', 'default', 'custom', 'beach', 'underwater', 'space', 'forest', 'jungle', 'mountains', 'nature', 'desert', 'cozy', 'city', 'world'];
 const CATEGORY_LABELS: Record<string, string> = {
-  medical: '📚 Study',
+  medical: 'Study',
   default: '⬜ None',
   custom: '📷 Custom',
-  beach: '🏖️ Beach & Ocean',
-  underwater: '🐠 Underwater',
-  space: '🌌 Space & Cosmos',
-  forest: '🌲 Forests',
-  jungle: '🦜 Jungle & Tropical',
-  mountains: '🏔️ Mountains',
+  beach: 'Beach & Ocean',
+  underwater: 'Underwater',
+  space: 'Space & Cosmos',
+  forest: 'Forests',
+  jungle: 'Jungle & Tropical',
+  mountains: 'Mountains',
   nature: '🌿 Nature',
   desert: '🏜️ Desert & Savanna',
-  cozy: '🔥 Cozy',
-  city: '🌃 Cities',
-  world: '🌍 World Landmarks'
+  cozy: 'Cozy',
+  city: 'Cities',
+  world: 'World Landmarks'
 };
 
 export function BackgroundSelector({
@@ -688,7 +689,7 @@ export function BackgroundSelector({
               : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
         }`}
       >
-        <span>{currentBg?.emoji || '🖼️'}</span>
+        <span>{currentBg?.emoji || <SparklesIcon className="w-4 h-4" />}</span>
         <span className="hidden sm:inline">Scene</span>
       </button>
 
@@ -717,7 +718,7 @@ export function BackgroundSelector({
               <h3 className={`font-semibold mb-3 flex items-center gap-2 ${
                 isDark ? 'text-white' : 'text-slate-900'
               }`}>
-                <span>🖼️</span>
+                <SparklesIcon className="w-5 h-5" />
                 <span>Study Scene</span>
               </h3>
 
@@ -767,7 +768,9 @@ export function BackgroundSelector({
                                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                             }`}
                           >
-                            <span>⬜</span>
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
                             <span>None</span>
                           </button>
                         )}
@@ -790,7 +793,14 @@ export function BackgroundSelector({
                               className="hidden"
                               disabled={isUploading}
                             />
-                            <span>{isUploading ? '⏳' : '📷'}</span>
+                            {isUploading ? (
+                              <ClockIcon className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                              </svg>
+                            )}
                             <span>{customBackgroundUrl ? 'Your Image' : 'Upload'}</span>
                           </label>
                         )}

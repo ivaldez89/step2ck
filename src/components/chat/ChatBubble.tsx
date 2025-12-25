@@ -13,15 +13,21 @@ import {
   type Conversation,
   type Message,
 } from '@/lib/storage/chatStorage';
+import {
+  BellIcon,
+  TargetIcon,
+  RheumatologyIcon,
+  InfectiousDiseaseIcon,
+} from '@/components/icons/MedicalIcons';
 
 // Focus mode options
 const FOCUS_MODES = [
-  { id: 'off', name: 'All notifications', icon: '🔔', description: 'Receive all messages' },
-  { id: '30min', name: '30 minutes', icon: '⏱️', description: 'Silent for 30 min' },
-  { id: '1hr', name: '1 hour', icon: '🕐', description: 'Silent for 1 hour' },
-  { id: '2hr', name: '2 hours', icon: '🕑', description: 'Silent for 2 hours' },
-  { id: 'until-tomorrow', name: 'Until tomorrow', icon: '🌙', description: 'Silent until 8 AM' },
-  { id: 'focus', name: 'Focus mode', icon: '🎯', description: 'Only urgent messages' },
+  { id: 'off', name: 'All notifications', description: 'Receive all messages' },
+  { id: '30min', name: '30 minutes', description: 'Silent for 30 min' },
+  { id: '1hr', name: '1 hour', description: 'Silent for 1 hour' },
+  { id: '2hr', name: '2 hours', description: 'Silent for 2 hours' },
+  { id: 'until-tomorrow', name: 'Until tomorrow', description: 'Silent until 8 AM' },
+  { id: 'focus', name: 'Focus mode', description: 'Only urgent messages' },
 ];
 
 // Study Buddy AI Message Type
@@ -34,12 +40,12 @@ interface StudyBuddyMessage {
 
 // Study topics for quick access
 const STUDY_TOPICS = [
-  { id: 'anatomy', name: 'Anatomy', icon: '🦴' },
-  { id: 'physiology', name: 'Physiology', icon: '🫀' },
-  { id: 'pathology', name: 'Pathology', icon: '🔬' },
-  { id: 'pharmacology', name: 'Pharmacology', icon: '💊' },
-  { id: 'biochemistry', name: 'Biochemistry', icon: '🧬' },
-  { id: 'microbiology', name: 'Microbiology', icon: '🦠' },
+  { id: 'anatomy', name: 'Anatomy' },
+  { id: 'physiology', name: 'Physiology' },
+  { id: 'pathology', name: 'Pathology' },
+  { id: 'pharmacology', name: 'Pharmacology' },
+  { id: 'biochemistry', name: 'Biochemistry' },
+  { id: 'microbiology', name: 'Microbiology' },
 ];
 
 // Simulated AI responses for Study Buddy (will be replaced with actual AI later)
@@ -705,28 +711,31 @@ export function ChatBubble() {
                               <p className="text-xs text-slate-500 dark:text-slate-400">Silence notifications</p>
                             </div>
                             <div className="p-2">
-                              {FOCUS_MODES.map((mode) => (
-                                <button
-                                  key={mode.id}
-                                  onClick={() => handleSetFocusMode(mode.id)}
-                                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left ${
-                                    focusMode === mode.id
-                                      ? 'bg-tribe-sage-50 dark:bg-tribe-sage-900/30 text-tribe-sage-700 dark:text-tribe-sage-300'
-                                      : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
-                                  }`}
-                                >
-                                  <span className="text-lg">{mode.icon}</span>
-                                  <div className="flex-1">
-                                    <p className="text-sm font-medium">{mode.name}</p>
-                                    <p className="text-xs text-slate-500 dark:text-slate-400">{mode.description}</p>
-                                  </div>
-                                  {focusMode === mode.id && (
-                                    <svg className="w-5 h-5 text-tribe-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                  )}
-                                </button>
-                              ))}
+                              {FOCUS_MODES.map((mode) => {
+                                const IconComponent = mode.id === 'off' ? BellIcon : mode.id === 'focus' ? TargetIcon : null;
+                                return (
+                                  <button
+                                    key={mode.id}
+                                    onClick={() => handleSetFocusMode(mode.id)}
+                                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left ${
+                                      focusMode === mode.id
+                                        ? 'bg-tribe-sage-50 dark:bg-tribe-sage-900/30 text-tribe-sage-700 dark:text-tribe-sage-300'
+                                        : 'hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+                                    }`}
+                                  >
+                                    {IconComponent && <IconComponent className="w-5 h-5" />}
+                                    <div className="flex-1">
+                                      <p className="text-sm font-medium">{mode.name}</p>
+                                      <p className="text-xs text-slate-500 dark:text-slate-400">{mode.description}</p>
+                                    </div>
+                                    {focusMode === mode.id && (
+                                      <svg className="w-5 h-5 text-tribe-sage-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                      </svg>
+                                    )}
+                                  </button>
+                                );
+                              })}
                             </div>
                             {isInFocusMode && focusEndTime && (
                               <div className="px-4 py-3 bg-slate-50 dark:bg-slate-700/50 border-t border-slate-100 dark:border-slate-700">
@@ -884,16 +893,19 @@ export function ChatBubble() {
 
                 {/* Quick Topic Buttons */}
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {STUDY_TOPICS.map((topic) => (
-                    <button
-                      key={topic.id}
-                      onClick={() => handleTopicSelect(topic)}
-                      className="px-2.5 py-1 bg-white/20 hover:bg-white/30 rounded-full text-xs text-white font-medium transition-colors flex items-center gap-1"
-                    >
-                      <span>{topic.icon}</span>
-                      {topic.name}
-                    </button>
-                  ))}
+                  {STUDY_TOPICS.map((topic) => {
+                    const TopicIcon = topic.id === 'anatomy' ? RheumatologyIcon : topic.id === 'microbiology' ? InfectiousDiseaseIcon : null;
+                    return (
+                      <button
+                        key={topic.id}
+                        onClick={() => handleTopicSelect(topic)}
+                        className="px-2.5 py-1 bg-white/20 hover:bg-white/30 rounded-full text-xs text-white font-medium transition-colors flex items-center gap-1"
+                      >
+                        {TopicIcon && <TopicIcon className="w-3 h-3" />}
+                        {topic.name}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

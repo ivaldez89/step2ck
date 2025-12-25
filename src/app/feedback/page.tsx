@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import Link from 'next/link';
+import { LightbulbIcon, TrendingUpIcon, BookOpenIcon, ChatBubbleIcon } from '@/components/icons/MedicalIcons';
 
 export default function FeedbackPage() {
   const [formData, setFormData] = useState({
@@ -49,11 +50,11 @@ export default function FeedbackPage() {
   };
 
   const feedbackTypes = [
-    { id: 'feature', label: 'Feature Request', icon: '💡', description: 'Suggest a new feature' },
-    { id: 'improvement', label: 'Improvement', icon: '📈', description: 'Improve existing features' },
-    { id: 'bug', label: 'Bug Report', icon: '🐛', description: 'Report an issue' },
-    { id: 'content', label: 'Content', icon: '📚', description: 'Flashcards or study materials' },
-    { id: 'general', label: 'General', icon: '💬', description: 'General feedback' },
+    { id: 'feature', label: 'Feature Request', icon: <LightbulbIcon className="w-8 h-8" />, description: 'Suggest a new feature' },
+    { id: 'improvement', label: 'Improvement', icon: <TrendingUpIcon className="w-8 h-8" />, description: 'Improve existing features' },
+    { id: 'bug', label: 'Bug Report', icon: <span className="text-2xl">🐛</span>, description: 'Report an issue' },
+    { id: 'content', label: 'Content', icon: <BookOpenIcon className="w-8 h-8" />, description: 'Flashcards or study materials' },
+    { id: 'general', label: 'General', icon: <ChatBubbleIcon className="w-8 h-8" />, description: 'General feedback' },
   ];
 
   return (
@@ -138,7 +139,7 @@ export default function FeedbackPage() {
                           : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
                       }`}
                     >
-                      <span className="text-2xl block mb-2">{type.icon}</span>
+                      <div className="block mb-2 text-[#5B7B6D] dark:text-[#7FA08F]">{type.icon}</div>
                       <span className="font-medium text-slate-900 dark:text-white text-sm block">{type.label}</span>
                       <span className="text-xs text-slate-500 dark:text-slate-400">{type.description}</span>
                     </button>

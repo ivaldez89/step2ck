@@ -22,11 +22,11 @@ export function VillageLeaderboard({ variant = 'full', showTopContributors = tru
   const getRankDisplay = (index: number) => {
     switch (index) {
       case 0:
-        return <span className="text-2xl">🥇</span>;
+        return <span className="text-2xl font-bold text-[#C4A77D]">1</span>;
       case 1:
-        return <span className="text-2xl">🥈</span>;
+        return <span className="text-2xl font-bold text-[#A0A0A0]">2</span>;
       case 2:
-        return <span className="text-2xl">🥉</span>;
+        return <span className="text-2xl font-bold text-[#CD7F32]">3</span>;
       default:
         return <span className="text-lg font-bold text-slate-500">#{index + 1}</span>;
     }

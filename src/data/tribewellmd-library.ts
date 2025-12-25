@@ -33,7 +33,7 @@ export const shelfCategories: CardCategory[] = [
     id: 'internal-medicine',
     name: 'Internal Medicine',
     description: 'Adult inpatient medicine, subspecialties, and hospital medicine',
-    icon: '🩺',
+    icon: '',
     color: 'from-emerald-500 to-teal-500',
     subcategories: [
       {
@@ -78,7 +78,7 @@ export const shelfCategories: CardCategory[] = [
     id: 'surgery',
     name: 'Surgery',
     description: 'General surgery, trauma, surgical subspecialties',
-    icon: '🔪',
+    icon: '',
     color: 'from-[#8B7355] to-[#6B5344]',
     subcategories: [
       {
@@ -99,7 +99,7 @@ export const shelfCategories: CardCategory[] = [
     id: 'obgyn',
     name: 'OB/GYN',
     description: 'Obstetrics, gynecology, reproductive health',
-    icon: '🤰',
+    icon: '',
     color: 'from-[#C4A77D] to-[#A89070]',
     subcategories: [
       {
@@ -126,7 +126,7 @@ export const shelfCategories: CardCategory[] = [
     id: 'pediatrics',
     name: 'Pediatrics',
     description: 'Child health, development, pediatric diseases',
-    icon: '👶',
+    icon: '',
     color: 'from-amber-500 to-yellow-500',
     subcategories: [
       {
@@ -141,7 +141,7 @@ export const shelfCategories: CardCategory[] = [
     id: 'psychiatry',
     name: 'Psychiatry',
     description: 'Mental health, psychopharmacology, behavioral disorders',
-    icon: '🧠',
+    icon: '',
     color: 'from-[#6B8B7D] to-[#5B7B6D]',
     subcategories: [
       {
@@ -162,7 +162,7 @@ export const shelfCategories: CardCategory[] = [
     id: 'neurology',
     name: 'Neurology',
     description: 'Stroke, seizures, headaches, neuromuscular disorders',
-    icon: '⚡',
+    icon: '',
     color: 'from-[#5B7B6D] to-[#3D5A4C]',
     subcategories: [
       {
@@ -189,7 +189,7 @@ export const shelfCategories: CardCategory[] = [
     id: 'family-medicine',
     name: 'Family Medicine',
     description: 'Primary care, preventive medicine, chronic disease',
-    icon: '👨‍👩‍👧‍👦',
+    icon: '',
     color: 'from-green-500 to-emerald-500',
     subcategories: [
       {
@@ -210,7 +210,7 @@ export const shelfCategories: CardCategory[] = [
     id: 'emergency-medicine',
     name: 'Emergency Medicine',
     description: 'Acute care, resuscitation, emergency procedures',
-    icon: '🚨',
+    icon: '',
     color: 'from-orange-500 to-red-500',
     subcategories: [
       {
@@ -238,7 +238,7 @@ export const topicCategories: CardCategory[] = [
     id: 'cardiology',
     name: 'Cardiology',
     description: 'Heart and vascular diseases',
-    icon: '❤️',
+    icon: '',
     color: 'from-[#8B7355] to-[#6B5344]',
     subcategories: [
       {
@@ -277,7 +277,7 @@ export const topicCategories: CardCategory[] = [
     id: 'pulmonology',
     name: 'Pulmonology',
     description: 'Respiratory diseases',
-    icon: '🫁',
+    icon: '',
     color: 'from-sky-500 to-blue-500',
     subcategories: [
       {
@@ -298,7 +298,7 @@ export const topicCategories: CardCategory[] = [
     id: 'gastroenterology',
     name: 'Gastroenterology',
     description: 'Digestive system diseases',
-    icon: '🫶',
+    icon: '',
     color: 'from-amber-500 to-orange-500',
     subcategories: [
       {
@@ -331,7 +331,7 @@ export const topicCategories: CardCategory[] = [
     id: 'nephrology',
     name: 'Nephrology',
     description: 'Kidney diseases and electrolytes',
-    icon: '🫘',
+    icon: '',
     color: 'from-yellow-500 to-amber-500',
     subcategories: [
       {
@@ -358,7 +358,7 @@ export const topicCategories: CardCategory[] = [
     id: 'endocrinology',
     name: 'Endocrinology',
     description: 'Hormonal and metabolic disorders',
-    icon: '🧬',
+    icon: '',
     color: 'from-[#A89070] to-[#8B7355]',
     subcategories: [
       {
@@ -379,7 +379,7 @@ export const topicCategories: CardCategory[] = [
     id: 'infectious-disease',
     name: 'Infectious Disease',
     description: 'Infections and antimicrobials',
-    icon: '🦠',
+    icon: '',
     color: 'from-green-500 to-teal-500',
     subcategories: [
       {
@@ -412,7 +412,7 @@ export const topicCategories: CardCategory[] = [
     id: 'neurology-topic',
     name: 'Neurology',
     description: 'Neurological disorders',
-    icon: '🧠',
+    icon: '',
     color: 'from-[#6B8B7D] to-[#5B7B6D]',
     subcategories: [
       {
@@ -439,7 +439,7 @@ export const topicCategories: CardCategory[] = [
     id: 'psychiatry-topic',
     name: 'Psychiatry',
     description: 'Mental health disorders',
-    icon: '💭',
+    icon: '',
     color: 'from-[#7FA08F] to-[#6B8B7D]',
     subcategories: [
       {
@@ -472,7 +472,7 @@ export const topicCategories: CardCategory[] = [
     id: 'obgyn-topic',
     name: 'OB/GYN',
     description: 'Obstetrics and gynecology',
-    icon: '🤱',
+    icon: '',
     color: 'from-[#C4A77D] to-[#A89070]',
     subcategories: [
       {

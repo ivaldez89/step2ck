@@ -7,6 +7,7 @@ import { ThreeColumnLayout, CARD_STYLES, ThreeColumnLayoutSkeleton } from '@/com
 import { UnifiedCalendarHub } from '@/components/calendar/UnifiedCalendarHub';
 import { useIsAuthenticated } from '@/hooks/useAuth';
 import { useCalendarHub } from '@/hooks/useCalendarHub';
+import { CalendarIcon, SparklesIcon } from '@/components/icons/MedicalIcons';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -198,7 +199,7 @@ export default function DashboardPage() {
       {/* Today's Schedule */}
       <div className={CARD_STYLES.containerWithPadding}>
         <h3 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-          <span className="text-lg">📅</span>
+          <CalendarIcon className="w-5 h-5 text-[#5B7B6D]" />
           Today&apos;s Schedule
         </h3>
         {todayEvents.length > 0 ? (
@@ -243,7 +244,7 @@ export default function DashboardPage() {
       {/* Tips */}
       <div className={CARD_STYLES.containerWithPadding}>
         <h3 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-          <span className="text-lg">💡</span>
+          <SparklesIcon className="w-5 h-5 text-amber-500" />
           Tips
         </h3>
         <div className="p-3 bg-slate-50 dark:bg-slate-700 rounded-xl">

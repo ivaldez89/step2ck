@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useStreak } from '@/hooks/useStreak';
 import { Icons } from '@/components/ui/Icons';
+import { CheckCircleIcon } from '@/components/icons/MedicalIcons';
 
 interface StreakCounterProps {
   variant?: 'compact' | 'full';
@@ -96,7 +97,9 @@ export function StreakCounter({ variant = 'compact', showDropdown = true }: Stre
               />
             </svg>
             {goalComplete && (
-              <span className="absolute inset-0 flex items-center justify-center text-[8px]">✓</span>
+              <span className="absolute inset-0 flex items-center justify-center">
+                <CheckCircleIcon className="w-3 h-3 text-green-600" />
+              </span>
             )}
           </div>
         </button>
@@ -138,14 +141,14 @@ export function StreakCounter({ variant = 'compact', showDropdown = true }: Stre
                   return (
                     <div key={index} className="flex flex-col items-center gap-1">
                       <span className="text-[10px] text-white/70">{day}</span>
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
                         isActive
                           ? 'bg-white text-orange-500'
                           : isToday
                             ? 'bg-white/30 text-white border-2 border-white/50'
                             : 'bg-white/20 text-white/50'
                       }`}>
-                        {isActive ? '✓' : ''}
+                        {isActive && <CheckCircleIcon className="w-4 h-4" />}
                       </div>
                     </div>
                   );
@@ -315,14 +318,14 @@ export function StreakCounter({ variant = 'compact', showDropdown = true }: Stre
             return (
               <div key={index} className="flex flex-col items-center gap-1.5">
                 <span className="text-xs text-white/70">{day}</span>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                   isActive
                     ? 'bg-white text-orange-500'
                     : isToday
                       ? 'bg-white/30 text-white border-2 border-white/50'
                       : 'bg-white/20 text-white/50'
                 }`}>
-                  {isActive ? '✓' : ''}
+                  {isActive && <CheckCircleIcon className="w-5 h-5" />}
                 </div>
               </div>
             );

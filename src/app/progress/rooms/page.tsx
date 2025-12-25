@@ -7,6 +7,7 @@ import { ThreeColumnLayout, CARD_STYLES, ThreeColumnLayoutSkeleton } from '@/com
 import { CreateRoomModal } from '@/components/study-room';
 import { useIsAuthenticated } from '@/hooks/useAuth';
 import { useStudyRooms } from '@/hooks/useStudyRoom';
+import { StarIcon, BookOpenIcon } from '@/components/icons/MedicalIcons';
 import {
   createStudySession,
   joinStudySession,
@@ -16,6 +17,7 @@ import {
 import { getUserProfile } from '@/lib/storage/profileStorage';
 import { createClient } from '@/lib/supabase/client';
 import { StudySession, CreateSessionData, formatTimerDisplay } from '@/types/studyRoom';
+import { LightbulbIcon } from '@/components/icons/MedicalIcons';
 
 export default function StudyRoomsPage() {
   const router = useRouter();
@@ -239,7 +241,7 @@ export default function StudyRoomsPage() {
       {isAuthenticated && myRooms.length > 0 && (
         <div className={CARD_STYLES.containerWithPadding}>
           <h3 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-            <span className="text-[#C4A77D]">★</span>
+            <StarIcon className="w-5 h-5 text-[#C4A77D]" />
             My Active Rooms
           </h3>
           <div className="space-y-2">
@@ -250,7 +252,7 @@ export default function StudyRoomsPage() {
                 className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-left"
               >
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#C4A77D] to-[#D4B78D] flex items-center justify-center">
-                  <span className="text-white text-lg">📚</span>
+                  <BookOpenIcon className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-slate-700 dark:text-slate-200 truncate">{room.name}</p>
@@ -306,7 +308,7 @@ export default function StudyRoomsPage() {
       {/* How It Works */}
       <div className={CARD_STYLES.containerWithPadding}>
         <h3 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-          <span className="text-lg">💡</span>
+          <LightbulbIcon className="w-5 h-5 text-[#F5D76E]" />
           How It Works
         </h3>
         <div className="space-y-3">
@@ -459,7 +461,9 @@ function RoomCard({
 
           {/* Timer */}
           <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
-            <span>🍅</span>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
             <span>{room.timerSessionsCompleted} completed</span>
           </div>
 

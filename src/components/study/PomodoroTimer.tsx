@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { TargetIcon, ClockIcon } from '@/components/icons/MedicalIcons';
 
 interface PomodoroTimerProps {
   onSessionComplete?: () => void;
@@ -192,9 +193,9 @@ export function PomodoroTimer({ onSessionComplete }: PomodoroTimerProps) {
   };
 
   const modeLabels = {
-    focus: '🎯 Focus',
-    shortBreak: '☕ Break',
-    longBreak: '🌴 Long',
+    focus: 'Focus',
+    shortBreak: 'Break',
+    longBreak: 'Long',
   };
 
   return (
@@ -209,7 +210,7 @@ export function PomodoroTimer({ onSessionComplete }: PomodoroTimerProps) {
             : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
         }`}
       >
-        <span className="text-base">🍅</span>
+        <ClockIcon className="w-4 h-4" />
         {isRunning ? (
           <span className="font-mono font-medium">{formatTime(timeLeft)}</span>
         ) : (
@@ -237,11 +238,12 @@ export function PomodoroTimer({ onSessionComplete }: PomodoroTimerProps) {
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                  <span>🍅</span>
+                  <ClockIcon className="w-5 h-5" />
                   <span>Pomodoro</span>
                 </h3>
-                <span className="text-xs text-slate-500 dark:text-slate-400">
-                  Today: {sessionsCompleted} 🍅
+                <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                  <span>Today: {sessionsCompleted}</span>
+                  <ClockIcon className="w-3.5 h-3.5" />
                 </span>
               </div>
 
@@ -251,13 +253,14 @@ export function PomodoroTimer({ onSessionComplete }: PomodoroTimerProps) {
                   <button
                     key={m}
                     onClick={() => switchMode(m)}
-                    className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center justify-center gap-1 ${
                       mode === m
                         ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm'
                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
                     }`}
                   >
-                    {modeLabels[m]}
+                    {m === 'focus' ? <TargetIcon className="w-3 h-3" /> : <ClockIcon className="w-3 h-3" />}
+                    <span>{modeLabels[m]}</span>
                   </button>
                 ))}
               </div>

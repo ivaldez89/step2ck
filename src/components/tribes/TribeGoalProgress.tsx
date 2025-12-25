@@ -2,6 +2,7 @@
 
 import type { SocialImpactGoal } from '@/types/tribes';
 import { getGoalProgress, getCauseLabel } from '@/lib/storage/tribeStorage';
+import { HeartIcon, UsersIcon, BookOpenIcon, BeakerIcon, GiftIcon, RocketIcon, FireIcon, StarIcon, SparklesIcon } from '@/components/icons/MedicalIcons';
 
 // Forest theme colors - only these are allowed
 const FOREST_THEME_COLORS = [
@@ -31,13 +32,13 @@ export function TribeGoalProgress({ goal, color }: TribeGoalProgressProps) {
   const isCompleted = !!goal.completedAt;
   const validColor = getForestColor(color);
 
-  const causeIcons: Record<SocialImpactGoal['cause'], string> = {
-    'red-cross': '❤️',
-    'animal-shelter': '🐾',
-    environment: '🌍',
-    education: '📚',
-    healthcare: '🏥',
-    community: '🤝',
+  const causeIcons: Record<SocialImpactGoal['cause'], React.ReactNode> = {
+    'red-cross': <HeartIcon className="w-8 h-8 text-white" />,
+    'animal-shelter': <GiftIcon className="w-8 h-8 text-white" />,
+    environment: <UsersIcon className="w-8 h-8 text-white" />,
+    education: <BookOpenIcon className="w-8 h-8 text-white" />,
+    healthcare: <BeakerIcon className="w-8 h-8 text-white" />,
+    community: <UsersIcon className="w-8 h-8 text-white" />,
   };
 
   const formatDeadline = (dateStr: string) => {
@@ -59,7 +60,7 @@ export function TribeGoalProgress({ goal, color }: TribeGoalProgressProps) {
       <div className={`px-6 py-4 bg-gradient-to-r ${validColor}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">{causeIcons[goal.cause]}</span>
+            <div className="flex-shrink-0">{causeIcons[goal.cause]}</div>
             <div>
               <h3 className="font-bold text-white text-lg">{goal.title}</h3>
               <p className="text-white/80 text-sm">{getCauseLabel(goal.cause)}</p>
@@ -134,7 +135,7 @@ export function TribeGoalProgress({ goal, color }: TribeGoalProgressProps) {
             <span>{formatDeadline(goal.deadline)}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xl">🏅</span>
+            <GiftIcon className="w-5 h-5 text-[#C4A77D]" />
             <span className="text-sm font-medium text-[#3D5A4C] dark:text-white">{goal.reward}</span>
           </div>
         </div>
@@ -143,11 +144,11 @@ export function TribeGoalProgress({ goal, color }: TribeGoalProgressProps) {
       {/* Motivation footer */}
       {!isCompleted && progress < 100 && (
         <div className="px-6 py-3 bg-[#F5EFE6] dark:bg-slate-700/50 border-t border-[#D4C4B0]/50 dark:border-slate-700">
-          <p className="text-sm text-center text-[#6B5344] dark:text-slate-300">
-            {progress < 25 && "🚀 Just getting started! Every point counts."}
-            {progress >= 25 && progress < 50 && "💪 Great progress! Keep the momentum going."}
-            {progress >= 50 && progress < 75 && "🔥 Over halfway there! The goal is in sight."}
-            {progress >= 75 && progress < 100 && "⭐ Almost there! Final push to the finish!"}
+          <p className="text-sm text-center text-[#6B5344] dark:text-slate-300 flex items-center justify-center gap-2">
+            {progress < 25 && <><RocketIcon className="w-4 h-4" /> Just getting started! Every point counts.</>}
+            {progress >= 25 && progress < 50 && <><SparklesIcon className="w-4 h-4" /> Great progress! Keep the momentum going.</>}
+            {progress >= 50 && progress < 75 && <><FireIcon className="w-4 h-4" /> Over halfway there! The goal is in sight.</>}
+            {progress >= 75 && progress < 100 && <><StarIcon className="w-4 h-4" /> Almost there! Final push to the finish!</>}
           </p>
         </div>
       )}

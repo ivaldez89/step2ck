@@ -27,11 +27,11 @@ export interface PostReaction {
 export type ReactionType = 'like' | 'love' | 'celebrate' | 'support' | 'insightful';
 
 export const REACTION_EMOJIS: Record<ReactionType, { emoji: string; label: string }> = {
-  like: { emoji: '👍', label: 'Like' },
-  love: { emoji: '❤️', label: 'Love' },
-  celebrate: { emoji: '🎉', label: 'Celebrate' },
-  support: { emoji: '🤝', label: 'Support' },
-  insightful: { emoji: '💡', label: 'Insightful' },
+  like: { emoji: '', label: 'Like' },
+  love: { emoji: '', label: 'Love' },
+  celebrate: { emoji: '', label: 'Celebrate' },
+  support: { emoji: '', label: 'Support' },
+  insightful: { emoji: '', label: 'Insightful' },
 };
 
 export interface PostComment {

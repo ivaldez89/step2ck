@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import type { Tribe } from '@/types/tribes';
 import { getTypeLabel } from '@/lib/storage/tribeStorage';
+import { TrophyIcon } from '@/components/icons/MedicalIcons';
 
 // Forest theme colors - only these are allowed
 const FOREST_THEME_COLORS = [
@@ -106,7 +107,7 @@ export function TribeHeader({
                   <>
                     <span className="w-1 h-1 bg-white/50 rounded-full"></span>
                     <span className="flex items-center gap-1">
-                      <span className="text-lg">🏆</span>
+                      <TrophyIcon className="w-4 h-4" />
                       #{tribe.rank} on leaderboard
                     </span>
                   </>
