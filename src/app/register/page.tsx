@@ -8,13 +8,11 @@ import {
   setCurrentUserId,
   clearLegacyProfileData,
   updateUserProfile,
-  joinVillage,
   WELLNESS_DIMENSIONS,
   GENERAL_INTERESTS,
   MEDICAL_SPECIALTIES,
   type WellnessDimension
 } from '@/lib/storage/profileStorage';
-import { PARTNER_CHARITIES, type Charity } from '@/data/charities';
 
 interface RoleOption {
   id: UserRole;
@@ -109,7 +107,7 @@ const roleOptions: RoleOption[] = [
 ];
 
 export default function RegisterPage() {
-  const [step, setStep] = useState<'role' | 'details' | 'village' | 'interests'>('role');
+  const [step, setStep] = useState<'role' | 'details' | 'interests'>('role');
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -123,16 +121,11 @@ export default function RegisterPage() {
     pgyYear: '',
     jobTitle: '',
   });
-  // Village selection
-  const [selectedVillage, setSelectedVillage] = useState<string | null>(null);
   // Interests selection
   const [selectedWellness, setSelectedWellness] = useState<WellnessDimension[]>([]);
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
   const [selectedGeneralInterests, setSelectedGeneralInterests] = useState<string[]>([]);
-  // User ID from signup (needed for saving profile data)
-  const [userId, setUserId] = useState<string | null>(null);
 
-  const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
@@ -146,10 +139,8 @@ export default function RegisterPage() {
     setError('');
     if (step === 'details') {
       setStep('role');
-    } else if (step === 'village') {
-      setStep('details');
     } else if (step === 'interests') {
-      setStep('village');
+      setStep('details');
     }
   };
 
@@ -157,7 +148,6 @@ export default function RegisterPage() {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    setSuccessMessage('');
 
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
       setError('Please fill in all required fields');
@@ -236,32 +226,17 @@ export default function RegisterPage() {
       // Set the current user ID for profile storage (if user is returned)
       if (result.user) {
         setCurrentUserId(result.user.id);
-        setUserId(result.user.id);
         // Clear any legacy profile data from before user-aware storage
         clearLegacyProfileData();
       }
 
-      // Move to village selection step instead of showing success
+      // Move to interests selection step
       setIsLoading(false);
-      setStep('village');
+      setStep('interests');
     } catch (err) {
       setError('Something went wrong. Please try again.');
       setIsLoading(false);
     }
-  };
-
-  // Handle village selection and proceed to interests
-  const handleVillageSelect = (villageId: string) => {
-    setSelectedVillage(villageId);
-  };
-
-  const handleVillageContinue = () => {
-    if (!selectedVillage) {
-      setError('Please select a Village to support');
-      return;
-    }
-    setError('');
-    setStep('interests');
   };
 
   // Toggle functions for interests
@@ -289,8 +264,8 @@ export default function RegisterPage() {
     );
   };
 
-  // Complete registration with all selections
-  const handleCompleteRegistration = () => {
+  // Complete interests and redirect to Village selection
+  const handleCompleteInterests = () => {
     if (selectedWellness.length === 0) {
       setError('Please select at least one wellness focus area');
       return;
@@ -300,22 +275,17 @@ export default function RegisterPage() {
     setError('');
 
     try {
-      // Join the selected village
-      if (selectedVillage) {
-        joinVillage(selectedVillage);
-      }
-
-      // Update profile with interests
+      // Update profile with interests (Village will be selected on the next page)
       updateUserProfile({
         wellnessInterests: selectedWellness,
         interestedSpecialties: selectedSpecialties,
         generalInterests: selectedGeneralInterests,
-        onboardingCompleted: true,
-        onboardingStep: 'complete',
+        onboardingCompleted: false,
+        onboardingStep: 'village',
       });
 
-      setSuccessMessage('Welcome to the Tribe! Please check your email to confirm your account.');
-      setIsLoading(false);
+      // Redirect to dedicated Village selection page
+      router.push('/onboarding/village');
     } catch (err) {
       setError('Something went wrong. Please try again.');
       setIsLoading(false);
@@ -348,18 +318,17 @@ export default function RegisterPage() {
           <p className="text-slate-600 dark:text-slate-400">
             {step === 'role' && 'Select your role to get started'}
             {step === 'details' && 'Tell us about yourself'}
-            {step === 'village' && 'Choose your Village to support'}
             {step === 'interests' && 'Help us connect you with like-minded peers'}
           </p>
 
           {/* Progress indicator */}
-          {(step === 'details' || step === 'village' || step === 'interests') && (
+          {(step === 'details' || step === 'interests') && (
             <div className="flex items-center justify-center gap-2 mt-4">
-              {['role', 'details', 'village', 'interests'].map((s, i) => (
+              {['role', 'details', 'interests'].map((s, i) => (
                 <div
                   key={s}
                   className={`h-2 rounded-full transition-all ${
-                    ['role', 'details', 'village', 'interests'].indexOf(step) >= i
+                    ['role', 'details', 'interests'].indexOf(step) >= i
                       ? 'w-8 bg-[#C4A77D]'
                       : 'w-2 bg-slate-300 dark:bg-slate-600'
                   }`}
@@ -629,21 +598,12 @@ export default function RegisterPage() {
                 </div>
               )}
 
-              {successMessage && (
-                <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-green-700 dark:text-green-400 text-sm text-center">
-                  <p className="font-medium">{successMessage}</p>
-                  <Link href="/login" className="inline-block mt-2 text-[#8B7355] hover:text-[#C4A77D] dark:text-[#C4A77D] font-medium underline">
-                    Go to Login
-                  </Link>
-                </div>
-              )}
-
               <button
                 type="submit"
                 disabled={isLoading}
                 className="w-full py-4 bg-gradient-to-r from-[#C4A77D] to-[#A89070] hover:from-[#B89B78] hover:to-[#9A8565] text-white font-bold rounded-xl shadow-lg shadow-[#C4A77D]/25 hover:shadow-[#C4A77D]/40 transition-all disabled:opacity-50"
               >
-                {isLoading ? 'Creating account...' : 'Create Account'}
+                {isLoading ? 'Creating account...' : 'Continue'}
               </button>
 
               <p className="text-center text-sm text-slate-500 dark:text-slate-400">
@@ -655,106 +615,7 @@ export default function RegisterPage() {
             </form>
           )}
 
-          {/* Step 3: Village Selection */}
-          {step === 'village' && (
-            <div className="space-y-6">
-              <button
-                type="button"
-                onClick={handleBack}
-                className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                Back
-              </button>
-
-              <div className="text-center mb-6">
-                <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Join a Village</h2>
-                <p className="text-slate-600 dark:text-slate-400 text-sm">
-                  As a member of the medical Tribe, you&apos;ll join a Village united around a charitable cause.
-                  <br />
-                  <span className="text-[#5B7B6D] dark:text-[#7FA08F] font-medium">100% of your earned points convert to real donations.</span>
-                </p>
-              </div>
-
-              <div className="grid gap-3 max-h-[400px] overflow-y-auto pr-2">
-                {PARTNER_CHARITIES.map((charity) => (
-                  <button
-                    key={charity.id}
-                    onClick={() => handleVillageSelect(charity.id)}
-                    className={`
-                      relative p-4 rounded-xl border-2 text-left transition-all duration-200
-                      hover:border-[#5B7B6D] hover:shadow-lg
-                      ${selectedVillage === charity.id
-                        ? 'border-[#5B7B6D] bg-[#5B7B6D]/10 dark:bg-[#5B7B6D]/20'
-                        : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700/50'
-                      }
-                    `}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#5B7B6D] to-[#7FA08F] flex items-center justify-center text-white shadow-lg flex-shrink-0">
-                        {charity.icon === 'Heart' && (
-                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                          </svg>
-                        )}
-                        {charity.icon === 'Globe' && (
-                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                        )}
-                        {charity.icon === 'Hospital' && (
-                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                          </svg>
-                        )}
-                        {charity.icon === 'GraduationCap' && (
-                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M12 14l9-5-9-5-9 5 9 5z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-                          </svg>
-                        )}
-                        {charity.icon === 'HeartHand' && (
-                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                          </svg>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-slate-900 dark:text-white truncate">{charity.shortName}</h3>
-                        <p className="text-xs text-[#5B7B6D] dark:text-[#7FA08F] font-medium">{charity.focus}</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">{charity.description}</p>
-                      </div>
-                      {selectedVillage === charity.id && (
-                        <div className="w-6 h-6 rounded-full bg-[#5B7B6D] flex items-center justify-center flex-shrink-0">
-                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                      )}
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              {error && (
-                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm text-center">
-                  {error}
-                </div>
-              )}
-
-              <button
-                onClick={handleVillageContinue}
-                disabled={!selectedVillage}
-                className="w-full py-4 bg-gradient-to-r from-[#5B7B6D] to-[#7FA08F] hover:from-[#4A6A5C] hover:to-[#6E8F7E] text-white font-bold rounded-xl shadow-lg shadow-[#5B7B6D]/25 hover:shadow-[#5B7B6D]/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Continue to Interests
-              </button>
-            </div>
-          )}
-
-          {/* Step 4: Interests Selection */}
+          {/* Step 3: Interests Selection */}
           {step === 'interests' && (
             <div className="space-y-6">
               <button
@@ -844,24 +705,13 @@ export default function RegisterPage() {
                 </div>
               )}
 
-              {successMessage && (
-                <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-green-700 dark:text-green-400 text-sm text-center">
-                  <p className="font-medium">{successMessage}</p>
-                  <Link href="/login" className="inline-block mt-2 text-[#8B7355] hover:text-[#C4A77D] dark:text-[#C4A77D] font-medium underline">
-                    Go to Login
-                  </Link>
-                </div>
-              )}
-
-              {!successMessage && (
-                <button
-                  onClick={handleCompleteRegistration}
-                  disabled={isLoading || selectedWellness.length === 0}
-                  className="w-full py-4 bg-gradient-to-r from-[#C4A77D] to-[#A89070] hover:from-[#B89B78] hover:to-[#9A8565] text-white font-bold rounded-xl shadow-lg shadow-[#C4A77D]/25 hover:shadow-[#C4A77D]/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? 'Completing setup...' : 'Complete Registration'}
-                </button>
-              )}
+              <button
+                onClick={handleCompleteInterests}
+                disabled={isLoading || selectedWellness.length === 0}
+                className="w-full py-4 bg-gradient-to-r from-[#5B7B6D] to-[#7FA08F] hover:from-[#4A6A5C] hover:to-[#6E8F7E] text-white font-bold rounded-xl shadow-lg shadow-[#5B7B6D]/25 hover:shadow-[#5B7B6D]/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Setting up...' : 'Choose Your Village'}
+              </button>
             </div>
           )}
         </div>
