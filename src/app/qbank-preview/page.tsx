@@ -31,22 +31,27 @@ export default function QBankPreviewPage() {
     async function fetchQuestions() {
       try {
         const supabase = createClient();
-        const { data, error } = await supabase
+        console.log('QBank: Fetching questions...');
+
+        const { data, error, count } = await supabase
           .from('questions')
-          .select('*')
+          .select('*', { count: 'exact' })
           .eq('status', 'active')
           .order('batch')
           .order('question_id');
 
+        console.log('QBank: Response received', { dataLength: data?.length, count, error });
+
         if (error) {
-          console.error('Supabase error:', error);
+          console.error('QBank: Supabase error:', error);
           setError(error.message);
           return;
         }
 
+        console.log('QBank: Setting questions:', data?.length || 0);
         setQuestions(data || []);
       } catch (err) {
-        console.error('Fetch error:', err);
+        console.error('QBank: Fetch error:', err);
         setError('Failed to load questions');
       } finally {
         setIsLoading(false);
