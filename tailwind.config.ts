@@ -105,161 +105,23 @@ const config: Config = {
         },
 
         // =============================================================
-        // RAW PALETTE - For token definitions & gradients ONLY
-        // Do NOT use these directly in components
+        // 🔒 LOCKED FOREST THEME RAW PALETTE
+        // For gradient definitions and legacy compatibility ONLY
+        // Do NOT use these directly in components - use semantic tokens
         // =============================================================
 
-        // Forest greens
+        // Forest greens (mapped to approved palette)
         forest: {
-          50: '#F4F7F5',
-          100: '#E8EFE9',
-          200: '#C5D6C8',
-          300: '#9BBAA1',
-          400: '#6B8B7D',
-          500: '#5B7B6D',
-          600: '#3D5A4C',
-          700: '#2D4A3C',
-          800: '#1E3D2F',
-          900: '#152E22',
-          950: '#0A1A12',
+          400: '#6E847D',  /* primary-soft */
+          500: '#556B5E',  /* primary */
+          600: '#405549',  /* primary-strong */
         },
 
-        // Earth/terracotta
-        earth: {
-          50: '#FAF5F4',
-          100: '#F5E8E6',
-          200: '#E8D0CC',
-          300: '#D4ADA5',
-          400: '#B87D73',
-          500: '#A65D4D',
-          600: '#8B4A3D',
-          700: '#6B3A30',
-          800: '#4A2920',
-          900: '#3A1F18',
-          950: '#1F100C',
-        },
-
-        // Burgundy
-        burgundy: {
-          50: '#FAF4F4',
-          100: '#F5E6E6',
-          200: '#E8CCCC',
-          300: '#D4A5A5',
-          400: '#B87373',
-          500: '#8B3A3A',
-          600: '#703030',
-          700: '#552424',
-          800: '#4A1F1F',
-          900: '#3A1818',
-          950: '#1F0C0C',
-        },
-
-        // Teal
-        teal: {
-          50: '#F2F7F8',
-          100: '#E4EEF0',
-          200: '#C5DCE0',
-          300: '#9BC5CC',
-          400: '#6BA3AD',
-          500: '#4A8A96',
-          600: '#3D717A',
-          700: '#2D5A63',
-          800: '#2D4A5A',
-          900: '#1E3D47',
-          950: '#0F2229',
-        },
-
-        // Sand/bark
+        // Sand/earth (mapped to approved palette)
         sand: {
-          50: '#FDFCFA',
-          100: '#F9F6F2',
-          200: '#F0E9E0',
-          300: '#E4D8C9',
-          400: '#D4C4B0',
-          500: '#C4A77D',
-          600: '#A89070',
-          700: '#8B7355',
-          800: '#6B5344',
-          900: '#4A3A30',
-          950: '#2A201A',
-        },
-
-        // Sage (brand green - for legacy compatibility)
-        sage: {
-          50: '#F4F9F6',
-          100: '#E6F2EC',
-          200: '#CCE5D9',
-          300: '#A3D1BC',
-          400: '#73B89A',
-          500: '#5DB075',
-          600: '#4A9962',
-          700: '#3D7D50',
-          800: '#346542',
-          900: '#2C5338',
-          950: '#152E1D',
-        },
-
-        // =============================================================
-        // LEGACY COLORS - Maintained for backward compatibility
-        // Migrate these to semantic tokens over time
-        // =============================================================
-
-        // Legacy tribe colors (alias to new palette)
-        tribe: {
-          sage: {
-            50: '#F4F9F6',
-            100: '#E6F2EC',
-            200: '#CCE5D9',
-            300: '#A3D1BC',
-            400: '#73B89A',
-            500: '#5DB075',
-            600: '#4A9962',
-            700: '#3D7D50',
-            800: '#346542',
-            900: '#2C5338',
-            950: '#152E1D',
-          },
-          coral: {
-            50: '#fdf5f5',
-            100: '#fae8e8',
-            200: '#f5d4d4',
-            300: '#e8b4b4',
-            400: '#d68f8f',
-            500: '#c26b6b',
-            600: '#a85454',
-            700: '#8c4444',
-            800: '#743a3a',
-            900: '#613434',
-            950: '#341919',
-          },
-          sky: {
-            50: '#f2f8fc',
-            100: '#e3eff8',
-            200: '#c1dff0',
-            300: '#8bc5e3',
-            400: '#4da5d3',
-            500: '#4A90D9',
-            600: '#2570b3',
-            700: '#205a91',
-            800: '#1e4c78',
-            900: '#1e4164',
-            950: '#142a43',
-          },
-        },
-
-        // Legacy medical colors
-        medical: {
-          50: '#f0fdfa',
-          100: '#ccfbf1',
-          200: '#99f6e4',
-          300: '#5eead4',
-          400: '#2dd4bf',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
-          950: '#042f2e',
+          400: '#B2ADA7',  /* secondary */
+          600: '#786551',  /* secondary-strong */
+          700: '#786551',  /* secondary-strong */
         },
       },
       boxShadow: {
