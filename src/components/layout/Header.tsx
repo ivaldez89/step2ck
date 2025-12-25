@@ -227,7 +227,7 @@ export function Header({ stats }: HeaderProps) {
 
   return (
     <>
-    <header className="fixed top-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-md border-b border-border-light shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-surface/95 dark:bg-primary/95 backdrop-blur-md border-b border-border-light shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -414,7 +414,7 @@ export function Header({ stats }: HeaderProps) {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-border-light bg-surface">
+        <div className="md:hidden border-t border-border-light bg-surface dark:bg-primary">
           <div className="max-w-7xl mx-auto px-4 py-4 space-y-2">
             {isAuthenticated ? (
               <>
