@@ -373,11 +373,11 @@ export default function TribesPage() {
         {/* Quick Action */}
         <div className="mt-8 text-center">
           <Link
-            href="/community"
+            href="/home"
             className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#5B7B6D] to-[#6B8B7D] hover:from-[#4A6B5D] hover:to-[#5B7B6D] text-white font-semibold rounded-xl transition-colors shadow-lg shadow-[#5B7B6D]/25"
           >
-            <Icons.Users />
-            Back to Community Hub
+            <Icons.Home />
+            Back to Home
           </Link>
         </div>
       </main>
